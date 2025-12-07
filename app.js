@@ -1,6 +1,6 @@
 // Tree of Life AI - Frontend Application with Authentication
 // Backend API URL
-const API_BASE = 'https://tree-of-life-ai-production.up.railway.app';
+const API_BASE = 'https://treeoflife-vn25.onrender.com';
 
 // State management
 let conversationId = null;
