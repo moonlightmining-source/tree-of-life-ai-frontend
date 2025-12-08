@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tree of Life AI - Login / Register</title>
+    <style>
+        :root {
+            --pure-black: #000000;
+            --gold-light: #FFD700;
+            --gold-medium: #FFBF00;
+            --gold-deep: #B8860B;
+            --metallic-gold: linear-gradient(135deg, #FFFEF0 0%, #FFD700 25%, #FFBF00 50%, #B8860B 75%, #8B6914 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--pure-black);
+            color: var(--gold-light);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .auth-container {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid var(--gold-deep);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.3);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            background: var(--metallic-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo p {
+            color: var(--gold-medium);
+            font-size: 0.9rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 1rem;
+            background: transparent;
+            border: 2px solid var(--gold-deep);
+            border-radius: 10px;
+            color: var(--gold-medium);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: var(--metallic-gold);
+            color: var(--pure-black);
+            border-color: var(--gold-light);
+        }
+
+        .form-container {
+            display: none;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--gold-light);
+            font-weight: 600;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--gold-deep);
+            border-radius: 10px;
+            color: var(--gold-light);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--gold-light);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        input::placeholder {
+            color: rgba(184, 134, 11, 0.5);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--metallic-gold);
+            color: var(--pure-black);
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .error-message {
+            background: rgba(220, 38, 38, 0.2);
+            border: 2px solid #DC2626;
+            color: #FF6B6B;
+        }
+
+        .success-message {
+            background: rgba(34, 197, 94, 0.2);
+            border: 2px solid #22C55E;
+            color: #4ADE80;
+        }
+
+        .terms-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .terms-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 0.2rem;
+            cursor: pointer;
+        }
+
+        .terms-checkbox label {
+            font-weight: normal;
+            font-size: 0.9rem;
+            color: var(--gold-medium);
+            margin-bottom: 0;
+        }
+
+        .terms-checkbox a {
+            color: var(--gold-light);
+            text-decoration: underline;
+        }
+
+        small {
+            display: block;
+            margin-top: 0.5rem;
+            color: var(--gold-medium);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                padding: 2rem 1.5rem;
+            }
+
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="logo">
+            <h1>TREE OF LIFE AI</h1>
+            <p>Integrative Health Intelligence</p>
+        </div>
+
+        <!-- Messages -->
+        <div id="error-message" class="message error-message"></div>
+        <div id="success-message" class="message success-message"></div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('login')">Login</button>
+            <button class="tab-btn" onclick="showTab('register')">Register</button>
+        </div>
+
+        <!-- Login Form -->
+        <div id="login-form" class="form-container active">
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input 
+                        type="email" 
+                        id="login-email" 
+                        placeholder="your@email.com"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input 
+                        type="password" 
+                        id="login-password" 
+                        placeholder="Your password"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="submit-btn" id="login-btn">
+                    Login
+                </button>
+            </form>
+        </div>
+
+        <!-- Register Form -->
+        <div id="register-form" class="form-container">
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input 
+                        type="email" 
+                        id="register-email" 
+                        placeholder="your@email.com"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input 
+                        type="password" 
+                        id="register-password" 
+                        placeholder="Minimum 8 characters"
+                        minlength="8"
+                        required
+                    >
+                    <small>Minimum 8 characters</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="register-first-name">First Name</label>
+                    <input 
+                        type="text" 
+                        id="register-first-name" 
+                        placeholder="John"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="register-last-name">Last Name</label>
+                    <input 
+                        type="text" 
+                        id="register-last-name" 
+                        placeholder="Doe"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="register-dob">Date of Birth</label>
+                    <input 
+                        type="date" 
+                        id="register-dob" 
+                        required
+                    >
+                    <small>For personalized constitutional recommendations</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="register-sex">Sex</label>
+                    <select id="register-sex" required>
+                        <option value="">Select...</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="register-location">ZIP Code</label>
+                    <input 
+                        type="text" 
+                        id="register-location" 
+                        placeholder="94102"
+                        pattern="[0-9]{5}"
+                        maxlength="5"
+                        required
+                    >
+                    <small>For local practitioner recommendations</small>
+                </div>
+
+                <div class="terms-checkbox">
+                    <input 
+                        type="checkbox" 
+                        id="terms-accepted" 
+                        required
+                    >
+                    <label for="terms-accepted">
+                        I agree to the <a href="#" target="_blank">Terms of Service</a> and understand this is educational only, not medical advice
+                    </label>
+                </div>
+
+                <button type="submit" class="submit-btn" id="register-btn">
+                    Create Account
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://treeoflife-vn25.onrender.com';
+
+        function showTab(tab) {
+            console.log('🔄 Switching to tab:', tab);
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update forms
+            document.querySelectorAll('.form-container').forEach(form => {
+                form.classList.remove('active');
+            });
+            document.getElementById(`${tab}-form`).classList.add('active');
+
+            // Hide messages
+            hideMessages();
+        }
+
+        function showError(message) {
+            console.error('❌ Error:', message);
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+            setTimeout(() => errorDiv.classList.remove('show'), 5000);
+        }
+
+        function showSuccess(message) {
+            console.log('✅ Success:', message);
+            const successDiv = document.getElementById('success-message');
+            successDiv.textContent = message;
+            successDiv.classList.add('show');
+            setTimeout(() => successDiv.classList.remove('show'), 5000);
+        }
+
+        function hideMessages() {
+            document.getElementById('error-message').classList.remove('show');
+            document.getElementById('success-message').classList.remove('show');
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const btn = document.getElementById('login-btn');
+
+            console.log('📤 Attempting login for:', email);
+
+            btn.disabled = true;
+            btn.textContent = 'Logging in...';
+
+            try {
+                console.log('🔄 POST /api/auth/login');
+                
+                const response = await fetch(`${API_BASE}/api/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                console.log('Response status:', response.status);
+                
+                const data = await response.json();
+                console.log('Response data:', data);
+
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Login failed');
+                }
+
+                // Store token with correct key name
+                const token = data.access_token || data.token;
+                console.log('💾 Saving token to localStorage as "authToken"');
+                localStorage.setItem('authToken', token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                
+                // Verify it was saved
+                const savedToken = localStorage.getItem('authToken');
+                console.log('✅ Token saved successfully:', !!savedToken);
+
+                showSuccess('Login successful! Redirecting...');
+                
+                console.log('🔄 Redirecting to index.html in 1 second...');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+
+            } catch (error) {
+                console.error('❌ Login error:', error);
+                showError(error.message);
+                btn.disabled = false;
+                btn.textContent = 'Login';
+            }
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const firstName = document.getElementById('register-first-name').value;
+            const lastName = document.getElementById('register-last-name').value;
+            const dateOfBirth = document.getElementById('register-dob').value;
+            const sex = document.getElementById('register-sex').value;
+            const location = document.getElementById('register-location').value;
+            const termsAccepted = document.getElementById('terms-accepted').checked;
+            const btn = document.getElementById('register-btn');
+
+            console.log('📤 Attempting registration for:', email);
+
+            if (!termsAccepted) {
+                showError('You must accept the terms of service');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Creating account...';
+
+            try {
+                console.log('🔄 POST /api/auth/register');
+                
+                const response = await fetch(`${API_BASE}/api/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email,
+                        password,
+                        first_name: firstName,
+                        last_name: lastName,
+                        date_of_birth: dateOfBirth,
+                        sex,
+                        location,
+                        terms_accepted: termsAccepted
+                    })
+                });
+
+                console.log('Response status:', response.status);
+                
+                const data = await response.json();
+                console.log('Response data:', data);
+
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Registration failed');
+                }
+
+                // Store token with correct key name
+                const token = data.access_token || data.token;
+                console.log('💾 Saving token to localStorage as "authToken"');
+                localStorage.setItem('authToken', token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                
+                // Verify it was saved
+                const savedToken = localStorage.getItem('authToken');
+                console.log('✅ Token saved successfully:', !!savedToken);
+
+                showSuccess('Account created! Redirecting...');
+                
+                console.log('🔄 Redirecting to index.html in 1 second...');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+
+            } catch (error) {
+                console.error('❌ Registration error:', error);
+                showError(error.message);
+                btn.disabled = false;
+                btn.textContent = 'Create Account';
+            }
+        }
+
+        // Check if already logged in
+        window.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('authToken');
+            console.log('🌿 Auth page loaded');
+            console.log('Existing authToken:', !!token);
+            
+            if (token) {
+                console.log('✅ Already logged in - redirecting to index');
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>

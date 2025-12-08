@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tree of Life AI - Integrative Health Intelligence</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo-container">
+            <h1 class="logo">TREE OF LIFE AI</h1>
+            <p>Integrative Health Intelligence</p>
+        </div>
+        
+        <!-- TRADITION NAVIGATION BUTTONS -->
+        <div class="tradition-nav">
+            <button class="tradition-btn" data-tradition="western">Western Medicine</button>
+            <button class="tradition-btn" data-tradition="ayurveda">Ayurveda</button>
+            <button class="tradition-btn" data-tradition="tcm">Traditional Chinese Medicine</button>
+            <button class="tradition-btn" data-tradition="herbal">Herbal Medicine</button>
+            <button class="tradition-btn" data-tradition="homeopathy">Homeopathy</button>
+            <button class="tradition-btn" data-tradition="naturopathy">Naturopathy</button>
+            <button class="tradition-btn" data-tradition="fitness">Fitness & PT</button>
+            <button class="tradition-btn" data-tradition="eldercare">Elder Care & Law</button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+        <!-- CHAT INTERFACE -->
+        <div class="chat-container">
+            <!-- Messages Display Area -->
+            <div class="chat-messages" id="chat-messages">
+                <!-- Messages will be added here dynamically -->
+            </div>
+
+            <!-- Loading Indicator -->
+            <div class="loading" id="loading">
+                <span>Tree of Life AI is thinking</span>
+                <span class="loading-dots">...</span>
+            </div>
+
+            <!-- Input Area -->
+            <div class="chat-input-container">
+                <textarea 
+                    id="chat-input" 
+                    class="chat-input" 
+                    placeholder="Ask about your health concerns..." 
+                    rows="2"
+                ></textarea>
+                <button class="send-btn" id="send-btn">Send</button>
+            </div>
+        </div>
+
+        <!-- INFORMATION SECTION -->
+        <div class="info-section">
+            <h2>🌿 How Tree of Life AI Works</h2>
+            <p>
+                Tree of Life AI integrates wisdom from multiple medical traditions to provide 
+                comprehensive, personalized health guidance. Select traditions above to focus 
+                on specific perspectives, or let our AI draw from all traditions automatically.
+            </p>
+            <ul>
+                <li><strong>Western Medicine:</strong> Evidence-based medical science</li>
+                <li><strong>Ayurveda:</strong> Ancient Indian holistic healing</li>
+                <li><strong>Traditional Chinese Medicine:</strong> Energy-based Eastern medicine</li>
+                <li><strong>Herbal Medicine:</strong> Plant-based natural remedies</li>
+                <li><strong>Homeopathy:</strong> Natural substance-based healing</li>
+                <li><strong>Naturopathy:</strong> Nature-centered wellness</li>
+                <li><strong>Fitness & PT:</strong> Exercise therapy and physical wellness</li>
+                <li><strong>Elder Care & Law:</strong> Senior health, caregiving, and legal planning</li>
+            </ul>
+        </div>
+
+        <!-- DISCLAIMER SECTION -->
+        <div class="info-section">
+            <h2>⚠️ Important Disclaimer</h2>
+            <p>
+                <strong>Tree of Life AI provides educational information only.</strong> 
+                This is not medical advice, diagnosis, or treatment. Always consult qualified 
+                healthcare professionals for medical decisions. If you're experiencing a medical 
+                emergency, call 911 immediately.
+            </p>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <p>&copy; 2024 Tree of Life AI. Educational purposes only - not medical advice.</p>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script src="app.js"></script>
+</body>
+</html>
