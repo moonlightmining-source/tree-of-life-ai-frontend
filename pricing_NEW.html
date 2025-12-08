@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - Tree of Life Health</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --amber-light: #D4A574;
+            --amber-medium: #C19A6B;
+            --bronze-deep: #B8860B;
+            --bronze-light: #A0826D;
+            --peach-gold: #EEC591;
+            --pure-black: #000;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--pure-black);
+            color: var(--amber-light);
+            line-height: 1.6;
+        }
+
+        .top-header {
+            background: var(--pure-black);
+            border-bottom: 2px solid var(--pure-black);
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .logo-img {
+            height: 195px;
+            width: auto;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            color: var(--amber-light);
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--amber-medium);
+            font-size: 1.2rem;
+            margin-bottom: 50px;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .pricing-card {
+            background: rgba(212, 165, 116, 0.05);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 16px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--amber-light);
+            box-shadow: 0 10px 30px rgba(212, 165, 116, 0.2);
+        }
+
+        .pricing-card.featured {
+            border: 3px solid var(--amber-light);
+            background: linear-gradient(135deg, rgba(212, 165, 116, 0.1), rgba(184, 134, 11, 0.08));
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: 20px;
+            right: -35px;
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+            padding: 8px 50px;
+            transform: rotate(45deg);
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .plan-name {
+            color: var(--amber-light);
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .plan-price {
+            color: var(--amber-light);
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .plan-price span {
+            font-size: 1.2rem;
+            color: var(--amber-medium);
+        }
+
+        .plan-description {
+            color: var(--amber-medium);
+            margin-bottom: 25px;
+            min-height: 50px;
+        }
+
+        .features-list {
+            list-style: none;
+            text-align: left;
+            margin: 25px 0;
+        }
+
+        .features-list li {
+            color: var(--amber-medium);
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            border-bottom: 1px solid var(--pure-black);
+        }
+
+        .features-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--amber-light);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(212, 165, 116, 0.4);
+        }
+
+        .comparison-note {
+            text-align: center;
+            color: var(--amber-medium);
+            margin: 40px 0;
+            padding: 20px;
+            background: rgba(212, 165, 116, 0.05);
+            border-radius: 12px;
+            border: 2px solid var(--pure-black);
+        }
+
+        .footer-nav {
+            background: var(--pure-black);
+            padding: 20px;
+            border-top: 2px solid var(--pure-black);
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .footer-nav a {
+            color: var(--amber-light);
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-nav a:hover {
+            color: var(--peach-gold);
+        }
+
+        @media (max-width: 768px) {
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .logo-img {
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Logo -->
+    <div class="top-header">
+        <a href="index.html">
+            <img src="Images/Tree_of_life_logo_800x800.png" alt="Tree of Life Health" class="logo-img">
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>Simple, Transparent Pricing</h1>
+        <p class="subtitle">Choose the plan that's right for you. No hidden fees. Cancel anytime.</p>
+
+        <div class="pricing-grid">
+            <!-- Free Plan -->
+            <div class="pricing-card">
+                <div class="plan-name">Free</div>
+                <div class="plan-price">$0<span>/month</span></div>
+                <p class="plan-description">Perfect for exploring integrative health</p>
+                
+                <ul class="features-list">
+                    <li>10 AI conversations per month</li>
+                    <li>Basic health profile</li>
+                    <li>Access to health library</li>
+                    <li>Community forum access</li>
+                    <li>Email support</li>
+                </ul>
+                
+                <a href="auth.html" class="cta-button">Get Started Free</a>
+            </div>
+
+            <!-- Premium Plan -->
+            <div class="pricing-card featured">
+                <div class="popular-badge">MOST POPULAR</div>
+                <div class="plan-name">Premium</div>
+                <div class="plan-price">$9.99<span>/month</span></div>
+                <p class="plan-description">Unlimited access to integrative health intelligence</p>
+                
+                <ul class="features-list">
+                    <li><strong>Unlimited AI conversations</strong></li>
+                    <li><strong>Full health profile & personalization</strong></li>
+                    <li><strong>Up to 5 family profiles included</strong></li>
+                    <li>Advanced progress tracking</li>
+                    <li>No advertisements</li>
+                    <li>Voice interaction</li>
+                    <li>Image analysis</li>
+                    <li>Priority support</li>
+                    <li>Export health reports (PDF)</li>
+                    <li>Constitutional assessment</li>
+                </ul>
+                
+                <a href="auth.html" class="cta-button">Start Premium Trial</a>
+            </div>
+
+            <!-- Pro Plan -->
+            <div class="pricing-card">
+                <div class="plan-name">Pro</div>
+                <div class="plan-price">$29.99<span>/month</span></div>
+                <p class="plan-description">For practitioners and power users</p>
+                
+                <ul class="features-list">
+                    <li><strong>Everything in Premium, plus:</strong></li>
+                    <li>Client management dashboard</li>
+                    <li>Create custom protocols</li>
+                    <li>Advanced analytics & insights</li>
+                    <li>Practitioner resources library</li>
+                    <li>Continuing education credits</li>
+                    <li>Early access to new features</li>
+                    <li>White-label options</li>
+                    <li>Dedicated support line</li>
+                </ul>
+                
+                <a href="auth.html" class="cta-button">Go Pro</a>
+            </div>
+        </div>
+
+        <!-- Annual Discount Note -->
+        <div class="comparison-note">
+            <h3 style="color: var(--amber-light); margin-bottom: 15px;">💰 Save with Annual Plans</h3>
+            <p style="font-size: 1.1rem;">
+                <strong>Premium:</strong> $99/year (save 17% - 2 months free!)<br>
+                <strong>Pro:</strong> $299/year (save 17% - 2 months free!)
+            </p>
+        </div>
+
+        <!-- Family Plan Explanation -->
+        <div class="comparison-note">
+            <h3 style="color: var(--amber-light); margin-bottom: 15px;">👨‍👩‍👧‍👦 Family Plans</h3>
+            <p style="font-size: 1.1rem;">
+                <strong>Premium includes up to 5 family profiles at no extra cost!</strong><br>
+                Manage health for your spouse, children, or elderly parents - all under one account.<br>
+                Each profile gets personalized recommendations based on their unique constitution.
+            </p>
+            <p style="margin-top: 15px; color: var(--bronze-light);">
+                <em>Compare: 5 separate Premium accounts would cost $49.95/month!</em>
+            </p>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="comparison-note" style="text-align: left;">
+            <h3 style="color: var(--amber-light); margin-bottom: 20px; text-align: center;">Frequently Asked Questions</h3>
+            
+            <p style="margin: 15px 0;"><strong style="color: var(--amber-light);">Can I cancel anytime?</strong><br>
+            Yes! Cancel anytime with no penalties. You'll continue to have access until the end of your billing period.</p>
+            
+            <p style="margin: 15px 0;"><strong style="color: var(--amber-light);">Is my health data secure?</strong><br>
+            Absolutely. All data is encrypted, HIPAA-compliant, and never sold to third parties.</p>
+            
+            <p style="margin: 15px 0;"><strong style="color: var(--amber-light);">Do you offer a free trial?</strong><br>
+            The Free plan requires no credit card and gives you access to explore our platform.</p>
+            
+            <p style="margin: 15px 0;"><strong style="color: var(--amber-light);">Can I upgrade or downgrade?</strong><br>
+            Yes! Change your plan anytime. Upgrades take effect immediately, downgrades at next billing cycle.</p>
+            
+            <p style="margin: 15px 0;"><strong style="color: var(--amber-light);">Is this medical advice?</strong><br>
+            No. Tree of Life Health provides educational information only. Always consult qualified healthcare providers for medical decisions.</p>
+        </div>
+    </div>
+
+    <!-- Footer Navigation -->
+    <div class="footer-nav">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="auth.html">Login / Sign Up</a>
+    </div>
+</body>
+</html>
