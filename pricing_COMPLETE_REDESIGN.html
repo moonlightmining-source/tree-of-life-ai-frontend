@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - Tree of Life AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --amber-light: #D4A574;
+            --amber-medium: #C19A6B;
+            --bronze-deep: #B8860B;
+            --bronze-light: #A0826D;
+            --peach-gold: #EEC591;
+            --pure-black: #000;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--pure-black);
+            color: var(--amber-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* TOP HEADER - Balanced buttons on both sides of logo */
+        .top-header {
+            background: var(--pure-black);
+            border-bottom: 2px solid var(--pure-black);
+            padding: 20px 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .header-left {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .header-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .logo-img {
+            height: 250px !important;
+            width: auto !important;
+            max-width: none !important;
+            max-height: none !important;
+            object-fit: contain !important;
+            display: block;
+            cursor: pointer;
+        }
+
+        .header-btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(212, 165, 116, 0.3);
+            white-space: nowrap;
+        }
+
+        .header-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.5);
+        }
+
+        /* CONTENT */
+        .content-wrapper {
+            flex: 1;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: var(--amber-light);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.3rem;
+            color: var(--amber-medium);
+            margin-bottom: 3rem;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .pricing-card {
+            background: rgba(212, 165, 116, 0.05);
+            border: 3px solid var(--bronze-deep);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(212, 165, 116, 0.4);
+            border-color: var(--amber-light);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--amber-light);
+            box-shadow: 0 5px 20px rgba(212, 165, 116, 0.3);
+            position: relative;
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .plan-name {
+            font-size: 2rem;
+            color: var(--amber-light);
+            margin-bottom: 1rem;
+        }
+
+        .plan-price {
+            font-size: 3rem;
+            color: var(--amber-light);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-price small {
+            font-size: 1.2rem;
+            color: var(--bronze-light);
+            font-weight: 400;
+        }
+
+        .plan-description {
+            color: var(--amber-medium);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 2rem;
+            flex: 1;
+        }
+
+        .plan-features li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(212, 165, 116, 0.1);
+            color: var(--amber-light);
+        }
+
+        .plan-features li:before {
+            content: "✓ ";
+            color: var(--bronze-deep);
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+
+        .plan-cta {
+            padding: 1.25rem;
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.3);
+        }
+
+        .plan-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(212, 165, 116, 0.5);
+        }
+
+        .faq-section {
+            margin-top: 4rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .faq-section h2 {
+            font-size: 2.5rem;
+            color: var(--amber-light);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .faq-item {
+            background: rgba(212, 165, 116, 0.05);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .faq-item h3 {
+            color: var(--amber-light);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .faq-item p {
+            color: var(--amber-medium);
+            line-height: 1.8;
+        }
+
+        .footer {
+            background: var(--pure-black);
+            border-top: 2px solid var(--pure-black);
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+
+        .footer-info {
+            font-size: 0.75rem;
+            color: var(--bronze-light);
+        }
+
+        @media (max-width: 768px) {
+            .top-header {
+                flex-direction: column;
+                padding: 15px 1rem;
+                gap: 1rem;
+            }
+
+            .header-left, .header-right {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .logo-img {
+                height: 180px !important;
+            }
+
+            .header-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NEW BALANCED HEADER -->
+    <div class="top-header">
+        <div class="header-left">
+            <button class="header-btn" onclick="window.location.href='about.html'">About</button>
+            <button class="header-btn" onclick="window.location.href='pricing.html'">Pricing</button>
+            <button class="header-btn" onclick="window.location.href='resources.html'">Resources</button>
+        </div>
+        
+        <div class="header-center">
+            <img src="Images/Tree_of_life_logo_800x800.png" alt="Tree of Life AI" class="logo-img" onclick="window.location.href='index.html'">
+        </div>
+        
+        <div class="header-right">
+            <button class="header-btn" onclick="window.location.href='privacy.html'">Privacy</button>
+            <button class="header-btn" onclick="window.location.href='terms.html'">Terms</button>
+            <button class="header-btn" onclick="window.location.href='auth.html'">Login</button>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <h1>Choose Your Plan</h1>
+        <p class="subtitle">Integrative health intelligence for everyone</p>
+
+        <div class="pricing-grid">
+            <!-- FREE TIER -->
+            <div class="pricing-card">
+                <div class="plan-name">Free</div>
+                <div class="plan-price">
+                    $0
+                    <small>/month</small>
+                </div>
+                <p class="plan-description">Perfect for exploring integrative health perspectives</p>
+                <ul class="plan-features">
+                    <li>10 AI conversations per month</li>
+                    <li>Basic health profile</li>
+                    <li>Access to health library</li>
+                    <li>All 11 medical traditions</li>
+                    <li>Community forum access</li>
+                </ul>
+                <button class="plan-cta" onclick="window.location.href='auth.html'">Get Started Free</button>
+            </div>
+
+            <!-- PREMIUM TIER (FEATURED) -->
+            <div class="pricing-card featured">
+                <span class="featured-badge">Most Popular</span>
+                <div class="plan-name">Premium Family Plan</div>
+                <div class="plan-price">
+                    $9.99
+                    <small>/month</small>
+                </div>
+                <p class="plan-description">Unlimited access for you and your family (up to 5 profiles)</p>
+                <ul class="plan-features">
+                    <li>Unlimited AI conversations</li>
+                    <li>Full health profiles (up to 5 family members)</li>
+                    <li>Constitutional personalization</li>
+                    <li>Progress tracking & analytics</li>
+                    <li>Voice interaction</li>
+                    <li>Image analysis</li>
+                    <li>Priority support</li>
+                    <li>Export health reports</li>
+                    <li>Ad-free experience</li>
+                    <li>Family health management</li>
+                </ul>
+                <button class="plan-cta" onclick="window.location.href='auth.html'">Start Premium</button>
+            </div>
+
+            <!-- PRO TIER -->
+            <div class="pricing-card">
+                <div class="plan-name">Pro</div>
+                <div class="plan-price">
+                    $29.99
+                    <small>/month</small>
+                </div>
+                <p class="plan-description">For practitioners, coaches, and wellness professionals</p>
+                <ul class="plan-features">
+                    <li>Everything in Premium Family</li>
+                    <li>Client management dashboard</li>
+                    <li>Custom protocol creation</li>
+                    <li>Advanced analytics & insights</li>
+                    <li>Practitioner resources library</li>
+                    <li>Continuing education credits</li>
+                    <li>Early access to new features</li>
+                    <li>White-label options (coming soon)</li>
+                    <li>API access (coming soon)</li>
+                </ul>
+                <button class="plan-cta" onclick="window.location.href='auth.html'">Go Pro</button>
+            </div>
+        </div>
+
+        <div class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="faq-item">
+                <h3>What is the Premium Family Plan?</h3>
+                <p>Our Premium subscription includes up to 5 separate health profiles under one account. Perfect for managing your own health plus family members (spouse, children, elderly parents). Each profile has its own health history, constitutional assessment, and personalized recommendations - all for $9.99/month total.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Can I cancel anytime?</h3>
+                <p>Yes! All subscriptions are month-to-month with no long-term commitment. Cancel anytime from your account settings.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Is this medical advice?</h3>
+                <p>No. Tree of Life AI provides educational information only. It is not a substitute for professional medical advice, diagnosis, or treatment. Always consult qualified healthcare professionals for medical decisions.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>What payment methods do you accept?</h3>
+                <p>We accept all major credit cards (Visa, Mastercard, American Express, Discover) through our secure payment processor, Stripe.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Do you offer refunds?</h3>
+                <p>Yes! If you're not satisfied within the first 30 days, contact us for a full refund, no questions asked.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>How is Pro different from Premium?</h3>
+                <p>Pro is designed for health practitioners, coaches, and wellness professionals who work with clients. It includes client management tools, custom protocol creation, and professional resources. Premium is perfect for personal and family health management.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Can I upgrade or downgrade?</h3>
+                <p>Absolutely! You can change plans anytime. Upgrades take effect immediately, and downgrades take effect at the next billing cycle.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Is my health data secure?</h3>
+                <p>Yes. We use bank-level encryption, HIPAA-compliant infrastructure, and never sell your personal health information. See our <a href="privacy.html" style="color: var(--amber-light);">Privacy Policy</a> for details.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-info">
+            © 2024 Tree of Life AI • Educational information only • Not medical advice • Always consult qualified healthcare professionals
+        </div>
+    </div>
+</body>
+</html>
