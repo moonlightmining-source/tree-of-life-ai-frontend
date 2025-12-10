@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Profile - Tree of Life AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --amber-light: #D4A574;
+            --bronze-deep: #B8860B;
+            --peach-gold: #EEC591;
+            --pure-black: #000;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--pure-black);
+            color: var(--amber-light);
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        .top-header {
+            background: var(--pure-black);
+            border-bottom: 2px solid var(--bronze-deep);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .header-left {
+            flex: 1;
+        }
+
+        .header-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header-right {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .logo-img {
+            height: 300px;
+            width: auto;
+            cursor: pointer;
+        }
+
+        .header-btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .header-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--amber-light), var(--peach-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--bronze-deep);
+            margin-bottom: 2rem;
+        }
+
+        /* FORM SECTIONS */
+        .form-section {
+            background: rgba(212, 165, 116, 0.1);
+            border: 1px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--peach-gold);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            color: var(--amber-light);
+            font-weight: 500;
+        }
+
+        input, select, textarea {
+            padding: 0.75rem;
+            background: rgba(212, 165, 116, 0.1);
+            border: 1px solid var(--bronze-deep);
+            border-radius: 8px;
+            color: var(--amber-light);
+            font-size: 1rem;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: var(--bronze-deep);
+            opacity: 0.5;
+        }
+
+        /* CHECKBOX GROUPS */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        /* BUTTONS */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+        }
+
+        .btn-secondary {
+            background: rgba(212, 165, 116, 0.2);
+            color: var(--amber-light);
+            border: 1px solid var(--bronze-deep);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.5);
+        }
+
+        /* SUCCESS MESSAGE */
+        .success-message {
+            display: none;
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4CAF50;
+            color: #4CAF50;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .success-message.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .logo-img {
+                height: 180px !important;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <div class="top-header">
+        <div class="header-left"></div>
+        <div class="header-center">
+            <img src="Images/Tree_of_life_logo_800x800.png" alt="Tree of Life AI" class="logo-img" onclick="window.location.href='index.html'">
+        </div>
+        <div class="header-right">
+            <button class="header-btn" onclick="window.location.href='index.html'">← Back to Chat</button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <h1>🌿 Health Profile</h1>
+        <p class="subtitle">Create your comprehensive health profile for personalized guidance across 11 medical traditions</p>
+
+        <div id="successMessage" class="success-message">
+            ✓ Profile saved successfully!
+        </div>
+
+        <form id="healthProfileForm">
+            <!-- BASIC INFO -->
+            <div class="form-section">
+                <div class="section-title">📋 Basic Information</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input type="number" id="age" min="1" max="120" placeholder="Your age">
+                    </div>
+                    <div class="form-group">
+                        <label>Biological Sex</label>
+                        <select id="sex">
+                            <option value="">Select...</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="intersex">Intersex</option>
+                            <option value="prefer_not_to_say">Prefer not to say</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Location</label>
+                        <input type="text" id="location" placeholder="City, State/Country">
+                    </div>
+                </div>
+            </div>
+
+            <!-- MEDICAL HISTORY -->
+            <div class="form-section">
+                <div class="section-title">🏥 Medical History</div>
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label>Current Conditions</label>
+                        <textarea id="current_conditions" placeholder="List any current health conditions (e.g., diabetes, hypertension, anxiety)"></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Current Medications & Supplements</label>
+                        <textarea id="medications" placeholder="List all medications and supplements you take"></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Allergies</label>
+                        <textarea id="allergies" placeholder="Food allergies, drug allergies, environmental allergies"></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Past Diagnoses & Surgeries</label>
+                        <textarea id="past_diagnoses" placeholder="Significant past health issues and surgeries"></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Family Health History</label>
+                        <textarea id="family_history" placeholder="Notable health conditions in your family"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONSTITUTIONAL TYPES -->
+            <div class="form-section">
+                <div class="section-title">🧬 Constitutional Types</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Ayurvedic Dosha</label>
+                        <select id="ayurvedic_dosha">
+                            <option value="">Not sure</option>
+                            <option value="vata">Vata (Air & Space)</option>
+                            <option value="pitta">Pitta (Fire & Water)</option>
+                            <option value="kapha">Kapha (Earth & Water)</option>
+                            <option value="vata-pitta">Vata-Pitta</option>
+                            <option value="pitta-kapha">Pitta-Kapha</option>
+                            <option value="vata-kapha">Vata-Kapha</option>
+                            <option value="tridoshic">Tridoshic (balanced)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>TCM Constitution</label>
+                        <select id="tcm_constitution">
+                            <option value="">Not sure</option>
+                            <option value="balanced">Balanced (Ping He)</option>
+                            <option value="qi_deficiency">Qi Deficiency</option>
+                            <option value="yang_deficiency">Yang Deficiency</option>
+                            <option value="yin_deficiency">Yin Deficiency</option>
+                            <option value="phlegm_dampness">Phlegm-Dampness</option>
+                            <option value="damp_heat">Damp-Heat</option>
+                            <option value="blood_stasis">Blood Stasis</option>
+                            <option value="qi_stagnation">Qi Stagnation</option>
+                            <option value="special_constitution">Special Constitution</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Body Type</label>
+                        <select id="body_type">
+                            <option value="">Select...</option>
+                            <option value="ectomorph">Ectomorph (lean, fast metabolism)</option>
+                            <option value="mesomorph">Mesomorph (muscular, athletic)</option>
+                            <option value="endomorph">Endomorph (broader, slower metabolism)</option>
+                            <option value="mixed">Mixed type</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LIFESTYLE -->
+            <div class="form-section">
+                <div class="section-title">🏃 Lifestyle</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Diet Type</label>
+                        <select id="diet_type">
+                            <option value="">Select...</option>
+                            <option value="omnivore">Omnivore</option>
+                            <option value="vegetarian">Vegetarian</option>
+                            <option value="vegan">Vegan</option>
+                            <option value="pescatarian">Pescatarian</option>
+                            <option value="keto">Ketogenic</option>
+                            <option value="paleo">Paleo</option>
+                            <option value="mediterranean">Mediterranean</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Exercise Frequency</label>
+                        <select id="exercise_frequency">
+                            <option value="">Select...</option>
+                            <option value="sedentary">Sedentary (little to no exercise)</option>
+                            <option value="light">Light (1-2 times/week)</option>
+                            <option value="moderate">Moderate (3-4 times/week)</option>
+                            <option value="active">Active (5-6 times/week)</option>
+                            <option value="very_active">Very Active (daily)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Sleep Hours (avg per night)</label>
+                        <input type="number" id="sleep_hours" step="0.5" min="0" max="24" placeholder="7.5">
+                    </div>
+                    <div class="form-group">
+                        <label>Sleep Quality</label>
+                        <select id="sleep_quality">
+                            <option value="">Select...</option>
+                            <option value="excellent">Excellent</option>
+                            <option value="good">Good</option>
+                            <option value="fair">Fair</option>
+                            <option value="poor">Poor</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Stress Level (1-10)</label>
+                        <input type="number" id="stress_level" min="1" max="10" placeholder="5">
+                    </div>
+                    <div class="form-group">
+                        <label>Occupation</label>
+                        <input type="text" id="occupation" placeholder="Your profession">
+                    </div>
+                </div>
+            </div>
+
+            <!-- PREFERENCES -->
+            <div class="form-section">
+                <div class="section-title">💚 Health Preferences</div>
+                <div class="form-group full-width">
+                    <label>Preferred Medical Traditions (check all that interest you)</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pref_western" value="western">
+                            <label for="pref_western">Western Medicine</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pref_ayurveda" value="ayurveda">
+                            <label for="pref_ayurveda">Ayurveda</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pref_tcm" value="tcm">
+                            <label for="pref_tcm">TCM</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pref_herbal" value="herbal">
+                            <label for="pref_herbal">Herbal Medicine</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pref_homeopathy" value="homeopathy">
+                            <label for="pref_homeopathy">Homeopathy</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pref_chiropractic" value="chiropractic">
+                            <label for="pref_chiropractic">Chiropractic</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pref_nutrition" value="nutrition">
+                            <label for="pref_nutrition">Clinical Nutrition</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pref_vibrational" value="vibrational">
+                            <label for="pref_vibrational">Vibrational Healing</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pref_fitness" value="fitness">
+                            <label for="pref_fitness">Fitness & PT</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pref_eldercare" value="eldercare">
+                            <label for="pref_eldercare">Elder Care</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pref_consciousness" value="consciousness">
+                            <label for="pref_consciousness">Consciousness Mapping</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group full-width">
+                    <label>Treatment Philosophy</label>
+                    <textarea id="treatment_philosophy" placeholder="Describe your approach to health and wellness (e.g., prefer natural remedies, open to all approaches, etc.)"></textarea>
+                </div>
+                <div class="form-group full-width">
+                    <label>Health Goals</label>
+                    <textarea id="health_goals" placeholder="What are your main health and wellness goals?"></textarea>
+                </div>
+                <div class="form-group full-width">
+                    <label>Specific Concerns</label>
+                    <textarea id="concerns" placeholder="Any specific health concerns you'd like to address?"></textarea>
+                </div>
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="button-group">
+                <button type="button" class="btn btn-secondary" onclick="window.location.href='index.html'">Cancel</button>
+                <button type="submit" class="btn btn-primary">💾 Save Profile</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const API_BASE = 'https://treeoflifeai.onrender.com';
+        
+        // Check auth
+        const authToken = localStorage.getItem('authToken');
+        if (!authToken) {
+            window.location.href = 'auth.html';
+        }
+
+        // Load existing profile
+        loadProfile();
+
+        async function loadProfile() {
+            try {
+                const response = await fetch(`${API_BASE}/api/health-profile`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                const data = await response.json();
+                
+                if (data.success && data.data.profile) {
+                    fillForm(data.data.profile);
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        function fillForm(profile) {
+            // Basic info
+            if (profile.age) document.getElementById('age').value = profile.age;
+            if (profile.sex) document.getElementById('sex').value = profile.sex;
+            if (profile.location) document.getElementById('location').value = profile.location;
+
+            // Medical history
+            if (profile.current_conditions) {
+                document.getElementById('current_conditions').value = Array.isArray(profile.current_conditions) 
+                    ? profile.current_conditions.join(', ') 
+                    : profile.current_conditions;
+            }
+            if (profile.medications) {
+                document.getElementById('medications').value = Array.isArray(profile.medications)
+                    ? profile.medications.join(', ')
+                    : profile.medications;
+            }
+            if (profile.allergies) {
+                document.getElementById('allergies').value = Array.isArray(profile.allergies)
+                    ? profile.allergies.join(', ')
+                    : profile.allergies;
+            }
+            if (profile.past_diagnoses) {
+                document.getElementById('past_diagnoses').value = Array.isArray(profile.past_diagnoses)
+                    ? profile.past_diagnoses.join(', ')
+                    : profile.past_diagnoses;
+            }
+            if (profile.family_history) {
+                document.getElementById('family_history').value = typeof profile.family_history === 'object'
+                    ? JSON.stringify(profile.family_history)
+                    : profile.family_history;
+            }
+
+            // Constitutional types
+            if (profile.ayurvedic_dosha) document.getElementById('ayurvedic_dosha').value = profile.ayurvedic_dosha;
+            if (profile.tcm_constitution) document.getElementById('tcm_constitution').value = profile.tcm_constitution;
+            if (profile.body_type) document.getElementById('body_type').value = profile.body_type;
+
+            // Lifestyle
+            if (profile.diet_type) document.getElementById('diet_type').value = profile.diet_type;
+            if (profile.exercise_frequency) document.getElementById('exercise_frequency').value = profile.exercise_frequency;
+            if (profile.sleep_hours) document.getElementById('sleep_hours').value = profile.sleep_hours;
+            if (profile.sleep_quality) document.getElementById('sleep_quality').value = profile.sleep_quality;
+            if (profile.stress_level) document.getElementById('stress_level').value = profile.stress_level;
+            if (profile.occupation) document.getElementById('occupation').value = profile.occupation;
+
+            // Preferences
+            if (profile.preferred_traditions && Array.isArray(profile.preferred_traditions)) {
+                profile.preferred_traditions.forEach(tradition => {
+                    const checkbox = document.getElementById(`pref_${tradition}`);
+                    if (checkbox) checkbox.checked = true;
+                });
+            }
+            if (profile.treatment_philosophy) document.getElementById('treatment_philosophy').value = profile.treatment_philosophy;
+            if (profile.health_goals) {
+                document.getElementById('health_goals').value = Array.isArray(profile.health_goals)
+                    ? profile.health_goals.join(', ')
+                    : profile.health_goals;
+            }
+            if (profile.concerns) {
+                document.getElementById('concerns').value = Array.isArray(profile.concerns)
+                    ? profile.concerns.join(', ')
+                    : profile.concerns;
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('healthProfileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Collect preferred traditions
+            const preferred_traditions = [];
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                preferred_traditions.push(cb.value);
+            });
+
+            // Build profile data
+            const profileData = {
+                age: document.getElementById('age').value ? parseInt(document.getElementById('age').value) : null,
+                sex: document.getElementById('sex').value || null,
+                location: document.getElementById('location').value || null,
+                
+                current_conditions: document.getElementById('current_conditions').value.split(',').map(s => s.trim()).filter(Boolean),
+                medications: document.getElementById('medications').value.split(',').map(s => s.trim()).filter(Boolean),
+                allergies: document.getElementById('allergies').value.split(',').map(s => s.trim()).filter(Boolean),
+                past_diagnoses: document.getElementById('past_diagnoses').value.split(',').map(s => s.trim()).filter(Boolean),
+                family_history: document.getElementById('family_history').value || null,
+                
+                ayurvedic_dosha: document.getElementById('ayurvedic_dosha').value || null,
+                tcm_constitution: document.getElementById('tcm_constitution').value || null,
+                body_type: document.getElementById('body_type').value || null,
+                
+                diet_type: document.getElementById('diet_type').value || null,
+                exercise_frequency: document.getElementById('exercise_frequency').value || null,
+                sleep_hours: document.getElementById('sleep_hours').value ? parseFloat(document.getElementById('sleep_hours').value) : null,
+                sleep_quality: document.getElementById('sleep_quality').value || null,
+                stress_level: document.getElementById('stress_level').value ? parseInt(document.getElementById('stress_level').value) : null,
+                occupation: document.getElementById('occupation').value || null,
+                
+                preferred_traditions: preferred_traditions,
+                treatment_philosophy: document.getElementById('treatment_philosophy').value || null,
+                health_goals: document.getElementById('health_goals').value.split(',').map(s => s.trim()).filter(Boolean),
+                concerns: document.getElementById('concerns').value.split(',').map(s => s.trim()).filter(Boolean)
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/api/health-profile`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(profileData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Show success message
+                    const successMsg = document.getElementById('successMessage');
+                    successMsg.classList.add('active');
+                    
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    
+                    // Hide after 3 seconds
+                    setTimeout(() => {
+                        successMsg.classList.remove('active');
+                    }, 3000);
+                } else {
+                    alert('Failed to save profile. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error saving profile:', error);
+                alert('Error saving profile. Please try again.');
+            }
+        });
+
+        console.log('🌿 Health Profile page loaded');
+    </script>
+</body>
+</html>
