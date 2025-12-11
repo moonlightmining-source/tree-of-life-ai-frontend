@@ -1,5 +1,5 @@
 // API Configuration
-const API_URL = 'https://treeoflife-vn25.onrender.com';
+const API_BASE_URL = 'https://treeoflife-vn25.onrender.com';
 let currentConversationId = null;
 let authToken = null;
 
