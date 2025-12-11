@@ -179,7 +179,7 @@ window.sendMessageToAI = sendMessage;
 // Create new conversation
 async function createConversation(initialMessage) {
     try {
-        const response = await fetch(`${API_URL}/api/chat/conversations`, {
+        const response = await fetch(`${API_BASE}/api/chat/conversations`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -229,7 +229,7 @@ async function createConversation(initialMessage) {
 // Send message to existing conversation
 async function sendMessageToConversation(message) {
     try {
-        const response = await fetch(`${API_URL}/api/chat/conversations/${currentConversationId}/messages`, {
+        const response = await fetch(`${API_BASE}/api/chat/conversations/${currentConversationId}/messages`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
