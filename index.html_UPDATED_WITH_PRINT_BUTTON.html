@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tree of Life AI - Integrative Health Intelligence</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-container">
+                    <img src="Images/Tree_of_life_logo_800x800.png" alt="Tree of Life AI Logo" class="logo">
+                    <h1>Tree of Life AI</h1>
+                </div>
+                <nav>
+                    <a href="index.html" class="active">Chat</a>
+                    <a href="chat-history.html">History</a>
+                    <a href="health-profile.html">Profile</a>
+                    <a href="settings.html">Settings</a>
+                    <button onclick="logout()" class="logout-btn">Logout</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="chat-container">
+            <!-- Chat Messages Area -->
+            <div id="chatMessages" class="chat-messages">
+                <!-- Messages will be dynamically inserted here -->
+            </div>
+
+            <!-- Print Button - Below Chat Area, Centered -->
+            <div class="print-button-container">
+                <button id="printChatBtn" class="print-chat-btn" style="display: none;">
+                    🖨️ Print Conversation
+                </button>
+            </div>
+
+            <!-- Input Area -->
+            <div class="chat-input-container">
+                <textarea 
+                    id="userInput" 
+                    placeholder="Ask about your health from multiple medical traditions..."
+                    rows="3"
+                ></textarea>
+                <button id="sendBtn" class="send-btn">
+                    <span>Send</span>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M2 10L18 2L10 18L8 11L2 10Z"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button onclick="startNewConversation()" class="quick-action-btn">
+                    ✨ New Conversation
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p class="disclaimer">
+                ⚠️ <strong>Medical Disclaimer:</strong> Tree of Life AI provides educational information only. 
+                It is not a substitute for professional medical advice, diagnosis, or treatment. 
+                Always consult with qualified healthcare professionals regarding your health.
+            </p>
+            <p>&copy; 2024 Tree of Life AI. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+        function logout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('currentConversationId');
+            localStorage.removeItem('userName');
+            window.location.href = 'auth.html';
+        }
+    </script>
+</body>
+</html>
