@@ -324,8 +324,11 @@
         <!-- EMPTY STATE -->
         <div id="emptyState" class="empty-state" style="display: none;">
             <div class="empty-state-icon">🌿</div>
-            <div class="empty-state-text">No conversations yet</div>
-            <button class="header-btn" onclick="window.location.href='index.html'">Start Your First Conversation</button>
+            <div class="empty-state-text">No conversations found</div>
+            <p style="color: rgba(212, 165, 116, 0.7); font-size: 0.9rem; margin-top: 1rem;">
+                Note: Conversations are temporarily stored. They may be cleared when the server restarts.
+            </p>
+            <button class="header-btn" onclick="window.location.href='index.html'">Start New Conversation</button>
         </div>
     </div>
 
@@ -342,14 +345,15 @@
     </div>
 
     <script>
-        const API_BASE = 'https://treeoflife-vn25.onrender.com';
+        const API_BASE = 'https://treeoflifeai.onrender.com';
         let conversations = [];
         let conversationToDelete = null;
 
         // Check auth
         const authToken = localStorage.getItem('authToken');
         if (!authToken) {
-            window.location.href = 'auth.html';
+            // Redirect to login, remember to come back here
+            window.location.href = 'auth.html?returnTo=chat-history.html';
         }
 
         // Load conversations on page load
@@ -364,10 +368,15 @@
                 });
 
                 const data = await response.json();
+                console.log('📊 Chat history response:', data);
 
                 if (data.success) {
                     conversations = data.data.conversations;
+                    console.log(`💬 Found ${conversations.length} conversations`);
                     displayConversations(conversations);
+                } else {
+                    console.error('❌ API returned error:', data);
+                    document.getElementById('loading').innerHTML = 'Error loading conversations. Please try again.';
                 }
             } catch (error) {
                 console.error('Error loading conversations:', error);
