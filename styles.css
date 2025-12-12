@@ -45,7 +45,7 @@ body {
 
 .header-left {
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
     align-items: center;
 }
 
@@ -116,7 +116,7 @@ body {
     font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
-    margin-top: 1.5rem;
+    margin-top: 2rem;
     margin-bottom: 2rem;
     display: flex;
     align-items: center;
