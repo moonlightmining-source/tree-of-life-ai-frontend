@@ -480,12 +480,13 @@
     </div>
 
     <script>
-        const API_BASE = 'https://treeoflife-vn25.onrender.com';;
+        const API_BASE = 'https://treeoflife-vn25.onrender.com';
         
         // Check auth
         const authToken = localStorage.getItem('authToken');
         if (!authToken) {
-            window.location.href = 'auth.html';
+            // Redirect to login, remember to come back here
+            window.location.href = 'auth.html?returnTo=health-profile.html';
         }
 
         // Load existing profile
