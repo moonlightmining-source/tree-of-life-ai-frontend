@@ -1,0 +1,114 @@
+/* ============================================
+   PRINT BUTTON - ADD TO YOUR EXISTING styles.css
+   ============================================ */
+
+/* Print Button Container - Centered Below Chat Area */
+.print-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 30px;
+    border-top: 1px solid var(--border);
+    background: var(--light-gray);
+}
+
+.print-chat-btn {
+    background: var(--sage-green);
+    color: var(--white);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.print-chat-btn:hover {
+    background: var(--dark-green);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.print-chat-btn:active {
+    transform: translateY(0);
+}
+
+/* Hide print button initially (shown via JS when messages exist) */
+#printChatBtn[style*="display: none"] {
+    display: none !important;
+}
+
+/* ============================================
+   MOBILE RESPONSIVE - ADD TO YOUR EXISTING @media
+   ============================================ */
+@media (max-width: 768px) {
+    .print-button-container {
+        padding: 12px 20px;
+    }
+    
+    .print-chat-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ============================================
+   PRINT-SPECIFIC STYLES
+   ============================================ */
+@media print {
+    /* Hide unnecessary elements when printing */
+    header, 
+    footer, 
+    nav, 
+    .chat-input-container, 
+    .quick-actions, 
+    .print-button-container {
+        display: none !important;
+    }
+    
+    body {
+        background: white;
+    }
+    
+    .chat-container {
+        box-shadow: none;
+    }
+}
+
+/* ============================================
+   INSTRUCTIONS
+   ============================================
+   
+   1. Copy these styles to the END of your existing styles.css file
+   2. Make sure your existing styles.css has these CSS variables defined:
+      - --border
+      - --light-gray
+      - --sage-green
+      - --dark-green
+      - --white
+   
+   3. If you don't have those variables, replace them with:
+      - var(--border) → #E0E0E0
+      - var(--light-gray) → #F5F5F5
+      - var(--sage-green) → #8B9D83
+      - var(--dark-green) → #4A5F4A
+      - var(--white) → #FFFFFF
+      
+   Example without variables:
+   
+   .print-chat-btn {
+       background: #8B9D83;
+       color: #FFFFFF;
+       ...
+   }
+   
+   .print-chat-btn:hover {
+       background: #4A5F4A;
+       ...
+   }
+   
+   ============================================ */
