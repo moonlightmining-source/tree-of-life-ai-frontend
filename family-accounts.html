@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Accounts - Tree of Life AI</title>
+    <style>
+        :root {
+            --amber-light: #FDB71A;
+            --amber-dark: #B8860B;
+            --peach-gold: #EEC591;
+            --pure-black: #000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--pure-black);
+            color: var(--amber-light);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--amber-light), var(--peach-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-btn {
+            padding: 0.75rem 1.5rem;
+            background: rgba(253, 183, 26, 0.1);
+            border: 1px solid var(--amber-dark);
+            color: var(--amber-light);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(253, 183, 26, 0.2);
+        }
+
+        /* Current Profile */
+        .current-profile {
+            background: linear-gradient(135deg, rgba(253, 183, 26, 0.1), rgba(184, 134, 11, 0.1));
+            border: 2px solid var(--amber-dark);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .profile-info h3 {
+            margin-bottom: 0.5rem;
+            color: var(--amber-light);
+        }
+
+        .profile-info p {
+            color: var(--peach-gold);
+        }
+
+        /* Add Member Button */
+        .add-member-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--amber-dark), var(--amber-light));
+            color: var(--pure-black);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-member-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(253, 183, 26, 0.3);
+        }
+
+        .add-member-btn:disabled {
+            background: rgba(253, 183, 26, 0.3);
+            cursor: not-allowed;
+        }
+
+        /* Members Grid */
+        .members-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .member-card {
+            background: rgba(253, 183, 26, 0.05);
+            border: 1px solid rgba(253, 183, 26, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .member-card:hover {
+            border-color: var(--amber-light);
+            transform: translateY(-3px);
+        }
+
+        .member-card.active {
+            border: 2px solid var(--amber-light);
+            background: linear-gradient(135deg, rgba(253, 183, 26, 0.15), rgba(184, 134, 11, 0.15));
+        }
+
+        .active-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--amber-light);
+            color: var(--pure-black);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .member-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--amber-dark), var(--amber-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--pure-black);
+        }
+
+        .member-name {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .member-details {
+            color: var(--peach-gold);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .member-details div {
+            margin: 0.25rem 0;
+        }
+
+        .member-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .btn-switch {
+            background: var(--amber-dark);
+            color: var(--pure-black);
+        }
+
+        .btn-switch:hover {
+            background: var(--amber-light);
+        }
+
+        .btn-edit {
+            background: rgba(253, 183, 26, 0.2);
+            color: var(--amber-light);
+            border: 1px solid var(--amber-dark);
+        }
+
+        .btn-edit:hover {
+            background: rgba(253, 183, 26, 0.3);
+        }
+
+        .btn-delete {
+            background: rgba(220, 38, 38, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(220, 38, 38, 0.5);
+        }
+
+        .btn-delete:hover {
+            background: rgba(220, 38, 38, 0.3);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--pure-black), #1a1a1a);
+            border: 2px solid var(--amber-dark);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h2 {
+            color: var(--amber-light);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--amber-light);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--amber-light);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(253, 183, 26, 0.05);
+            border: 1px solid rgba(253, 183, 26, 0.3);
+            border-radius: 6px;
+            color: var(--amber-light);
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--amber-light);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-primary {
+            flex: 1;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, var(--amber-dark), var(--amber-light));
+            color: var(--pure-black);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            padding: 0.75rem;
+            background: transparent;
+            color: var(--amber-light);
+            border: 1px solid var(--amber-dark);
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            color: #60a5fa;
+        }
+
+        .upgrade-notice {
+            background: rgba(253, 183, 26, 0.1);
+            border: 1px solid var(--amber-dark);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .upgrade-notice h3 {
+            margin-bottom: 0.5rem;
+            color: var(--amber-light);
+        }
+
+        .upgrade-notice p {
+            margin-bottom: 1rem;
+            color: var(--peach-gold);
+        }
+
+        .upgrade-btn {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            background: linear-gradient(135deg, var(--amber-dark), var(--amber-light));
+            color: var(--pure-black);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .members-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Family Accounts</h1>
+            <a href="index.html" class="back-btn">← Back to Chat</a>
+        </div>
+
+        <div class="info-box">
+            <strong>Family Accounts:</strong> Manage health profiles for your entire family. Each member gets personalized guidance based on their unique constitution and health needs.
+        </div>
+
+        <!-- Upgrade Notice (for free users) -->
+        <div id="upgrade-notice" class="upgrade-notice" style="display: none;">
+            <h3>🔒 Unlock Family Accounts</h3>
+            <p>Upgrade to Premium to add up to 5 family member profiles<br>or Pro for up to 10 profiles</p>
+            <a href="subscriptions.html" class="upgrade-btn">Upgrade Now</a>
+        </div>
+
+        <!-- Current Profile -->
+        <div class="current-profile">
+            <div class="profile-info">
+                <h3>Active Profile</h3>
+                <p id="active-profile-name">Loading...</p>
+            </div>
+            <button class="add-member-btn" onclick="openAddMemberModal()" id="add-member-button">
+                + Add Family Member
+            </button>
+        </div>
+
+        <!-- Members Grid -->
+        <div class="members-grid" id="members-grid">
+            <div style="text-align: center; padding: 2rem; color: var(--peach-gold);">
+                Loading family members...
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Member Modal -->
+    <div class="modal" id="member-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Add Family Member</h2>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <form id="member-form" onsubmit="saveMember(event)">
+                <div class="form-group">
+                    <label>Name *</label>
+                    <input type="text" id="member-name" required placeholder="e.g., John Doe">
+                </div>
+                <div class="form-group">
+                    <label>Relationship *</label>
+                    <select id="member-relationship" required>
+                        <option value="">Select relationship</option>
+                        <option value="self">Self (Primary)</option>
+                        <option value="spouse">Spouse/Partner</option>
+                        <option value="child">Child</option>
+                        <option value="parent">Parent</option>
+                        <option value="sibling">Sibling</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Date of Birth *</label>
+                    <input type="date" id="member-dob" required>
+                </div>
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select id="member-gender">
+                        <option value="">Prefer not to say</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="non-binary">Non-binary</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-primary">Save Member</button>
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://treeoflife-vn25.onrender.com';
+        let currentPlan = 'free';
+        let maxProfiles = 1;
+        let familyMembers = [];
+        let editingMemberId = null;
+        let activeProfileId = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            await loadFamilyMembers();
+        });
+
+        // Load family members
+        async function loadFamilyMembers() {
+            try {
+                const token = localStorage.getItem('authToken');
+                
+                // Get subscription info
+                const subResponse = await fetch(`${API_BASE}/api/subscriptions/current`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (subResponse.ok) {
+                    const subData = await subResponse.json();
+                    currentPlan = subData.plan || 'free';
+                    maxProfiles = subData.plan === 'pro' ? 10 : subData.plan === 'premium' ? 5 : 1;
+                }
+
+                // Get family members
+                const response = await fetch(`${API_BASE}/api/family/members`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    familyMembers = data.members || [];
+                    activeProfileId = data.active_profile_id;
+                    
+                    renderFamilyMembers();
+                    updateUI();
+                } else {
+                    throw new Error('Failed to load family members');
+                }
+            } catch (error) {
+                console.error('Error loading family members:', error);
+                document.getElementById('members-grid').innerHTML = 
+                    '<div style="text-align: center; padding: 2rem; color: #ef4444;">Failed to load family members</div>';
+            }
+        }
+
+        // Render family members
+        function renderFamilyMembers() {
+            const grid = document.getElementById('members-grid');
+            
+            if (familyMembers.length === 0) {
+                grid.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--peach-gold);">No family members added yet. Click "Add Family Member" to get started.</div>';
+                return;
+            }
+
+            grid.innerHTML = familyMembers.map(member => `
+                <div class="member-card ${member.id === activeProfileId ? 'active' : ''}">
+                    ${member.id === activeProfileId ? '<span class="active-badge">ACTIVE</span>' : ''}
+                    <div class="member-avatar">${getInitials(member.name)}</div>
+                    <div class="member-name">${member.name}</div>
+                    <div class="member-details">
+                        <div>👤 ${member.relationship || 'Family member'}</div>
+                        <div>🎂 ${calculateAge(member.date_of_birth)} years old</div>
+                        ${member.gender ? `<div>⚧ ${member.gender}</div>` : ''}
+                    </div>
+                    <div class="member-actions">
+                        ${member.id !== activeProfileId ? 
+                            `<button class="btn btn-switch" onclick="switchProfile('${member.id}')">Switch To</button>` : 
+                            '<button class="btn btn-switch" disabled>Active</button>'
+                        }
+                        <button class="btn btn-edit" onclick="editMember('${member.id}')">Edit</button>
+                        ${member.relationship !== 'self' ? 
+                            `<button class="btn btn-delete" onclick="deleteMember('${member.id}')">Delete</button>` : 
+                            ''
+                        }
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update UI based on plan
+        function updateUI() {
+            const addButton = document.getElementById('add-member-button');
+            const upgradeNotice = document.getElementById('upgrade-notice');
+            const activeMember = familyMembers.find(m => m.id === activeProfileId);
+            
+            document.getElementById('active-profile-name').textContent = 
+                activeMember ? activeMember.name : 'No profile selected';
+
+            if (currentPlan === 'free') {
+                upgradeNotice.style.display = 'block';
+                addButton.disabled = true;
+                addButton.textContent = '🔒 Upgrade to Add Family';
+            } else if (familyMembers.length >= maxProfiles) {
+                addButton.disabled = true;
+                addButton.textContent = `Maximum ${maxProfiles} Profiles Reached`;
+            } else {
+                upgradeNotice.style.display = 'none';
+                addButton.disabled = false;
+                addButton.textContent = '+ Add Family Member';
+            }
+        }
+
+        // Open add member modal
+        function openAddMemberModal() {
+            if (currentPlan === 'free') {
+                window.location.href = 'subscriptions.html';
+                return;
+            }
+
+            editingMemberId = null;
+            document.getElementById('modal-title').textContent = 'Add Family Member';
+            document.getElementById('member-form').reset();
+            document.getElementById('member-modal').classList.add('active');
+        }
+
+        // Edit member
+        function editMember(memberId) {
+            const member = familyMembers.find(m => m.id === memberId);
+            if (!member) return;
+
+            editingMemberId = memberId;
+            document.getElementById('modal-title').textContent = 'Edit Family Member';
+            document.getElementById('member-name').value = member.name;
+            document.getElementById('member-relationship').value = member.relationship || '';
+            document.getElementById('member-dob').value = member.date_of_birth;
+            document.getElementById('member-gender').value = member.gender || '';
+            document.getElementById('member-modal').classList.add('active');
+        }
+
+        // Save member
+        async function saveMember(event) {
+            event.preventDefault();
+
+            const memberData = {
+                name: document.getElementById('member-name').value,
+                member_relationship: document.getElementById('member-relationship').value,
+                date_of_birth: document.getElementById('member-dob').value,
+                gender: document.getElementById('member-gender').value
+            };
+
+            try {
+                const token = localStorage.getItem('authToken');
+                const url = editingMemberId 
+                    ? `${API_BASE}/api/family/members/${editingMemberId}`
+                    : `${API_BASE}/api/family/members`;
+                
+                const response = await fetch(url, {
+                    method: editingMemberId ? 'PUT' : 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(memberData)
+                });
+
+                if (response.ok) {
+                    closeModal();
+                    await loadFamilyMembers();
+                } else {
+                    alert('Failed to save family member');
+                }
+            } catch (error) {
+                console.error('Error saving member:', error);
+                alert('Failed to save family member');
+            }
+        }
+
+        // Delete member
+        async function deleteMember(memberId) {
+            if (!confirm('Are you sure you want to delete this family member? This will also delete all their health data.')) {
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await fetch(`${API_BASE}/api/family/members/${memberId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    await loadFamilyMembers();
+                } else {
+                    alert('Failed to delete family member');
+                }
+            } catch (error) {
+                console.error('Error deleting member:', error);
+                alert('Failed to delete family member');
+            }
+        }
+
+        // Switch active profile
+        async function switchProfile(memberId) {
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await fetch(`${API_BASE}/api/family/switch`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ profile_id: memberId })
+                });
+
+                if (response.ok) {
+                    // Reload to update entire app with new profile
+                    window.location.reload();
+                } else {
+                    alert('Failed to switch profile');
+                }
+            } catch (error) {
+                console.error('Error switching profile:', error);
+                alert('Failed to switch profile');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('member-modal').classList.remove('active');
+            document.getElementById('member-form').reset();
+            editingMemberId = null;
+        }
+
+        // Helper functions
+        function getInitials(name) {
+            return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        }
+
+        function calculateAge(dob) {
+            const birthDate = new Date(dob);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age;
+        }
+    </script>
+</body>
+</html>
