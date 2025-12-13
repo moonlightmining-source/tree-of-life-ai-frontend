@@ -450,7 +450,7 @@
                 const token = localStorage.getItem('authToken');
                 
                 // Get current subscription
-                const response = await fetch(`${API_BASE}/api/subscriptions/current`, {
+               const response = await fetch(`${API_BASE}/api/subscription/status`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -570,7 +570,7 @@
                     }
                 } else {
                     // Upgrade - redirect to Stripe checkout
-                    const response = await fetch(`${API_BASE}/api/subscriptions/checkout`, {
+                    const response = await fetch(`${API_BASE}/api/subscription/create-checkout`, {
                         method: 'POST',
                         headers: {
                             'Authorization': `Bearer ${token}`,
