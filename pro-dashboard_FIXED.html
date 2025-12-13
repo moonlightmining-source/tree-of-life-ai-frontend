@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Dashboard - Tree of Life AI</title>
+    <style>
+        :root {
+            --amber-light: #FDB71A;
+            --amber-dark: #B8860B;
+            --peach-gold: #EEC591;
+            --pure-black: #000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--pure-black);
+            color: var(--amber-light);
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: linear-gradient(180deg, var(--pure-black), #0a0a0a);
+            border-right: 1px solid rgba(253, 183, 26, 0.2);
+            padding: 2rem 1rem;
+            overflow-y: auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--amber-light), var(--peach-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: var(--peach-gold);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(253, 183, 26, 0.1);
+            color: var(--amber-light);
+        }
+
+        .nav-link .icon {
+            margin-right: 0.75rem;
+            font-size: 1.2rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--amber-light), var(--peach-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user-badge {
+            padding: 0.5rem 1rem;
+            background: rgba(253, 183, 26, 0.1);
+            border: 1px solid var(--amber-dark);
+            border-radius: 8px;
+            color: var(--amber-light);
+            font-weight: bold;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(253, 183, 26, 0.05), rgba(184, 134, 11, 0.05));
+            border: 1px solid rgba(253, 183, 26, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--amber-light);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--peach-gold);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--amber-light);
+        }
+
+        .stat-change {
+            font-size: 0.8rem;
+            color: #22c55e;
+        }
+
+        /* Content Sections */
+        .section {
+            background: rgba(253, 183, 26, 0.03);
+            border: 1px solid rgba(253, 183, 26, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--amber-light);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--amber-dark), var(--amber-light));
+            color: var(--pure-black);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(253, 183, 26, 0.3);
+        }
+
+        /* Table */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            text-align: left;
+            padding: 1rem;
+            background: rgba(253, 183, 26, 0.1);
+            color: var(--amber-light);
+            border-bottom: 2px solid rgba(253, 183, 26, 0.3);
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(253, 183, 26, 0.1);
+            color: var(--peach-gold);
+        }
+
+        .table tr:hover {
+            background: rgba(253, 183, 26, 0.05);
+        }
+
+        /* Protocol Cards */
+        .protocols-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .protocol-card {
+            background: rgba(253, 183, 26, 0.05);
+            border: 1px solid rgba(253, 183, 26, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .protocol-card:hover {
+            border-color: var(--amber-light);
+            transform: translateY(-3px);
+        }
+
+        .protocol-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .protocol-title {
+            font-size: 1.2rem;
+            color: var(--amber-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .protocol-tag {
+            padding: 0.25rem 0.75rem;
+            background: rgba(253, 183, 26, 0.2);
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .protocol-description {
+            color: var(--peach-gold);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .protocol-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            background: var(--amber-dark);
+            color: var(--pure-black);
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .btn-small:hover {
+            background: var(--amber-light);
+        }
+
+        /* Upgrade Notice */
+        .upgrade-notice {
+            background: rgba(253, 183, 26, 0.1);
+            border: 2px solid var(--amber-dark);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .upgrade-notice h2 {
+            margin-bottom: 1rem;
+            color: var(--amber-light);
+        }
+
+        .upgrade-notice p {
+            margin-bottom: 1.5rem;
+            color: var(--peach-gold);
+        }
+
+        /* Chart Placeholder */
+        .chart-placeholder {
+            height: 300px;
+            background: rgba(253, 183, 26, 0.05);
+            border: 1px dashed rgba(253, 183, 26, 0.3);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--peach-gold);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">🌳 Tree of Life Pro</div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="#" class="nav-link active" onclick="showSection('dashboard')">
+                    <span class="icon">📊</span>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" onclick="showSection('clients')">
+                    <span class="icon">👥</span>
+                    Clients
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" onclick="showSection('protocols')">
+                    <span class="icon">📋</span>
+                    Protocols
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" onclick="showSection('analytics')">
+                    <span class="icon">📈</span>
+                    Analytics
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" onclick="showSection('resources')">
+                    <span class="icon">📚</span>
+                    Resources
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="index.html" class="nav-link">
+                    <span class="icon">💬</span>
+                    AI Chat
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="subscriptions.html" class="nav-link">
+                    <span class="icon">⚙️</span>
+                    Settings
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Upgrade Notice (for non-Pro users) -->
+        <div id="upgrade-notice" class="upgrade-notice" style="display: none;">
+            <h2>🔒 Unlock Pro Features</h2>
+            <p>Upgrade to Pro to access client management, custom protocols, advanced analytics, and more!</p>
+            <a href="subscriptions.html" class="btn">Upgrade to Pro - $29.99/month</a>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard-section" class="content-section">
+            <div class="header">
+                <h1>Pro Dashboard</h1>
+                <div class="user-badge">👤 <span id="user-name">Loading...</span></div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-label">Active Clients</div>
+                    <div class="stat-value" id="client-count">0</div>
+                    <div class="stat-change">+3 this month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📋</div>
+                    <div class="stat-label">Custom Protocols</div>
+                    <div class="stat-value" id="protocol-count">0</div>
+                    <div class="stat-change">5 active</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💬</div>
+                    <div class="stat-label">Consultations</div>
+                    <div class="stat-value" id="consultation-count">0</div>
+                    <div class="stat-change">+12 this week</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-label">Success Rate</div>
+                    <div class="stat-value">94%</div>
+                    <div class="stat-change">Client satisfaction</div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Client Activity</h2>
+                    <button class="btn" onclick="showSection('clients')">View All</button>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Client</th>
+                            <th>Last Active</th>
+                            <th>Protocol</th>
+                            <th>Progress</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-activity">
+                        <tr>
+                            <td colspan="4" style="text-align: center;">No recent activity</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Clients Section -->
+        <div id="clients-section" class="content-section" style="display: none;">
+            <div class="header">
+                <h1>Client Management</h1>
+                <button class="btn" onclick="addClient()">+ Add Client</button>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Your Clients</h2>
+                    <input type="text" placeholder="Search clients..." style="padding: 0.5rem; border-radius: 6px; background: rgba(253,183,26,0.1); border: 1px solid rgba(253,183,26,0.3); color: var(--amber-light);">
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Constitution</th>
+                            <th>Active Protocol</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clients-table">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 2rem;">No clients added yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Protocols Section -->
+        <div id="protocols-section" class="content-section" style="display: none;">
+            <div class="header">
+                <h1>Custom Protocols</h1>
+                <button class="btn" onclick="createProtocol()">+ Create Protocol</button>
+            </div>
+
+            <div class="protocols-grid" id="protocols-grid">
+                <div class="protocol-card">
+                    <div class="protocol-header">
+                        <div>
+                            <div class="protocol-title">Sleep Optimization</div>
+                            <div class="protocol-tag">Ayurveda + TCM</div>
+                        </div>
+                    </div>
+                    <div class="protocol-description">
+                        6-week protocol combining Ayurvedic herbs and TCM acupressure for improved sleep quality
+                    </div>
+                    <div class="protocol-actions">
+                        <button class="btn-small">Edit</button>
+                        <button class="btn-small">Assign</button>
+                    </div>
+                </div>
+                <!-- More protocol cards will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Analytics Section -->
+        <div id="analytics-section" class="content-section" style="display: none;">
+            <div class="header">
+                <h1>Analytics & Insights</h1>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Client Retention</div>
+                    <div class="stat-value">92%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg Protocol Completion</div>
+                    <div class="stat-value">78%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Client Satisfaction</div>
+                    <div class="stat-value">4.8/5</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Client Progress Over Time</h2>
+                <div class="chart-placeholder">
+                    📊 Chart visualization coming soon
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Most Effective Protocols</h2>
+                <div class="chart-placeholder">
+                    📈 Analytics visualization coming soon
+                </div>
+            </div>
+        </div>
+
+        <!-- Resources Section -->
+        <div id="resources-section" class="content-section" style="display: none;">
+            <div class="header">
+                <h1>Practitioner Resources</h1>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">📚 Resource Library</h2>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 1rem; border-bottom: 1px solid rgba(253,183,26,0.1);">
+                        <strong>Ayurvedic Protocols Database</strong> - 200+ traditional protocols
+                    </li>
+                    <li style="padding: 1rem; border-bottom: 1px solid rgba(253,183,26,0.1);">
+                        <strong>TCM Point Reference</strong> - Complete acupressure guide
+                    </li>
+                    <li style="padding: 1rem; border-bottom: 1px solid rgba(253,183,26,0.1);">
+                        <strong>Herb Interaction Checker</strong> - Drug-herb interaction database
+                    </li>
+                    <li style="padding: 1rem; border-bottom: 1px solid rgba(253,183,26,0.1);">
+                        <strong>Continuing Education</strong> - Earn CE credits (coming soon)
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://treeoflife-vn25.onrender.com';
+        let currentPlan = 'free';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('authToken');
+            const userName = localStorage.getItem('userName');
+            
+            if (!token) {
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            document.getElementById('user-name').textContent = userName || 'User';
+
+            // Check subscription
+            await checkSubscription();
+        });
+
+        // Check if user has Pro subscription
+        async function checkSubscription() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await fetch(`${API_BASE}/api/subscription/status`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    currentPlan = data.plan || 'free';
+
+                    if (currentPlan !== 'pro') {
+                        // Show upgrade notice
+                        document.getElementById('upgrade-notice').style.display = 'block';
+                        // Disable pro features
+                        document.querySelectorAll('.btn').forEach(btn => {
+                            if (!btn.textContent.includes('Upgrade')) {
+                                btn.disabled = true;
+                                btn.style.opacity = '0.5';
+                            }
+                        });
+                    } else {
+                        // Load pro dashboard data
+                        loadDashboardData();
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking subscription:', error);
+            }
+        }
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await fetch(`${API_BASE}/api/pro/dashboard`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    // Update stats
+                    document.getElementById('client-count').textContent = data.client_count || 0;
+                    document.getElementById('protocol-count').textContent = data.protocol_count || 0;
+                    document.getElementById('consultation-count').textContent = data.consultation_count || 0;
+                }
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        // Show section
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.style.display = 'none';
+            });
+
+            // Remove active class from all nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(`${sectionName}-section`).style.display = 'block';
+
+            // Add active class to clicked nav link
+            event.target.closest('.nav-link').classList.add('active');
+        }
+
+        // Placeholder functions
+        function addClient() {
+            if (currentPlan !== 'pro') {
+                window.location.href = 'subscriptions.html';
+                return;
+            }
+            alert('Client management coming soon!');
+        }
+
+        function createProtocol() {
+            if (currentPlan !== 'pro') {
+                window.location.href = 'subscriptions.html';
+                return;
+            }
+            alert('Protocol creator coming soon!');
+        }
+    </script>
+</body>
+</html>
