@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Tree of Life AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --amber-light: #D4A574;
+            --bronze-deep: #B8860B;
+            --peach-gold: #EEC591;
+            --pure-black: #000;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--pure-black);
+            color: var(--amber-light);
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        .top-header {
+            background: var(--pure-black);
+            border-bottom: 2px solid var(--bronze-deep);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .header-left {
+            flex: 1;
+        }
+
+        .header-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header-right {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .logo-img {
+            height: 300px;
+            width: auto;
+            cursor: pointer;
+        }
+
+        .header-btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .header-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--amber-light), var(--peach-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--bronze-deep);
+            margin-bottom: 2rem;
+        }
+
+        /* SETTINGS SECTIONS */
+        .settings-section {
+            background: rgba(212, 165, 116, 0.1);
+            border: 1px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--peach-gold);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(184, 134, 11, 0.3);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-label {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .setting-description {
+            font-size: 0.9rem;
+            color: var(--bronze-deep);
+        }
+
+        .setting-value {
+            color: var(--peach-gold);
+            font-weight: 500;
+        }
+
+        /* SUBSCRIPTION CARD */
+        .subscription-card {
+            background: linear-gradient(135deg, rgba(212, 165, 116, 0.2), rgba(184, 134, 11, 0.2));
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tier-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .features-list li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .features-list li::before {
+            content: "✓";
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        /* TOGGLE SWITCH */
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: rgba(184, 134, 11, 0.3);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(30px);
+        }
+
+        /* BUTTONS */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+        }
+
+        .btn-secondary {
+            background: rgba(212, 165, 116, 0.2);
+            color: var(--amber-light);
+            border: 1px solid var(--bronze-deep);
+        }
+
+        .btn-danger {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff6666;
+            border: 1px solid #ff0000;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* SUCCESS MESSAGE */
+        .success-message {
+            display: none;
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4CAF50;
+            color: #4CAF50;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .success-message.active {
+            display: block;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .logo-img {
+                height: 180px !important;
+            }
+
+            .setting-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <div class="top-header">
+        <div class="header-left"></div>
+        <div class="header-center">
+            <img src="Images/Tree_of_life_logo_800x800.png" alt="Tree of Life AI" class="logo-img" onclick="window.location.href='index.html'">
+        </div>
+        <div class="header-right">
+            <button class="header-btn" onclick="window.location.href='index.html'">← Back to Chat</button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <h1>⚙️ Settings</h1>
+        <p class="subtitle">Manage your account, subscription, and preferences</p>
+
+        <div id="successMessage" class="success-message">
+            ✓ Settings saved successfully!
+        </div>
+
+        <!-- SUBSCRIPTION SECTION -->
+        <div class="settings-section">
+            <div class="section-title">💎 Subscription</div>
+            
+            <div class="subscription-card" id="subscriptionCard">
+                <div class="tier-badge" id="tierBadge">FREE</div>
+                <div id="subscriptionDetails">
+                    Loading subscription...
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="window.location.href='subscriptions.html'">⬆️ Upgrade Plan</button>
+                <button class="btn btn-secondary" id="billingPortalBtn" onclick="openBillingPortal()">💳 Manage Billing</button>
+            </div>
+        </div>
+
+        <!-- ACCOUNT SETTINGS -->
+        <div class="settings-section">
+            <div class="section-title">👤 Account</div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Email</div>
+                    <div class="setting-value" id="userEmail">Loading...</div>
+                </div>
+                <button class="btn btn-secondary" onclick="alert('Email change coming soon!')">Change</button>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Password</div>
+                    <div class="setting-description">Last changed: Never</div>
+                </div>
+                <button class="btn btn-secondary" onclick="alert('Password change coming soon!')">Change</button>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Family Accounts</div>
+                    <div class="setting-description">Manage family member profiles (Premium/Pro only)</div>
+                </div>
+                <button class="btn btn-secondary" onclick="window.location.href='family-accounts.html'">👨‍👩‍👧‍👦 Manage</button>
+            </div>
+        </div>
+
+        <!-- NOTIFICATIONS -->
+        <div class="settings-section">
+            <div class="section-title">🔔 Notifications</div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Email Notifications</div>
+                    <div class="setting-description">Health tips, updates, and news</div>
+                </div>
+                <div class="toggle-switch active" id="emailNotifications" onclick="toggleSetting(this, 'email_notifications')">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Marketing Emails</div>
+                    <div class="setting-description">Special offers and promotions</div>
+                </div>
+                <div class="toggle-switch" id="marketingEmails" onclick="toggleSetting(this, 'marketing_emails')">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRIVACY -->
+        <div class="settings-section">
+            <div class="section-title">🔒 Privacy</div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Data Sharing</div>
+                    <div class="setting-description">Share anonymized data for research</div>
+                </div>
+                <div class="toggle-switch" id="dataSharing" onclick="toggleSetting(this, 'data_sharing')">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Anonymous Analytics</div>
+                    <div class="setting-description">Help us improve the app</div>
+                </div>
+                <div class="toggle-switch active" id="anonymousAnalytics" onclick="toggleSetting(this, 'anonymous_analytics')">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DATA & ACCOUNT -->
+        <div class="settings-section">
+            <div class="section-title">📦 Data & Account</div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Export Data</div>
+                    <div class="setting-description">Download all your data in JSON format (conversations, health profile, settings)</div>
+                </div>
+                <button class="btn btn-secondary" onclick="exportData()">📥 Download</button>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Delete Account</div>
+                    <div class="setting-description" style="color: #ff6666;">Permanently delete your account and all data</div>
+                </div>
+                <button class="btn btn-danger" onclick="confirmDeleteAccount()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://treeoflife-vn25.onrender.com';
+        let userSettings = {};
+        let currentTier = 'free';
+        
+        // Check auth
+        const authToken = localStorage.getItem('authToken');
+        if (!authToken) {
+            window.location.href = 'auth.html?returnTo=settings.html';
+        }
+
+        // Load data on page load
+        loadSettings();
+        loadSubscription();
+
+        async function loadSettings() {
+            // Load from localStorage for now (backend endpoint coming soon)
+            try {
+                const savedSettings = localStorage.getItem('userSettings');
+                if (savedSettings) {
+                    userSettings = JSON.parse(savedSettings);
+                    applySettings(userSettings);
+                } else {
+                    // Default settings
+                    userSettings = {
+                        email_notifications: true,
+                        marketing_emails: false,
+                        data_sharing: false,
+                        anonymous_analytics: true
+                    };
+                    applySettings(userSettings);
+                }
+            } catch (error) {
+                console.error('Error loading settings:', error);
+            }
+
+            // Load user email
+            const userEmail = localStorage.getItem('userEmail');
+            if (userEmail) {
+                document.getElementById('userEmail').textContent = userEmail;
+            }
+        }
+
+        function applySettings(settings) {
+            if (settings.email_notifications !== undefined) {
+                setToggle('emailNotifications', settings.email_notifications);
+            }
+            if (settings.marketing_emails !== undefined) {
+                setToggle('marketingEmails', settings.marketing_emails);
+            }
+            if (settings.data_sharing !== undefined) {
+                setToggle('dataSharing', settings.data_sharing);
+            }
+            if (settings.anonymous_analytics !== undefined) {
+                setToggle('anonymousAnalytics', settings.anonymous_analytics);
+            }
+        }
+
+        function setToggle(id, active) {
+            const toggle = document.getElementById(id);
+            if (active) {
+                toggle.classList.add('active');
+            } else {
+                toggle.classList.remove('active');
+            }
+        }
+
+        async function toggleSetting(element, settingKey) {
+            element.classList.toggle('active');
+            const isActive = element.classList.contains('active');
+
+            // Save to localStorage (backend endpoint coming soon)
+            try {
+                userSettings[settingKey] = isActive;
+                localStorage.setItem('userSettings', JSON.stringify(userSettings));
+                showSuccess();
+            } catch (error) {
+                console.error('Error updating setting:', error);
+                // Revert on error
+                element.classList.toggle('active');
+            }
+        }
+
+        async function loadSubscription() {
+            try {
+                const response = await fetch(`${API_BASE}/api/subscription/status`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load subscription');
+                }
+
+                const data = await response.json();
+                console.log('Subscription data:', data);
+                
+                currentTier = data.tier || 'free';
+                displaySubscription(data);
+                
+            } catch (error) {
+                console.error('Error loading subscription:', error);
+                document.getElementById('subscriptionDetails').innerHTML = 
+                    '<p>Unable to load subscription details</p>';
+            }
+        }
+
+        function displaySubscription(subData) {
+            const badge = document.getElementById('tierBadge');
+            const details = document.getElementById('subscriptionDetails');
+            const billingBtn = document.getElementById('billingPortalBtn');
+            
+            const tierNames = {
+                'free': 'FREE',
+                'premium': 'PREMIUM',
+                'pro': 'PRO'
+            };
+
+            const tier = subData.tier || 'free';
+            badge.textContent = tierNames[tier] || tier.toUpperCase();
+
+            let featuresHtml = '<div style="font-size: 1.1rem; margin-bottom: 1rem;">';
+            
+            if (tier === 'premium') {
+                featuresHtml += '<ul class="features-list">';
+                featuresHtml += '<li>Unlimited AI conversations</li>';
+                featuresHtml += '<li>Family accounts (5 profiles)</li>';
+                featuresHtml += '<li>Priority support</li>';
+                featuresHtml += '<li>Advanced health tracking</li>';
+                featuresHtml += '</ul>';
+                billingBtn.disabled = false;
+            } else if (tier === 'pro') {
+                featuresHtml += '<ul class="features-list">';
+                featuresHtml += '<li>Everything in Premium</li>';
+                featuresHtml += '<li>Client management tools</li>';
+                featuresHtml += '<li>Custom health protocols</li>';
+                featuresHtml += '<li>Advanced analytics</li>';
+                featuresHtml += '<li>API access</li>';
+                featuresHtml += '</ul>';
+                billingBtn.disabled = false;
+            } else {
+                featuresHtml += '<p>Upgrade to unlock premium features!</p>';
+                billingBtn.disabled = true;
+                billingBtn.style.opacity = '0.5';
+                billingBtn.title = 'Available with Premium or Pro subscription';
+            }
+            
+            featuresHtml += '</div>';
+            
+            if (subData.status) {
+                const statusColor = subData.status === 'active' ? '#4CAF50' : 'var(--bronze-deep)';
+                featuresHtml += `<p style="color: ${statusColor};">Status: <strong>${subData.status}</strong></p>`;
+            }
+            
+            details.innerHTML = featuresHtml;
+        }
+
+        async function openBillingPortal() {
+            if (currentTier === 'free') {
+                alert('Billing portal is only available for Premium and Pro subscribers.\n\nPlease upgrade your plan first!');
+                return;
+            }
+
+            const btn = document.getElementById('billingPortalBtn');
+            btn.disabled = true;
+            btn.textContent = 'Opening...';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/subscription/portal`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to create portal session');
+                }
+
+                const data = await response.json();
+                
+                if (data.portal_url) {
+                    // Redirect to Stripe billing portal
+                    window.location.href = data.portal_url;
+                } else {
+                    throw new Error('No portal URL received');
+                }
+                
+            } catch (error) {
+                console.error('Error opening billing portal:', error);
+                alert('Unable to open billing portal. Please try again or contact support.');
+                btn.disabled = false;
+                btn.textContent = '💳 Manage Billing';
+            }
+        }
+
+        async function exportData() {
+            try {
+                const exportBtn = document.querySelector('[onclick="exportData()"]');
+                exportBtn.disabled = true;
+                exportBtn.textContent = 'Exporting...';
+
+                // Gather all user data
+                const exportData = {
+                    exported_at: new Date().toISOString(),
+                    user: {
+                        email: localStorage.getItem('userEmail'),
+                        name: localStorage.getItem('userName')
+                    },
+                    settings: userSettings,
+                    subscription: {}
+                };
+
+                // Get subscription data
+                try {
+                    const subResponse = await fetch(`${API_BASE}/api/subscription/status`, {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    if (subResponse.ok) {
+                        exportData.subscription = await subResponse.json();
+                    }
+                } catch (e) {
+                    console.log('Could not fetch subscription data');
+                }
+
+                // Get conversations list
+                try {
+                    const convResponse = await fetch(`${API_BASE}/api/chat/conversations`, {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    if (convResponse.ok) {
+                        const conversations = await convResponse.json();
+                        exportData.conversations = conversations;
+                        
+                        // Get full conversation details for each
+                        exportData.full_conversations = [];
+                        for (const conv of conversations) {
+                            try {
+                                const detailResponse = await fetch(`${API_BASE}/api/chat/conversations/${conv.id}`, {
+                                    headers: { 'Authorization': `Bearer ${authToken}` }
+                                });
+                                if (detailResponse.ok) {
+                                    const details = await detailResponse.json();
+                                    exportData.full_conversations.push(details);
+                                }
+                            } catch (e) {
+                                console.log(`Could not fetch conversation ${conv.id}`);
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.log('Could not fetch conversations');
+                }
+
+                // Get health profile
+                try {
+                    const healthResponse = await fetch(`${API_BASE}/api/health-profile`, {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    if (healthResponse.ok) {
+                        exportData.health_profile = await healthResponse.json();
+                    }
+                } catch (e) {
+                    console.log('Could not fetch health profile');
+                }
+
+                // Create and download JSON file
+                const dataStr = JSON.stringify(exportData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                const timestamp = new Date().toISOString().split('T')[0];
+                link.download = `treeoflife-data-export-${timestamp}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                exportBtn.disabled = false;
+                exportBtn.textContent = 'Download';
+                
+                alert('✅ Data exported successfully!\n\nYour data has been downloaded as a JSON file.\n\nIncludes:\n• Account information\n• Subscription details\n• All conversations\n• Health profile\n• Settings');
+
+            } catch (error) {
+                console.error('Error exporting data:', error);
+                alert('❌ Error exporting data. Please try again or contact support.');
+                
+                const exportBtn = document.querySelector('[onclick="exportData()"]');
+                exportBtn.disabled = false;
+                exportBtn.textContent = 'Download';
+            }
+        }
+
+        function confirmDeleteAccount() {
+            if (confirm('⚠️ WARNING: This will permanently delete your account and ALL data.\n\nThis action CANNOT be undone.\n\nAre you absolutely sure?')) {
+                if (confirm('Please confirm one more time. Delete your account and all data?')) {
+                    deleteAccount();
+                }
+            }
+        }
+
+        async function deleteAccount() {
+            alert('Account deletion will be implemented in production. For now, contact support@treeoflifeai.com');
+        }
+
+        function showSuccess() {
+            const msg = document.getElementById('successMessage');
+            msg.classList.add('active');
+            setTimeout(() => {
+                msg.classList.remove('active');
+            }, 3000);
+        }
+
+        console.log('⚙️ Settings page loaded');
+    </script>
+</body>
+</html>
