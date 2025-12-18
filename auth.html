@@ -125,20 +125,47 @@
             document.getElementById('errorMessage').classList.remove('show');
         }
 
+       
         // Login Handler
-        document.getElementById('loginFormSubmit').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            hideError();
+             document.getElementById('loginFormSubmit').addEventListener('submit', async (e) => {
+             e.preventDefault();
+             hideError();
 
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
 
-            try {
-                const response = await fetch(`${API_URL}/api/auth/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
+    try {
+        const response = await fetch(`${API_URL}/api/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.detail || 'Login failed');
+
+        // 🔍 DEBUG - See what backend sends
+        console.log('🔍 Full login response:', JSON.stringify(data, null, 2));
+        console.log('🔍 User object:', data.user);
+        console.log('🔍 User.name value:', data.user?.name);
+        console.log('🔍 Token:', data.token ? 'Present' : 'Missing');
+
+        // ✅ Store authentication data
+        const fullName = data.user?.name && data.user.name !== 'undefined' ? data.user.name : email.split('@')[0];
+        const firstName = fullName.split(' ')[0];
+        
+        localStorage.setItem('authToken', data.token);
+        localStorage.setItem('userEmail', email);
+        localStorage.setItem('userName', firstName);
+        localStorage.setItem('userFirstName', firstName);
+        
+        console.log('✅ Stored userName:', firstName);
+        
+        setTimeout(() => window.location.href = 'index.html', 100);
+    } catch (error) {
+        showError(error.message);
+    }
+});
 
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.detail || 'Login failed');
