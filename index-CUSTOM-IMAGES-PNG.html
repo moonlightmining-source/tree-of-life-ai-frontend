@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tree of Life AI - Integrative Health Intelligence</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --amber-light: #D4A574;
+            --amber-medium: #C19A6B;
+            --bronze-deep: #B8860B;
+            --bronze-light: #A0826D;
+            --peach-gold: #EEC591;
+            --pure-black: #000;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            /* 🎨 CUSTOM BACKGROUND IMAGE */
+            background: url('Images/Background.png') center center fixed;
+            background-size: cover;
+            color: var(--amber-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Optional: Add overlay for better text readability */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3); /* Semi-transparent overlay */
+            z-index: -1;
+        }
+
+        /* TOP HEADER - Matches other pages */
+        .top-header {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--pure-black);
+            padding: 20px 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .header-left {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .header-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* 🎨 LOGO WITH CUSTOM FRAME */
+        .logo-container {
+            position: relative;
+            padding: 15px;
+            background: url('Images/Logoframe.png') center center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            display: inline-block;
+        }
+
+        .logo-img {
+            height: 300px !important;
+            width: auto !important;
+            cursor: pointer;
+            display: block;
+        }
+
+        /* 🎨 CUSTOM BUTTON STYLE - Uses Button.png */
+        .header-btn {
+            /* Base button styling */
+            padding: 0.75rem 1.5rem;
+            color: var(--pure-black);
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            position: relative;
+            
+            /* Button image background */
+            background: url('Images/Button.png') center center;
+            background-size: cover;
+            box-shadow: 0 2px 10px rgba(212, 165, 116, 0.3);
+        }
+
+        /* Fallback gradient if image doesn't load */
+        .header-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            border-radius: 10px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .header-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.5);
+        }
+
+        .header-btn:hover::before {
+            opacity: 0.3; /* Show gradient on hover for effect */
+        }
+
+        /* CONTENT WRAPPER */
+        .content-wrapper {
+            flex: 1;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* BUTTONS SECTION */
+        .buttons-section {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        /* New Chat & Log Out - Centered */
+        .primary-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        /* 🎨 PRIMARY BUTTONS with Button.png */
+        .new-chat-btn, .logout-btn {
+            padding: 1rem 2rem;
+            color: var(--pure-black);
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            position: relative;
+            
+            /* Button image background */
+            background: url('Images/Button.png') center center;
+            background-size: cover;
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.3);
+        }
+
+        /* Fallback gradient */
+        .new-chat-btn::before, .logout-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            border-radius: 10px;
+            z-index: -1;
+            opacity: 0;
+        }
+
+        .new-chat-btn:hover, .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(212, 165, 116, 0.5);
+        }
+
+        /* Quick Access Buttons - 3 across */
+        .quick-access-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* 🎨 QUICK BUTTONS with Button.png */
+        .quick-btn {
+            padding: 1rem;
+            color: var(--pure-black);
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            
+            /* Button image background */
+            background: url('Images/Button.png') center center;
+            background-size: cover;
+            box-shadow: 0 2px 10px rgba(212, 165, 116, 0.3);
+        }
+
+        .quick-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            border-radius: 10px;
+            z-index: -1;
+            opacity: 0;
+        }
+
+        .quick-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.5);
+        }
+
+        /* CHAT AREA - Full Screen */
+        .chat-section {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            min-height: 60vh;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-section h2 {
+            font-size: 2rem;
+            color: var(--amber-light);
+            margin-bottom: 1rem;
+        }
+
+        .welcome-section p {
+            font-size: 1.1rem;
+            color: var(--amber-medium);
+        }
+
+        .chat-messages {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto 2rem auto;
+        }
+
+        .message {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 15px;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            background: rgba(74, 144, 226, 0.15);
+            border: 2px solid #4A90E2;
+        }
+
+        .message.assistant {
+            background: rgba(212, 165, 116, 0.15);
+            border: 2px solid var(--bronze-deep);
+        }
+
+        .message-text {
+            color: var(--amber-light);
+            line-height: 1.6;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            color: var(--bronze-light);
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: var(--amber-medium);
+            padding: 2rem;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        /* INPUT AREA */
+        .input-area {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        #userInput {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 10px;
+            color: var(--amber-light);
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 50px;
+            max-height: 150px;
+        }
+
+        #userInput:focus {
+            outline: none;
+            border-color: var(--amber-light);
+            box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
+        }
+
+        #userInput::placeholder {
+            color: var(--bronze-light);
+        }
+
+        #sendBtn {
+            padding: 1rem 1.5rem;
+            background: url('Images/Button.png') center center;
+            background-size: cover;
+            color: var(--pure-black);
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(212, 165, 116, 0.3);
+            min-width: 60px;
+        }
+
+        #sendBtn:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.5);
+        }
+
+        #sendBtn:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .disclaimer {
+            font-size: 0.75rem;
+            color: var(--bronze-light);
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        /* MEDICAL TRADITIONS */
+        .traditions-section {
+            margin-bottom: 3rem;
+        }
+
+        .traditions-section h3 {
+            text-align: center;
+            font-size: 1.5rem;
+            color: var(--amber-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .traditions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 🎨 TRADITION BUTTONS with Button.png */
+        .tradition-btn {
+            padding: 1rem;
+            background: url('Images/Button.png') center center;
+            background-size: cover;
+            color: var(--amber-light);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .tradition-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            z-index: 0;
+            transition: background 0.3s;
+        }
+
+        .tradition-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .tradition-btn:hover, .tradition-btn.active {
+            border-color: var(--amber-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.3);
+        }
+
+        .tradition-btn:hover::before, .tradition-btn.active::before {
+            background: rgba(212, 165, 116, 0.2);
+        }
+
+        /* FOOTER */
+        .footer {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-top: 2px solid var(--bronze-deep);
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+
+        .footer-info {
+            font-size: 0.75rem;
+            color: var(--bronze-light);
+        }
+
+        /* MOBILE */
+        @media (max-width: 768px) {
+            .top-header {
+                flex-direction: column;
+                padding: 15px 1rem;
+                gap: 1rem;
+            }
+
+            .header-left, .header-right {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .logo-container {
+                padding: 10px;
+            }
+
+            .logo-img {
+                height: 180px !important;
+            }
+
+            .header-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+
+            .content-wrapper {
+                padding: 2rem 1rem;
+            }
+
+            /* Keep buttons side-by-side on mobile */
+            .primary-buttons {
+                flex-direction: row;
+                justify-content: center;
+            }
+
+            .new-chat-btn, .logout-btn {
+                flex: 0 1 auto;
+                padding: 0.75rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .quick-access-buttons {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.5rem;
+            }
+
+            .quick-btn {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.85rem;
+            }
+
+            .traditions-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+
+            .tradition-btn {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.85rem;
+            }
+
+            .chat-section {
+                padding: 1rem;
+            }
+
+            .welcome-section h2 {
+                font-size: 1.5rem;
+            }
+
+            #userInput {
+                font-size: 16px; /* Prevents iOS zoom */
+                min-height: 80px;
+            }
+
+            #sendBtn {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <div class="top-header">
+        <div class="header-left">
+            <button class="header-btn" onclick="window.location.href='about.html'">About</button>
+            <button class="header-btn" onclick="window.location.href='subscriptions.html'">Subscribe</button>
+            <button class="header-btn" onclick="window.location.href='resources.html'">Resources</button>
+        </div>
+        
+        <div class="header-center">
+            <!-- 🎨 LOGO WITH CUSTOM FRAME -->
+            <div class="logo-container">
+                <img src="Images/Tree_of_life_logo_800x800.png" alt="Tree of Life AI" class="logo-img" onclick="window.location.href='index.html'">
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <button class="header-btn" onclick="window.location.href='privacy.html'">Privacy</button>
+            <button class="header-btn" onclick="window.location.href='terms.html'">Terms</button>
+            <button class="header-btn" onclick="window.location.href='auth.html'">Login</button>
+        </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content-wrapper">
+        <!-- PRIMARY BUTTONS -->
+        <div class="buttons-section">
+            <div class="primary-buttons">
+                <button class="new-chat-btn" onclick="startNewConversation()">
+                    ✨ New Chat
+                </button>
+                <button class="logout-btn" onclick="logout()">
+                    🚪 Log Out
+                </button>
+            </div>
+
+            <!-- QUICK ACCESS BUTTONS -->
+            <div class="quick-access-buttons">
+                <button class="quick-btn" onclick="window.location.href='chat-history.html'">
+                    💬 Chat History
+                </button>
+                <button class="quick-btn" onclick="window.location.href='health-profile.html'">
+                    🌿 Health Profile
+                </button>
+                <button class="quick-btn" onclick="window.location.href='settings.html'">
+                    ⚙️ Settings
+                </button>
+            </div>
+        </div>
+
+        <!-- CHAT AREA -->
+        <div class="chat-section">
+            <div class="welcome-section" id="welcomeSection">
+                <h2>Welcome to Tree of Life AI</h2>
+                <p>Your integrative health intelligence assistant</p>
+            </div>
+
+            <div id="chatMessages" class="chat-messages"></div>
+            
+            <div class="loading" id="loadingIndicator">
+                <p>🌿 Thinking...</p>
+            </div>
+
+            <div class="input-area">
+                <div class="input-container">
+                    <div class="input-wrapper">
+                        <textarea 
+                            id="userInput" 
+                            placeholder="Ask about your health from multiple traditions..."
+                            rows="1"
+                        ></textarea>
+                    </div>
+                    <button id="sendBtn">➤</button>
+                </div>
+                <div class="disclaimer">
+                    ⚠️ This is educational information only. Always consult healthcare professionals for medical advice.
+                </div>
+            </div>
+        </div>
+
+        <!-- MEDICAL TRADITIONS -->
+        <div class="traditions-section">
+            <h3>Medical Traditions</h3>
+            <div class="traditions-grid">
+                <button class="tradition-btn active" data-tradition="all"><span>All Traditions</span></button>
+                <button class="tradition-btn" data-tradition="western"><span>Western Medicine</span></button>
+                <button class="tradition-btn" data-tradition="ayurveda"><span>Ayurveda</span></button>
+                <button class="tradition-btn" data-tradition="tcm"><span>Traditional Chinese Medicine</span></button>
+                <button class="tradition-btn" data-tradition="herbal"><span>Herbal Medicine</span></button>
+                <button class="tradition-btn" data-tradition="homeopathy"><span>Homeopathy</span></button>
+                <button class="tradition-btn" data-tradition="chiropractic"><span>Chiropractic</span></button>
+                <button class="tradition-btn" data-tradition="nutrition"><span>Clinical Nutrition</span></button>
+                <button class="tradition-btn" data-tradition="vibrational"><span>Vibrational Healing</span></button>
+                <button class="tradition-btn" data-tradition="fitness"><span>Fitness & Physical Therapy</span></button>
+                <button class="tradition-btn" data-tradition="eldercare"><span>Elder Care & Law</span></button>
+                <button class="tradition-btn" data-tradition="consciousness"><span>Consciousness Mapping</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <div class="footer-info">
+            © 2024 Tree of Life AI • Educational information only • Not medical advice • Always consult qualified healthcare professionals
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Tradition button handling
+        document.querySelectorAll('.tradition-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tradition-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const tradition = this.dataset.tradition || 'all';
+                console.log('🌿 Selected tradition:', tradition);
+                
+                const input = document.getElementById('userInput');
+                if (input) {
+                    if (tradition === 'all') {
+                        input.placeholder = 'Ask about your health from multiple traditions...';
+                    } else {
+                        input.placeholder = `Ask about ${this.textContent.toLowerCase()} perspectives...`;
+                    }
+                }
+                
+                // Scroll to chat area after selecting tradition
+                document.querySelector('.chat-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // Auto-resize textarea
+        const textarea = document.getElementById('userInput');
+        if (textarea) {
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+            });
+        }
+
+        console.log('🌿 Tree of Life AI loaded - Custom image edition');
+    </script>
+</body>
+</html>
