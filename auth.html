@@ -144,7 +144,9 @@
                 if (!response.ok) throw new Error(data.detail || 'Login failed');
 
                 const { token, user } = data;
-                
+                console.log('🔍 Backend login response:', data);
+                console.log('🔍 User object:', user);
+                console.log('🔍 User.name:', user.name);
                 // ✅ FIX: Store FIRST NAME for AI greeting
                 const fullName = user.name && user.name !== 'undefined' ? user.name : email.split('@')[0];
                 const firstName = fullName.split(' ')[0];
