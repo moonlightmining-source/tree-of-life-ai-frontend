@@ -144,10 +144,12 @@
                 if (!response.ok) throw new Error(data.detail || 'Login failed');
 
                 const { token, user } = data;
-                console.log('🔍 Full login response:', data);
+                const { token, user } = data;
+
+                console.log('🔍 Full login response:', JSON.stringify(data, null, 2));
                 console.log('🔍 User object:', user);
                 console.log('🔍 User.name value:', user.name);
-                console.log('🔍 User.name type:', typeof user.name);
+                console.log('🔍 User.name is undefined?', user.name === undefined);
 
                 // ✅ FIX: Store FIRST NAME for AI greeting
                 const fullName = user.name && user.name !== 'undefined' ? user.name : email.split('@')[0];
