@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources - Tree of Life AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --amber-light: #D4A574;
+            --amber-medium: #C19A6B;
+            --bronze-deep: #B8860B;
+            --bronze-light: #A0826D;
+            --peach-gold: #EEC591;
+            --pure-black: #000;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: url('Images/Background.png') center center fixed;
+            background-size: cover;
+            color: var(--amber-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: -1;
+        }
+
+        /* 🎨 TRANSPARENT HEADER */
+        .top-header {
+            background: transparent;
+            border-bottom: 0px solid rgba(212, 165, 116, 0.3);
+            padding: 20px 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .header-left, .header-right {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .header-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 🎨 LOGO INSIDE OCTAGONAL FRAME */
+        .logo-container {
+            position: relative;
+            width: 600px;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: url('Images/Logoframe.png') center center;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .logo-img {
+            height: 320px !important;
+            width: auto !important;
+            cursor: pointer;
+            display: block;
+            position: relative;
+            z-index: 2;
+            mix-blend-mode: screen;
+        }
+
+        /* 🛑 HEADER BUTTONS */
+        .header-btn {
+            width: 180px;
+            height: 180px;
+            background: url('Images/Button.png') center center;
+            background-size: cover;
+            background-color: transparent !important;
+            color: var(--amber-light);
+            border: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            clip-path: polygon(
+                30% 0%, 70% 0%, 
+                100% 30%, 100% 70%, 
+                70% 100%, 30% 100%, 
+                0% 70%, 0% 30%
+            );
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.4);
+        }
+
+        .header-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 25px rgba(212, 165, 116, 0.7);
+            color: var(--peach-gold);
+            filter: brightness(1.2);
+        }
+
+        /* CONTENT WRAPPER */
+        .content-wrapper {
+            flex: 1;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--amber-light);
+            margin-bottom: 1rem;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.3rem;
+            color: var(--amber-medium);
+            margin-bottom: 3rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        /* EMERGENCY BOX */
+        .emergency-box {
+            background: rgba(255, 193, 7, 0.15);
+            border: 3px solid #FFC107;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .emergency-box h2 {
+            color: #FFC107;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .emergency-box p {
+            font-size: 1.1rem;
+            color: var(--amber-light);
+            line-height: 1.8;
+            margin-bottom: 0.5rem;
+        }
+
+        /* RESOURCE SECTIONS */
+        .resource-section {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .resource-section h2 {
+            font-size: 1.75rem;
+            color: var(--amber-light);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--bronze-deep);
+            padding-bottom: 0.75rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .resource-card {
+            background: rgba(212, 165, 116, 0.05);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(212, 165, 116, 0.3);
+            border-color: var(--amber-light);
+            background: rgba(212, 165, 116, 0.1);
+        }
+
+        .resource-card h3 {
+            font-size: 1.3rem;
+            color: var(--peach-gold);
+            margin-bottom: 0.75rem;
+        }
+
+        .resource-card p {
+            font-size: 1rem;
+            color: var(--amber-medium);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .resource-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .resource-link {
+            color: var(--amber-light);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0;
+        }
+
+        .resource-link:hover {
+            color: var(--peach-gold);
+            transform: translateX(5px);
+        }
+
+        .resource-link:before {
+            content: "→";
+            color: var(--bronze-deep);
+            font-weight: bold;
+        }
+
+        /* 🎨 TRANSPARENT FOOTER */
+        .footer {
+            background: transparent;
+            border-top: 2px solid rgba(212, 165, 116, 0.3);
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+
+        .footer-info {
+            font-size: 0.75rem;
+            color: var(--amber-light);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+        }
+
+        /* 📱 MOBILE RESPONSIVE */
+        @media (max-width: 768px) {
+            .top-header {
+                flex-direction: column;
+                padding: 15px 1rem;
+                gap: 1rem;
+            }
+
+            .header-left, .header-right {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .header-btn {
+                width: 90px;
+                height: 90px;
+                font-size: 0.75rem;
+            }
+
+            .logo-container {
+                width: 240px;
+                height: 240px;
+            }
+
+            .logo-img {
+                height: 180px !important;
+            }
+
+            .content-wrapper {
+                padding: 2rem 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .resource-section {
+                padding: 1.5rem;
+            }
+
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <div class="top-header">
+        <div class="header-left">
+            <button class="header-btn" onclick="window.location.href='about.html'">About</button>
+            <button class="header-btn" onclick="window.location.href='subscriptions.html'">Subscribe</button>
+            <button class="header-btn" onclick="window.location.href='resources.html'">Resources</button>
+        </div>
+        
+        <div class="header-center">
+            <div class="logo-container">
+                <img src="Images/Tree_of_life_logo_800x800.png" alt="Tree of Life AI" class="logo-img" onclick="window.location.href='index.html'">
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <button class="header-btn" onclick="window.location.href='privacy.html'">Privacy</button>
+            <button class="header-btn" onclick="window.location.href='terms.html'">Terms</button>
+            <button class="header-btn" onclick="window.location.href='auth.html'">Login</button>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <h1>Health & Wellness Resources</h1>
+        <p class="subtitle">Curated resources from multiple medical traditions</p>
+
+        <!-- EMERGENCY -->
+        <div class="emergency-box">
+            <h2>🚨 Emergency Resources</h2>
+            <p><strong>Life-Threatening Emergency:</strong> Call 911 (US) or your local emergency number</p>
+            <p><strong>Suicide Prevention Hotline:</strong> 988 (US)</p>
+            <p><strong>Crisis Text Line:</strong> Text HOME to 741741</p>
+            <p><strong>Poison Control:</strong> 1-800-222-1222</p>
+        </div>
+
+        <!-- WESTERN MEDICINE -->
+        <div class="resource-section">
+            <h2>🏥 Western Medicine</h2>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <h3>Research & Information</h3>
+                    <p>Evidence-based medical information and research databases</p>
+                    <div class="resource-links">
+                        <a href="https://www.nih.gov" class="resource-link" target="_blank">National Institutes of Health</a>
+                        <a href="https://pubmed.ncbi.nlm.nih.gov" class="resource-link" target="_blank">PubMed (Research Database)</a>
+                        <a href="https://www.mayoclinic.org" class="resource-link" target="_blank">Mayo Clinic</a>
+                        <a href="https://www.webmd.com" class="resource-link" target="_blank">WebMD</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Find a Doctor</h3>
+                    <p>Locate qualified medical professionals near you</p>
+                    <div class="resource-links">
+                        <a href="https://www.zocdoc.com" class="resource-link" target="_blank">ZocDoc (Appointments)</a>
+                        <a href="https://www.vitals.com" class="resource-link" target="_blank">Vitals (Doctor Reviews)</a>
+                        <a href="https://www.healthgrades.com" class="resource-link" target="_blank">Healthgrades</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Patient Education</h3>
+                    <p>Learn about conditions, treatments, and medications</p>
+                    <div class="resource-links">
+                        <a href="https://medlineplus.gov" class="resource-link" target="_blank">MedlinePlus</a>
+                        <a href="https://www.drugs.com" class="resource-link" target="_blank">Drugs.com (Medications)</a>
+                        <a href="https://www.cdc.gov" class="resource-link" target="_blank">CDC (Disease Prevention)</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AYURVEDA -->
+        <div class="resource-section">
+            <h2>🌿 Ayurveda</h2>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <h3>Organizations</h3>
+                    <p>Professional Ayurvedic organizations and certification bodies</p>
+                    <div class="resource-links">
+                        <a href="https://www.ayurveda.com" class="resource-link" target="_blank">National Ayurvedic Medical Association</a>
+                        <a href="https://www.ayurvedainstitute.com" class="resource-link" target="_blank">The Ayurvedic Institute</a>
+                        <a href="https://www.aapna.org" class="resource-link" target="_blank">Association of Ayurvedic Professionals</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Learning Resources</h3>
+                    <p>Books, courses, and educational materials</p>
+                    <div class="resource-links">
+                        <a href="https://www.banyanbotanicals.com" class="resource-link" target="_blank">Banyan Botanicals (Education)</a>
+                        <a href="https://www.joyfulbelly.com" class="resource-link" target="_blank">Joyful Belly (Dosha Guide)</a>
+                        <a href="https://www.ayurveda.com/resources" class="resource-link" target="_blank">Ayurveda.com Resources</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Find a Practitioner</h3>
+                    <p>Locate certified Ayurvedic practitioners</p>
+                    <div class="resource-links">
+                        <a href="https://www.ayurveda.com/practitioners" class="resource-link" target="_blank">NAMA Practitioner Directory</a>
+                        <a href="https://www.aapna.org/find-practitioner" class="resource-link" target="_blank">AAPNA Directory</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TRADITIONAL CHINESE MEDICINE -->
+        <div class="resource-section">
+            <h2>☯️ Traditional Chinese Medicine</h2>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <h3>Organizations</h3>
+                    <p>Professional TCM associations and resources</p>
+                    <div class="resource-links">
+                        <a href="https://www.nccaom.org" class="resource-link" target="_blank">NCCAOM (Certification)</a>
+                        <a href="https://www.tcmworld.org" class="resource-link" target="_blank">World Federation of Chinese Medicine Societies</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Find an Acupuncturist</h3>
+                    <p>Locate licensed acupuncturists and TCM practitioners</p>
+                    <div class="resource-links">
+                        <a href="https://www.nccaom.org/find-a-practitioner" class="resource-link" target="_blank">NCCAOM Practitioner Directory</a>
+                        <a href="https://www.acufinder.com" class="resource-link" target="_blank">AcuFinder</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Education & Research</h3>
+                    <p>Learn about TCM principles and practices</p>
+                    <div class="resource-links">
+                        <a href="https://www.sacredlotus.com" class="resource-link" target="_blank">Sacred Lotus (TCM Database)</a>
+                        <a href="https://www.tcmpage.com" class="resource-link" target="_blank">TCM Page</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HERBAL MEDICINE -->
+        <div class="resource-section">
+            <h2>🌱 Herbal Medicine</h2>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <h3>Organizations</h3>
+                    <p>Professional herbalist associations</p>
+                    <div class="resource-links">
+                        <a href="https://www.americanherbalistsguild.com" class="resource-link" target="_blank">American Herbalists Guild</a>
+                        <a href="https://www.herbsociety.org" class="resource-link" target="_blank">The Herb Society of America</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Herbal Information</h3>
+                    <p>Databases and resources on medicinal herbs</p>
+                    <div class="resource-links">
+                        <a href="https://www.herbalgram.org" class="resource-link" target="_blank">American Botanical Council</a>
+                        <a href="https://www.mountainroseherbs.com/learn" class="resource-link" target="_blank">Mountain Rose Herbs (Education)</a>
+                        <a href="https://www.henriettes-herb.com" class="resource-link" target="_blank">Henriette's Herbal Homepage</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Find a Herbalist</h3>
+                    <p>Locate registered herbalists</p>
+                    <div class="resource-links">
+                        <a href="https://www.americanherbalistsguild.com/find-an-herbalist" class="resource-link" target="_blank">AHG Member Directory</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NUTRITION -->
+        <div class="resource-section">
+            <h2>🥗 Clinical Nutrition</h2>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <h3>Organizations</h3>
+                    <p>Professional nutrition associations</p>
+                    <div class="resource-links">
+                        <a href="https://www.eatright.org" class="resource-link" target="_blank">Academy of Nutrition and Dietetics</a>
+                        <a href="https://www.nutrition.org" class="resource-link" target="_blank">American Society for Nutrition</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Find a Nutritionist</h3>
+                    <p>Locate registered dietitians and nutritionists</p>
+                    <div class="resource-links">
+                        <a href="https://www.eatright.org/find-a-nutrition-expert" class="resource-link" target="_blank">Find a Nutrition Expert</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Nutrition Tools</h3>
+                    <p>Calculators, trackers, and educational resources</p>
+                    <div class="resource-links">
+                        <a href="https://www.myplate.gov" class="resource-link" target="_blank">MyPlate (USDA)</a>
+                        <a href="https://www.cronometer.com" class="resource-link" target="_blank">Cronometer (Tracking)</a>
+                        <a href="https://nutritiondata.self.com" class="resource-link" target="_blank">Nutrition Data</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHIROPRACTIC -->
+        <div class="resource-section">
+            <h2>🦴 Chiropractic Care</h2>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <h3>Organizations</h3>
+                    <p>Professional chiropractic associations</p>
+                    <div class="resource-links">
+                        <a href="https://www.acatoday.org" class="resource-link" target="_blank">American Chiropractic Association</a>
+                        <a href="https://www.f4cp.org" class="resource-link" target="_blank">Foundation for Chiropractic Progress</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Find a Chiropractor</h3>
+                    <p>Locate licensed chiropractors</p>
+                    <div class="resource-links">
+                        <a href="https://www.acatoday.org/Patients/Find-a-Doctor" class="resource-link" target="_blank">ACA Find a Doctor</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Patient Education</h3>
+                    <p>Learn about chiropractic care</p>
+                    <div class="resource-links">
+                        <a href="https://www.f4cp.org/patient-resources" class="resource-link" target="_blank">Patient Resources (F4CP)</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HOMEOPATHY -->
+        <div class="resource-section">
+            <h2>💧 Homeopathy</h2>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <h3>Organizations</h3>
+                    <p>Professional homeopathy associations</p>
+                    <div class="resource-links">
+                        <a href="https://www.homeopathycenter.org" class="resource-link" target="_blank">National Center for Homeopathy</a>
+                        <a href="https://homeopathyusa.org" class="resource-link" target="_blank">North American Society of Homeopaths</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Find a Homeopath</h3>
+                    <p>Locate certified homeopaths</p>
+                    <div class="resource-links">
+                        <a href="https://www.homeopathycenter.org/find-homeopath" class="resource-link" target="_blank">NCH Practitioner Directory</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Learning Resources</h3>
+                    <p>Education about homeopathic principles</p>
+                    <div class="resource-links">
+                        <a href="https://www.homeopathybooks.com" class="resource-link" target="_blank">Homeopathy Books</a>
+                        <a href="https://www.hpathy.com" class="resource-link" target="_blank">Hpathy (Education Portal)</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ELDER CARE -->
+        <div class="resource-section">
+            <h2>👴 Elder Care & Law</h2>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <h3>Medicare & Medicaid</h3>
+                    <p>Official government resources</p>
+                    <div class="resource-links">
+                        <a href="https://www.medicare.gov" class="resource-link" target="_blank">Medicare.gov (Official Site)</a>
+                        <a href="https://www.medicaid.gov" class="resource-link" target="_blank">Medicaid.gov</a>
+                        <a href="https://www.ssa.gov" class="resource-link" target="_blank">Social Security Administration</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Nursing Homes & Care</h3>
+                    <p>Find and compare care facilities</p>
+                    <div class="resource-links">
+                        <a href="https://www.medicare.gov/care-compare" class="resource-link" target="_blank">Medicare Care Compare</a>
+                        <a href="https://www.aplaceformom.com" class="resource-link" target="_blank">A Place for Mom</a>
+                        <a href="https://www.caring.com" class="resource-link" target="_blank">Caring.com</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Elder Law & Planning</h3>
+                    <p>Legal resources and attorney directories</p>
+                    <div class="resource-links">
+                        <a href="https://www.naela.org" class="resource-link" target="_blank">National Academy of Elder Law Attorneys</a>
+                        <a href="https://www.elderlawanswers.com" class="resource-link" target="_blank">ElderLawAnswers.com</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Caregiver Support</h3>
+                    <p>Resources for family caregivers</p>
+                    <div class="resource-links">
+                        <a href="https://www.caregiver.org" class="resource-link" target="_blank">Family Caregiver Alliance</a>
+                        <a href="https://www.aarp.org/caregiving" class="resource-link" target="_blank">AARP Caregiving Resource Center</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FITNESS & PT -->
+        <div class="resource-section">
+            <h2>💪 Fitness & Physical Therapy</h2>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <h3>Organizations</h3>
+                    <p>Professional fitness and PT associations</p>
+                    <div class="resource-links">
+                        <a href="https://www.apta.org" class="resource-link" target="_blank">American Physical Therapy Association</a>
+                        <a href="https://www.acefitness.org" class="resource-link" target="_blank">American Council on Exercise</a>
+                        <a href="https://www.nasm.org" class="resource-link" target="_blank">National Academy of Sports Medicine</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Find a PT or Trainer</h3>
+                    <p>Locate physical therapists and certified trainers</p>
+                    <div class="resource-links">
+                        <a href="https://www.apta.org/findapt" class="resource-link" target="_blank">Find a Physical Therapist</a>
+                        <a href="https://www.acefitness.org/fitness-certifications/ace-pro-finder" class="resource-link" target="_blank">ACE Pro Finder</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Exercise Resources</h3>
+                    <p>Workout plans, videos, and education</p>
+                    <div class="resource-links">
+                        <a href="https://www.exrx.net" class="resource-link" target="_blank">ExRx.net (Exercise Database)</a>
+                        <a href="https://www.bodybuilding.com" class="resource-link" target="_blank">Bodybuilding.com</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONSCIOUSNESS MAPPING -->
+        <div class="resource-section">
+            <h2>🧘 Consciousness Mapping</h2>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <h3>Tarot Resources</h3>
+                    <p>Learn about Tarot symbolism and practice</p>
+                    <div class="resource-links">
+                        <a href="https://www.biddytarot.com" class="resource-link" target="_blank">Biddy Tarot</a>
+                        <a href="https://www.learntarot.com" class="resource-link" target="_blank">Learning the Tarot</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Astrology</h3>
+                    <p>Astrological charts and learning resources</p>
+                    <div class="resource-links">
+                        <a href="https://www.astro.com" class="resource-link" target="_blank">Astro.com (Free Charts)</a>
+                        <a href="https://cafeastrology.com" class="resource-link" target="_blank">Cafe Astrology</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>I Ching</h3>
+                    <p>Book of Changes resources</p>
+                    <div class="resource-links">
+                        <a href="https://www.jamesdekorne.com/GBCh/hexagrams.htm" class="resource-link" target="_blank">I Ching Hexagrams</a>
+                        <a href="https://divination.com/iching" class="resource-link" target="_blank">I Ching Online</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Mythology & Jung</h3>
+                    <p>Hero's Journey and Jungian psychology</p>
+                    <div class="resource-links">
+                        <a href="https://www.jungcurrents.com" class="resource-link" target="_blank">Jung Currents</a>
+                        <a href="https://www.mythologyteacher.com" class="resource-link" target="_blank">Mythology Teacher</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GENERAL WELLNESS -->
+        <div class="resource-section">
+            <h2>🌟 General Wellness Tools</h2>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <h3>Mental Health</h3>
+                    <p>Therapy, counseling, and support resources</p>
+                    <div class="resource-links">
+                        <a href="https://www.psychologytoday.com/us/therapists" class="resource-link" target="_blank">Find a Therapist</a>
+                        <a href="https://www.betterhelp.com" class="resource-link" target="_blank">BetterHelp (Online Therapy)</a>
+                        <a href="https://www.nami.org" class="resource-link" target="_blank">NAMI (Mental Health Support)</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Meditation & Mindfulness</h3>
+                    <p>Apps and resources for meditation practice</p>
+                    <div class="resource-links">
+                        <a href="https://www.headspace.com" class="resource-link" target="_blank">Headspace</a>
+                        <a href="https://www.calm.com" class="resource-link" target="_blank">Calm</a>
+                        <a href="https://www.insighttimer.com" class="resource-link" target="_blank">Insight Timer (Free)</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Sleep Resources</h3>
+                    <p>Improve sleep quality and address sleep disorders</p>
+                    <div class="resource-links">
+                        <a href="https://www.sleepfoundation.org" class="resource-link" target="_blank">Sleep Foundation</a>
+                        <a href="https://www.sleepassociation.org" class="resource-link" target="_blank">American Sleep Association</a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>Health Tracking Apps</h3>
+                    <p>Track health metrics and wellness</p>
+                    <div class="resource-links">
+                        <a href="https://www.myfitnesspal.com" class="resource-link" target="_blank">MyFitnessPal</a>
+                        <a href="https://www.apple.com/health" class="resource-link" target="_blank">Apple Health</a>
+                        <a href="https://www.fitbit.com" class="resource-link" target="_blank">Fitbit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <div class="footer-info">
+            © 2024 Tree of Life AI • Educational information only • Not medical advice • Always consult qualified healthcare professionals
+        </div>
+    </div>
+</body>
+</html>
