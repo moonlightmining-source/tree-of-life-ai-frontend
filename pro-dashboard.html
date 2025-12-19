@@ -5,46 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pro Dashboard - Tree of Life AI</title>
     <style>
-        :root {
-            --amber-light: #FDB71A;
-            --amber-dark: #B8860B;
-            --peach-gold: #EEC591;
-            --pure-black: #000;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--pure-black);
-            color: var(--amber-light);
-            min-height: 100vh;
+        :root {
+            --amber-light: #D4A574;
+            --amber-medium: #C19A6B;
+            --bronze-deep: #B8860B;
+            --bronze-light: #A0826D;
+            --peach-gold: #EEC591;
+            --pure-black: #000;
         }
 
-        /* Sidebar */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: url('Images/Background.png') center center fixed;
+            background-size: cover;
+            color: var(--amber-light);
+            min-height: 100vh;
+            display: flex;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: -1;
+        }
+
+        /* SIDEBAR */
         .sidebar {
             position: fixed;
             left: 0;
             top: 0;
             width: 250px;
             height: 100vh;
-            background: linear-gradient(180deg, var(--pure-black), #0a0a0a);
-            border-right: 1px solid rgba(253, 183, 26, 0.2);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-right: 2px solid var(--bronze-deep);
             padding: 2rem 1rem;
             overflow-y: auto;
+            z-index: 100;
         }
 
         .logo {
             font-size: 1.5rem;
             font-weight: bold;
             margin-bottom: 2rem;
-            background: linear-gradient(135deg, var(--amber-light), var(--peach-gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--amber-light);
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .nav-menu {
@@ -59,16 +77,23 @@
             display: flex;
             align-items: center;
             padding: 0.75rem 1rem;
-            color: var(--peach-gold);
+            color: var(--amber-medium);
             text-decoration: none;
             border-radius: 8px;
             transition: all 0.3s ease;
+            border: 1px solid transparent;
         }
 
-        .nav-link:hover,
+        .nav-link:hover {
+            background: rgba(212, 165, 116, 0.1);
+            color: var(--peach-gold);
+            border-color: var(--bronze-deep);
+        }
+
         .nav-link.active {
-            background: rgba(253, 183, 26, 0.1);
+            background: rgba(212, 165, 116, 0.2);
             color: var(--amber-light);
+            border-color: var(--bronze-deep);
         }
 
         .nav-link .icon {
@@ -76,10 +101,12 @@
             font-size: 1.2rem;
         }
 
-        /* Main Content */
+        /* MAIN CONTENT */
         .main-content {
             margin-left: 250px;
             padding: 2rem;
+            flex: 1;
+            min-height: 100vh;
         }
 
         .header {
@@ -90,22 +117,61 @@
         }
 
         .header h1 {
-            font-size: 2rem;
-            background: linear-gradient(135deg, var(--amber-light), var(--peach-gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 2.5rem;
+            color: var(--amber-light);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .user-badge {
-            padding: 0.5rem 1rem;
-            background: rgba(253, 183, 26, 0.1);
-            border: 1px solid var(--amber-dark);
-            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 10px;
             color: var(--amber-light);
             font-weight: bold;
         }
 
-        /* Stats Grid */
+        /* UPGRADE NOTICE */
+        .upgrade-notice {
+            background: rgba(255, 193, 7, 0.15);
+            border: 3px solid #FFC107;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .upgrade-notice h2 {
+            margin-bottom: 1rem;
+            color: #FFC107;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .upgrade-notice p {
+            margin-bottom: 1.5rem;
+            color: var(--amber-light);
+        }
+
+        .upgrade-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #FFC107, #FF9800);
+            color: var(--pure-black);
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upgrade-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(255, 193, 7, 0.5);
+        }
+
+        /* STATS GRID */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -114,16 +180,18 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, rgba(253, 183, 26, 0.05), rgba(184, 134, 11, 0.05));
-            border: 1px solid rgba(253, 183, 26, 0.3);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
             border-radius: 12px;
             padding: 1.5rem;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
         }
 
         .stat-card:hover {
             transform: translateY(-3px);
             border-color: var(--amber-light);
+            box-shadow: 0 6px 20px rgba(212, 165, 116, 0.3);
         }
 
         .stat-icon {
@@ -132,7 +200,7 @@
         }
 
         .stat-label {
-            color: var(--peach-gold);
+            color: var(--amber-medium);
             font-size: 0.9rem;
             margin-bottom: 0.5rem;
         }
@@ -148,11 +216,12 @@
             color: #22c55e;
         }
 
-        /* Content Sections */
+        /* SECTIONS */
         .section {
-            background: rgba(253, 183, 26, 0.03);
-            border: 1px solid rgba(253, 183, 26, 0.2);
-            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
             padding: 2rem;
             margin-bottom: 2rem;
         }
@@ -166,26 +235,27 @@
 
         .section-title {
             font-size: 1.5rem;
-            color: var(--amber-light);
+            color: var(--peach-gold);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
         }
 
         .btn {
             padding: 0.75rem 1.5rem;
-            background: linear-gradient(135deg, var(--amber-dark), var(--amber-light));
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
             color: var(--pure-black);
             border: none;
             border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(253, 183, 26, 0.3);
+            box-shadow: 0 5px 15px rgba(212, 165, 116, 0.3);
         }
 
-        /* Table */
+        /* TABLE */
         .table {
             width: 100%;
             border-collapse: collapse;
@@ -194,22 +264,22 @@
         .table th {
             text-align: left;
             padding: 1rem;
-            background: rgba(253, 183, 26, 0.1);
+            background: rgba(212, 165, 116, 0.1);
             color: var(--amber-light);
-            border-bottom: 2px solid rgba(253, 183, 26, 0.3);
+            border-bottom: 2px solid var(--bronze-deep);
         }
 
         .table td {
             padding: 1rem;
-            border-bottom: 1px solid rgba(253, 183, 26, 0.1);
-            color: var(--peach-gold);
+            border-bottom: 1px solid rgba(184, 134, 11, 0.3);
+            color: var(--amber-medium);
         }
 
         .table tr:hover {
-            background: rgba(253, 183, 26, 0.05);
+            background: rgba(212, 165, 116, 0.05);
         }
 
-        /* Protocol Cards */
+        /* PROTOCOL CARDS */
         .protocols-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -217,42 +287,40 @@
         }
 
         .protocol-card {
-            background: rgba(253, 183, 26, 0.05);
-            border: 1px solid rgba(253, 183, 26, 0.3);
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--bronze-deep);
             border-radius: 12px;
             padding: 1.5rem;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
         }
 
         .protocol-card:hover {
             border-color: var(--amber-light);
             transform: translateY(-3px);
-        }
-
-        .protocol-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
+            box-shadow: 0 6px 20px rgba(212, 165, 116, 0.3);
         }
 
         .protocol-title {
             font-size: 1.2rem;
-            color: var(--amber-light);
+            color: var(--peach-gold);
             margin-bottom: 0.5rem;
         }
 
         .protocol-tag {
             padding: 0.25rem 0.75rem;
-            background: rgba(253, 183, 26, 0.2);
+            background: rgba(212, 165, 116, 0.2);
+            border: 1px solid var(--bronze-deep);
             border-radius: 4px;
             font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 1rem;
         }
 
         .protocol-description {
-            color: var(--peach-gold);
+            color: var(--amber-medium);
             margin-bottom: 1rem;
             font-size: 0.9rem;
+            line-height: 1.6;
         }
 
         .protocol-actions {
@@ -262,65 +330,76 @@
 
         .btn-small {
             padding: 0.5rem 1rem;
-            background: var(--amber-dark);
+            background: var(--bronze-deep);
             color: var(--pure-black);
             border: none;
             border-radius: 6px;
             font-size: 0.9rem;
             cursor: pointer;
+            transition: all 0.3s;
         }
 
         .btn-small:hover {
             background: var(--amber-light);
         }
 
-        /* Upgrade Notice */
-        .upgrade-notice {
-            background: rgba(253, 183, 26, 0.1);
-            border: 2px solid var(--amber-dark);
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            margin: 2rem 0;
-        }
-
-        .upgrade-notice h2 {
-            margin-bottom: 1rem;
-            color: var(--amber-light);
-        }
-
-        .upgrade-notice p {
-            margin-bottom: 1.5rem;
-            color: var(--peach-gold);
-        }
-
-        /* Chart Placeholder */
+        /* CHART PLACEHOLDER */
         .chart-placeholder {
             height: 300px;
-            background: rgba(253, 183, 26, 0.05);
-            border: 1px dashed rgba(253, 183, 26, 0.3);
+            background: rgba(212, 165, 116, 0.05);
+            border: 2px dashed var(--bronze-deep);
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--peach-gold);
+            color: var(--amber-medium);
         }
 
+        /* FOOTER */
+        .footer {
+            background: transparent;
+            border-top: 2px solid rgba(212, 165, 116, 0.3);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            margin-left: 250px;
+        }
+
+        .footer-info {
+            font-size: 0.75rem;
+            color: var(--amber-light);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+        }
+
+        /* MOBILE */
         @media (max-width: 768px) {
             .sidebar {
                 width: 100%;
                 height: auto;
                 position: relative;
+                border-right: none;
+                border-bottom: 2px solid var(--bronze-deep);
             }
 
             .main-content {
                 margin-left: 0;
             }
+
+            .footer {
+                margin-left: 0;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .protocols-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
+    <!-- SIDEBAR -->
     <div class="sidebar">
         <div class="logo">🌳 Tree of Life Pro</div>
         <ul class="nav-menu">
@@ -361,7 +440,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="subscriptions.html" class="nav-link">
+                <a href="settings.html" class="nav-link">
                     <span class="icon">⚙️</span>
                     Settings
                 </a>
@@ -369,23 +448,25 @@
         </ul>
     </div>
 
-    <!-- Main Content -->
+    <!-- MAIN CONTENT -->
     <div class="main-content">
-        <!-- Upgrade Notice (for non-Pro users) -->
+        <!-- UPGRADE NOTICE -->
         <div id="upgrade-notice" class="upgrade-notice" style="display: none;">
             <h2>🔒 Unlock Pro Features</h2>
             <p>Upgrade to Pro to access client management, custom protocols, advanced analytics, and more!</p>
-            <a href="subscriptions.html" class="btn">Upgrade to Pro - $29.99/month</a>
+            <button class="upgrade-btn" onclick="window.location.href='subscriptions.html'">
+                Upgrade to Pro - $29.99/month
+            </button>
         </div>
 
-        <!-- Dashboard Section -->
+        <!-- DASHBOARD SECTION -->
         <div id="dashboard-section" class="content-section">
             <div class="header">
                 <h1>Pro Dashboard</h1>
                 <div class="user-badge">👤 <span id="user-name">Loading...</span></div>
             </div>
 
-            <!-- Stats -->
+            <!-- STATS -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon">👥</div>
@@ -413,7 +494,7 @@
                 </div>
             </div>
 
-            <!-- Recent Activity -->
+            <!-- RECENT ACTIVITY -->
             <div class="section">
                 <div class="section-header">
                     <h2 class="section-title">Recent Client Activity</h2>
@@ -437,7 +518,7 @@
             </div>
         </div>
 
-        <!-- Clients Section -->
+        <!-- CLIENTS SECTION -->
         <div id="clients-section" class="content-section" style="display: none;">
             <div class="header">
                 <h1>Client Management</h1>
@@ -447,7 +528,7 @@
             <div class="section">
                 <div class="section-header">
                     <h2 class="section-title">Your Clients</h2>
-                    <input type="text" placeholder="Search clients..." style="padding: 0.5rem; border-radius: 6px; background: rgba(253,183,26,0.1); border: 1px solid rgba(253,183,26,0.3); color: var(--amber-light);">
+                    <input type="text" placeholder="Search clients..." style="padding: 0.5rem; border-radius: 6px; background: rgba(0,0,0,0.5); border: 1px solid var(--bronze-deep); color: var(--amber-light);">
                 </div>
                 <table class="table">
                     <thead>
@@ -468,7 +549,7 @@
             </div>
         </div>
 
-        <!-- Protocols Section -->
+        <!-- PROTOCOLS SECTION -->
         <div id="protocols-section" class="content-section" style="display: none;">
             <div class="header">
                 <h1>Custom Protocols</h1>
@@ -477,12 +558,8 @@
 
             <div class="protocols-grid" id="protocols-grid">
                 <div class="protocol-card">
-                    <div class="protocol-header">
-                        <div>
-                            <div class="protocol-title">Sleep Optimization</div>
-                            <div class="protocol-tag">Ayurveda + TCM</div>
-                        </div>
-                    </div>
+                    <div class="protocol-title">Sleep Optimization</div>
+                    <div class="protocol-tag">Ayurveda + TCM</div>
                     <div class="protocol-description">
                         6-week protocol combining Ayurvedic herbs and TCM acupressure for improved sleep quality
                     </div>
@@ -491,11 +568,10 @@
                         <button class="btn-small">Assign</button>
                     </div>
                 </div>
-                <!-- More protocol cards will be loaded here -->
             </div>
         </div>
 
-        <!-- Analytics Section -->
+        <!-- ANALYTICS SECTION -->
         <div id="analytics-section" class="content-section" style="display: none;">
             <div class="header">
                 <h1>Analytics & Insights</h1>
@@ -531,7 +607,7 @@
             </div>
         </div>
 
-        <!-- Resources Section -->
+        <!-- RESOURCES SECTION -->
         <div id="resources-section" class="content-section" style="display: none;">
             <div class="header">
                 <h1>Practitioner Resources</h1>
@@ -540,20 +616,27 @@
             <div class="section">
                 <h2 class="section-title">📚 Resource Library</h2>
                 <ul style="list-style: none; padding: 0;">
-                    <li style="padding: 1rem; border-bottom: 1px solid rgba(253,183,26,0.1);">
-                        <strong>Ayurvedic Protocols Database</strong> - 200+ traditional protocols
+                    <li style="padding: 1rem; border-bottom: 1px solid rgba(184,134,11,0.3);">
+                        <strong style="color: var(--peach-gold);">Ayurvedic Protocols Database</strong> - 200+ traditional protocols
                     </li>
-                    <li style="padding: 1rem; border-bottom: 1px solid rgba(253,183,26,0.1);">
-                        <strong>TCM Point Reference</strong> - Complete acupressure guide
+                    <li style="padding: 1rem; border-bottom: 1px solid rgba(184,134,11,0.3);">
+                        <strong style="color: var(--peach-gold);">TCM Point Reference</strong> - Complete acupressure guide
                     </li>
-                    <li style="padding: 1rem; border-bottom: 1px solid rgba(253,183,26,0.1);">
-                        <strong>Herb Interaction Checker</strong> - Drug-herb interaction database
+                    <li style="padding: 1rem; border-bottom: 1px solid rgba(184,134,11,0.3);">
+                        <strong style="color: var(--peach-gold);">Herb Interaction Checker</strong> - Drug-herb interaction database
                     </li>
-                    <li style="padding: 1rem; border-bottom: 1px solid rgba(253,183,26,0.1);">
-                        <strong>Continuing Education</strong> - Earn CE credits (coming soon)
+                    <li style="padding: 1rem; border-bottom: 1px solid rgba(184,134,11,0.3);">
+                        <strong style="color: var(--peach-gold);">Continuing Education</strong> - Earn CE credits (coming soon)
                     </li>
                 </ul>
             </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <div class="footer-info">
+            © 2024 Tree of Life AI • Educational information only • Not medical advice • Always consult qualified healthcare professionals
         </div>
     </div>
 
@@ -561,7 +644,6 @@
         const API_BASE = 'https://treeoflife-vn25.onrender.com';
         let currentPlan = 'free';
 
-        // Initialize
         document.addEventListener('DOMContentLoaded', async () => {
             const token = localStorage.getItem('authToken');
             const userName = localStorage.getItem('userName');
@@ -572,12 +654,9 @@
             }
 
             document.getElementById('user-name').textContent = userName || 'User';
-
-            // Check subscription
             await checkSubscription();
         });
 
-        // Check if user has Pro subscription
         async function checkSubscription() {
             try {
                 const token = localStorage.getItem('authToken');
@@ -587,20 +666,17 @@
 
                 if (response.ok) {
                     const data = await response.json();
-                    currentPlan = data.plan || 'free';
+                    currentPlan = data.tier || 'free';
 
                     if (currentPlan !== 'pro') {
-                        // Show upgrade notice
                         document.getElementById('upgrade-notice').style.display = 'block';
-                        // Disable pro features
                         document.querySelectorAll('.btn').forEach(btn => {
-                            if (!btn.textContent.includes('Upgrade')) {
+                            if (!btn.classList.contains('upgrade-btn')) {
                                 btn.disabled = true;
                                 btn.style.opacity = '0.5';
                             }
                         });
                     } else {
-                        // Load pro dashboard data
                         loadDashboardData();
                     }
                 }
@@ -609,7 +685,6 @@
             }
         }
 
-        // Load dashboard data
         async function loadDashboardData() {
             try {
                 const token = localStorage.getItem('authToken');
@@ -619,7 +694,6 @@
 
                 if (response.ok) {
                     const data = await response.json();
-                    // Update stats
                     document.getElementById('client-count').textContent = data.client_count || 0;
                     document.getElementById('protocol-count').textContent = data.protocol_count || 0;
                     document.getElementById('consultation-count').textContent = data.consultation_count || 0;
@@ -629,26 +703,19 @@
             }
         }
 
-        // Show section
         function showSection(sectionName) {
-            // Hide all sections
             document.querySelectorAll('.content-section').forEach(section => {
                 section.style.display = 'none';
             });
 
-            // Remove active class from all nav links
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active');
             });
 
-            // Show selected section
             document.getElementById(`${sectionName}-section`).style.display = 'block';
-
-            // Add active class to clicked nav link
             event.target.closest('.nav-link').classList.add('active');
         }
 
-        // Placeholder functions
         function addClient() {
             if (currentPlan !== 'pro') {
                 window.location.href = 'subscriptions.html';
