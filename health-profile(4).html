@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Profile - Tree of Life AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --amber-light: #D4A574;
+            --amber-medium: #C19A6B;
+            --bronze-deep: #B8860B;
+            --bronze-light: #A0826D;
+            --peach-gold: #EEC591;
+            --pure-black: #000;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: url('Images/Background.png') center center fixed;
+            background-size: cover;
+            color: var(--amber-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: -1;
+        }
+
+        /* HEADER */
+        .top-header {
+            background: transparent;
+            padding: 20px 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .header-left, .header-right {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .logo-container {
+            position: relative;
+            width: 600px;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: url('Images/Logoframe.png') center center;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .logo-img {
+            height: 320px !important;
+            width: auto !important;
+            cursor: pointer;
+            mix-blend-mode: screen;
+        }
+
+        .header-btn {
+            width: 180px;
+            height: 180px;
+            background: url('Images/Button.png') center center;
+            background-size: cover;
+            color: var(--amber-light);
+            border: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.4);
+        }
+
+        .header-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 25px rgba(212, 165, 116, 0.7);
+            color: var(--peach-gold);
+            filter: brightness(1.2);
+        }
+
+        /* CONTENT */
+        .content-wrapper {
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--amber-light);
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* TABS */
+        .profile-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            width: 160px;
+            height: 160px;
+            background: url('Images/Button.png') center center;
+            background-size: cover;
+            color: var(--amber-light);
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.4);
+            opacity: 0.6;
+        }
+
+        .tab-btn.active {
+            opacity: 1;
+            color: var(--peach-gold);
+            filter: brightness(1.2);
+            box-shadow: 0 6px 25px rgba(212, 165, 116, 0.7);
+            transform: scale(1.05);
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        /* TAB CONTENT */
+        .tab-content {
+            display: none;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* UPLOAD SECTION */
+        .upload-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .upload-area {
+            border: 3px dashed var(--bronze-deep);
+            border-radius: 15px;
+            padding: 3rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: var(--amber-light);
+            background: rgba(212, 165, 116, 0.1);
+        }
+
+        .upload-area.dragover {
+            border-color: var(--peach-gold);
+            background: rgba(212, 165, 116, 0.2);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            color: var(--amber-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-subtext {
+            font-size: 0.9rem;
+            color: var(--bronze-light);
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        /* FORM FIELDS */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            color: var(--amber-light);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 10px;
+            color: var(--amber-light);
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--amber-light);
+            box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.2);
+        }
+
+        /* BUTTONS */
+        .btn {
+            width: 140px;
+            height: 140px;
+            background: url('Images/Button.png') center center;
+            background-size: cover;
+            color: var(--amber-light);
+            border: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.4);
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 25px rgba(212, 165, 116, 0.7);
+            color: var(--peach-gold);
+            filter: brightness(1.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        /* RESULTS LIST */
+        .results-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .result-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .result-card:hover {
+            border-color: var(--amber-light);
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.3);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .result-title {
+            font-size: 1.3rem;
+            color: var(--peach-gold);
+            font-weight: 700;
+        }
+
+        .result-date {
+            color: var(--bronze-light);
+        }
+
+        .result-provider {
+            color: var(--amber-medium);
+            margin-bottom: 1rem;
+        }
+
+        .result-values {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .result-value {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 1rem;
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+        }
+
+        .value-name {
+            font-weight: 600;
+        }
+
+        .value-number {
+            color: var(--peach-gold);
+            font-weight: 700;
+        }
+
+        .value-range {
+            color: var(--bronze-light);
+            font-size: 0.9rem;
+        }
+
+        .status-normal {
+            color: #4ade80;
+        }
+
+        .status-abnormal {
+            color: #ff6666;
+        }
+
+        /* EXTRACTION PREVIEW */
+        .extraction-preview {
+            display: none;
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .extraction-preview.active {
+            display: block;
+        }
+
+        .preview-title {
+            font-size: 1.5rem;
+            color: var(--peach-gold);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .extracted-values {
+            display: grid;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .extracted-value {
+            display: grid;
+            grid-template-columns: 150px 1fr 100px 150px;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .extracted-value input {
+            padding: 0.5rem;
+        }
+
+        /* LOADING */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid rgba(212, 165, 116, 0.3);
+            border-top: 4px solid var(--amber-light);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* MESSAGES */
+        .message {
+            display: none;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.error {
+            background: rgba(255, 68, 68, 0.1);
+            border: 2px solid #ef4444;
+            color: #ff6666;
+        }
+
+        .message.success {
+            background: rgba(74, 222, 128, 0.1);
+            border: 2px solid #4ade80;
+            color: #4ade80;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .top-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .header-btn {
+                width: 90px;
+                height: 90px;
+                font-size: 0.65rem;
+            }
+
+            .logo-container {
+                width: 240px;
+                height: 240px;
+            }
+
+            .logo-img {
+                height: 180px !important;
+            }
+
+            .tab-btn {
+                width: 100px;
+                height: 100px;
+                font-size: 0.7rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .btn {
+                width: 100px;
+                height: 100px;
+                font-size: 0.75rem;
+            }
+
+            .extracted-value {
+                grid-template-columns: 1fr;
+            }
+
+            .result-value {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <div class="top-header">
+        <div class="header-left">
+            <button class="header-btn" onclick="window.location.href='index.html'">Home</button>
+            <button class="header-btn" onclick="window.location.href='about.html'">About</button>
+        </div>
+        
+        <div class="logo-container">
+            <img src="Images/Tree_of_life_logo_800x800.png" alt="Tree of Life AI" class="logo-img" onclick="window.location.href='index.html'">
+        </div>
+        
+        <div class="header-right">
+            <button class="header-btn" onclick="window.location.href='settings.html'">Settings</button>
+            <button class="header-btn" onclick="window.location.href='chat-history.html'">Chat History</button>
+        </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content-wrapper">
+        <h1 class="page-title">Health Profile</h1>
+
+        <!-- TABS -->
+        <div class="profile-tabs">
+            <button class="tab-btn" onclick="switchTab('personal')">Personal Info</button>
+            <button class="tab-btn" onclick="switchTab('medical')">Medical History</button>
+            <button class="tab-btn" onclick="switchTab('medications')">Medications</button>
+            <button class="tab-btn active" onclick="switchTab('tests')">Test Results</button>
+        </div>
+
+        <!-- PERSONAL INFO TAB -->
+        <div id="personalTab" class="tab-content">
+            <h2 style="color: var(--peach-gold); margin-bottom: 1.5rem;">Personal Information</h2>
+            <form id="personalForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" id="firstName" placeholder="John">
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" id="lastName" placeholder="Doe">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Date of Birth</label>
+                        <input type="date" id="dob">
+                    </div>
+                    <div class="form-group">
+                        <label>Blood Type</label>
+                        <select id="bloodType">
+                            <option value="">Select...</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn">Save</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- MEDICAL HISTORY TAB -->
+        <div id="medicalTab" class="tab-content">
+            <h2 style="color: var(--peach-gold); margin-bottom: 1.5rem;">Medical History</h2>
+            <p style="color: var(--amber-medium); text-align: center;">Coming soon...</p>
+        </div>
+
+        <!-- MEDICATIONS TAB -->
+        <div id="medicationsTab" class="tab-content">
+            <h2 style="color: var(--peach-gold); margin-bottom: 1.5rem;">Current Medications</h2>
+            <p style="color: var(--amber-medium); text-align: center;">Coming soon...</p>
+        </div>
+
+        <!-- TEST RESULTS TAB -->
+        <div id="testsTab" class="tab-content active">
+            <div id="errorMessage" class="message error"></div>
+            <div id="successMessage" class="message success"></div>
+
+            <!-- UPLOAD SECTION -->
+            <div id="uploadSection" class="upload-section">
+                <h2 style="color: var(--peach-gold); margin-bottom: 1.5rem;">📋 Upload Lab Results</h2>
+                
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📤</div>
+                    <div class="upload-text">Drop image or PDF here</div>
+                    <div class="upload-subtext">or click to browse</div>
+                    <div class="upload-subtext" style="margin-top: 1rem;">
+                        Supports: JPG, PNG, PDF from any medical provider
+                    </div>
+                </div>
+                <input type="file" id="fileInput" accept="image/*,.pdf">
+
+                <div class="form-row" style="max-width: 600px; margin: 2rem auto;">
+                    <div class="form-group">
+                        <label>Provider</label>
+                        <input type="text" id="provider" placeholder="Kaiser Permanente, LabCorp, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label>Test Date</label>
+                        <input type="date" id="testDate">
+                    </div>
+                </div>
+            </div>
+
+            <!-- LOADING -->
+            <div id="loadingSection" class="loading">
+                <div class="spinner"></div>
+                <div style="color: var(--amber-light); font-size: 1.2rem;">
+                    🤖 AI is extracting data from your test results...
+                </div>
+            </div>
+
+            <!-- EXTRACTION PREVIEW -->
+            <div id="extractionPreview" class="extraction-preview">
+                <div class="preview-title">Review Extracted Results</div>
+                
+                <div class="form-row" style="margin-bottom: 2rem;">
+                    <div class="form-group">
+                        <label>Test Type</label>
+                        <select id="extractedTestType">
+                            <option value="Blood Panel">Blood Panel</option>
+                            <option value="Lipid Panel">Lipid Panel</option>
+                            <option value="Metabolic Panel">Metabolic Panel</option>
+                            <option value="Thyroid Panel">Thyroid Panel</option>
+                            <option value="Urinalysis">Urinalysis</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Provider</label>
+                        <input type="text" id="extractedProvider">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Test Date</label>
+                    <input type="date" id="extractedDate">
+                </div>
+
+                <h3 style="color: var(--amber-light); margin: 2rem 0 1rem;">Extracted Values:</h3>
+                <div id="extractedValuesList" class="extracted-values">
+                    <!-- Dynamically populated -->
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn" onclick="cancelExtraction()">Cancel</button>
+                    <button class="btn" onclick="saveLabResults()">Save to Profile</button>
+                </div>
+            </div>
+
+            <!-- RESULTS LIST -->
+            <div id="resultsListSection">
+                <h2 style="color: var(--peach-gold); margin: 3rem 0 1.5rem; text-align: center;">
+                    Your Lab Results
+                </h2>
+                <div id="resultsList" class="results-list">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://treeoflife-vn25.onrender.com';
+        let currentFile = null;
+        let extractedData = null;
+
+        // Get auth token
+        function getAuthToken() {
+            return localStorage.getItem('authToken');
+        }
+
+        // Check if user is logged in
+        function checkAuth() {
+            if (!getAuthToken()) {
+                window.location.href = 'auth.html';
+            }
+        }
+
+        // Tab switching
+        function switchTab(tab) {
+            // Remove active from all tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            // Add active to selected tab
+            const tabMap = {
+                'personal': 'personalTab',
+                'medical': 'medicalTab',
+                'medications': 'medicationsTab',
+                'tests': 'testsTab'
+            };
+
+            document.getElementById(tabMap[tab]).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Upload area interactions
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            if (e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
+                handleFileSelect(e.dataTransfer.files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileSelect(e.target.files[0]);
+            }
+        });
+
+        // Handle file selection
+        async function handleFileSelect(file) {
+            currentFile = file;
+
+            // Validate file
+            const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
+            if (!validTypes.includes(file.type)) {
+                showError('Please upload a JPG, PNG, or PDF file');
+                return;
+            }
+
+            // Check required fields
+            const provider = document.getElementById('provider').value;
+            const testDate = document.getElementById('testDate').value;
+
+            if (!provider || !testDate) {
+                showError('Please fill in Provider and Test Date before uploading');
+                return;
+            }
+
+            // Upload and extract
+            await uploadAndExtract(file, provider, testDate);
+        }
+
+        // Upload and extract data
+        async function uploadAndExtract(file, provider, testDate) {
+            // Show loading
+            document.getElementById('uploadSection').style.display = 'none';
+            document.getElementById('loadingSection').classList.add('active');
+
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('provider', provider);
+                formData.append('test_date', testDate);
+
+                const response = await fetch(`${API_URL}/api/lab-results/upload`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${getAuthToken()}`
+                    },
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Upload failed');
+                }
+
+                const data = await response.json();
+                extractedData = data;
+
+                // Show extraction preview
+                showExtractionPreview(data);
+
+            } catch (error) {
+                console.error('Upload error:', error);
+                showError('Failed to extract data. Please try again.');
+                resetUpload();
+            }
+        }
+
+        // Show extraction preview
+        function showExtractionPreview(data) {
+            document.getElementById('loadingSection').classList.remove('active');
+            document.getElementById('extractionPreview').classList.add('active');
+
+            // Populate fields
+            document.getElementById('extractedTestType').value = data.test_type || 'Blood Panel';
+            document.getElementById('extractedProvider').value = data.provider || '';
+            document.getElementById('extractedDate').value = data.test_date || '';
+
+            // Populate extracted values
+            const valuesList = document.getElementById('extractedValuesList');
+            valuesList.innerHTML = '';
+
+            if (data.results && data.results.length > 0) {
+                data.results.forEach((result, index) => {
+                    const valueDiv = document.createElement('div');
+                    valueDiv.className = 'extracted-value';
+                    valueDiv.innerHTML = `
+                        <input type="text" value="${result.name}" data-index="${index}" data-field="name">
+                        <input type="text" value="${result.value}" data-index="${index}" data-field="value">
+                        <input type="text" value="${result.unit}" data-index="${index}" data-field="unit">
+                        <input type="text" value="${result.reference_range}" data-index="${index}" data-field="range">
+                    `;
+                    valuesList.appendChild(valueDiv);
+                });
+            } else {
+                valuesList.innerHTML = '<p style="color: var(--amber-medium); text-align: center;">No values extracted. Please add manually.</p>';
+            }
+        }
+
+        // Cancel extraction
+        function cancelExtraction() {
+            resetUpload();
+        }
+
+        // Reset upload
+        function resetUpload() {
+            document.getElementById('uploadSection').style.display = 'block';
+            document.getElementById('loadingSection').classList.remove('active');
+            document.getElementById('extractionPreview').classList.remove('active');
+            currentFile = null;
+            extractedData = null;
+            fileInput.value = '';
+        }
+
+        // Save lab results
+        async function saveLabResults() {
+            try {
+                // Gather updated data
+                const testType = document.getElementById('extractedTestType').value;
+                const provider = document.getElementById('extractedProvider').value;
+                const testDate = document.getElementById('extractedDate').value;
+
+                // Gather results from inputs
+                const results = [];
+                document.querySelectorAll('.extracted-value').forEach(div => {
+                    const inputs = div.querySelectorAll('input');
+                    results.push({
+                        name: inputs[0].value,
+                        value: inputs[1].value,
+                        unit: inputs[2].value,
+                        reference_range: inputs[3].value
+                    });
+                });
+
+                const response = await fetch(`${API_URL}/api/lab-results/save`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${getAuthToken()}`
+                    },
+                    body: JSON.stringify({
+                        test_type: testType,
+                        provider: provider,
+                        test_date: testDate,
+                        results: results,
+                        file_url: extractedData.file_url
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Save failed');
+                }
+
+                showSuccess('✅ Lab results saved successfully!');
+                resetUpload();
+                
+                // Reload results
+                loadLabResults();
+
+            } catch (error) {
+                console.error('Save error:', error);
+                showError('Failed to save results. Please try again.');
+            }
+        }
+
+        // Load lab results
+        async function loadLabResults() {
+            try {
+                const response = await fetch(`${API_URL}/api/lab-results`, {
+                    headers: {
+                        'Authorization': `Bearer ${getAuthToken()}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load results');
+                }
+
+                const results = await response.json();
+                displayResults(results);
+
+            } catch (error) {
+                console.error('Load error:', error);
+                showError('Failed to load results');
+            }
+        }
+
+        // Display results
+        function displayResults(results) {
+            const resultsList = document.getElementById('resultsList');
+            
+            if (!results || results.length === 0) {
+                resultsList.innerHTML = '<p style="color: var(--amber-medium); text-align: center; padding: 2rem;">No lab results yet. Upload your first test results above!</p>';
+                return;
+            }
+
+            resultsList.innerHTML = results.map(result => `
+                <div class="result-card">
+                    <div class="result-header">
+                        <div class="result-title">${result.test_type}</div>
+                        <div class="result-date">${new Date(result.test_date).toLocaleDateString()}</div>
+                    </div>
+                    <div class="result-provider">Provider: ${result.provider}</div>
+                    <div class="result-values">
+                        ${result.results.map(r => `
+                            <div class="result-value">
+                                <span class="value-name">${r.name}</span>
+                                <span class="value-number">${r.value} ${r.unit}</span>
+                                <span class="value-range">${r.reference_range}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+            setTimeout(() => errorDiv.classList.remove('show'), 5000);
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.classList.add('show');
+            setTimeout(() => successDiv.classList.remove('show'), 5000);
+        }
+
+        // Initialize
+        checkAuth();
+        loadLabResults();
+
+        // Set default date to today
+        document.getElementById('testDate').valueAsDate = new Date();
+    </script>
+</body>
+</html>
