@@ -905,113 +905,131 @@
             }
         }
 
-        /* 📱 TABLET / IPAD RESPONSIVE (768px - 1024px) */
-        @media (min-width: 768px) and (max-width: 1024px) {
-            .top-header {
-                max-width: 900px;      /* ← ADD THIS LINE */
-                margin: 0 auto;        /* ← ADD THIS LINE */
-                padding: 20px 2rem;
-                gap: 1.5rem;
-        }
+       /* 📱 TABLET / IPAD RESPONSIVE (768px - 1024px) - FIXED & SMALLER */
+@media (min-width: 768px) and (max-width: 1024px) {
+    /* ✅ HEADER: Smaller and centered */
+    .top-header {
+        max-width: 650px;
+        margin: 0 auto;
+        padding: 15px 1.5rem;
+        gap: 1rem;
+    }
 
-            /* ✅ LOGO: Scale down for iPad */
-            .logo-container {
-                width: 400px;
-                height: 400px;
-            }
+    .header-left, .header-right {
+        gap: 0.75rem;
+    }
 
-            .logo-img {
-                height: 240px !important;
-            }
+    /* ✅ LOGO: Much smaller (300px vs 600px) */
+    .logo-container {
+        width: 300px;
+        height: 300px;
+    }
 
-            /* ✅ HEADER BUTTONS: Medium size for iPad */
-            .header-btn {
-                width: 120px;
-                height: 120px;
-                font-size: 0.75rem;
-            }
+    .logo-img {
+        height: 180px !important;
+    }
 
-            /* ✅ CENTER ALL CONTENT */
-            .content-wrapper {
-                max-width: 900px;
-                margin: 0 auto;
-                padding: 2rem;
-            }
+    /* ✅ HEADER BUTTONS: Small (90px) */
+    .header-btn {
+        width: 90px;
+        height: 90px;
+        font-size: 0.65rem;
+        padding: 0.5rem;
+    }
 
-            /* ✅ PRIMARY BUTTONS: Medium size */
-            .primary-buttons {
-                gap: 1.5rem;
-            }
+    /* ✅ CONTENT: Match header width */
+    .content-wrapper {
+        max-width: 650px;
+        margin: 0 auto;
+        padding: 1.5rem 1rem;
+    }
 
-            .new-chat-btn, .logout-btn {
-                width: 140px;
-                height: 140px;
-                font-size: 0.95rem;
-            }
+    /* ✅ PRIMARY BUTTONS: Small (110px) */
+    .primary-buttons {
+        gap: 1rem;
+    }
 
-            /* ✅ QUICK ACCESS: 3 across with medium buttons */
-            .quick-access-buttons {
-                gap: 1rem;
-                display: grid;
-                grid-template-columns: repeat(3, 140px);
-                justify-content: center;
-            }
+    .new-chat-btn, .logout-btn {
+        width: 110px;
+        height: 110px;
+        font-size: 0.8rem;
+    }
 
-            .quick-btn, .print-btn {
-                width: 140px;
-                height: 140px;
-                font-size: 0.85rem;
-            }
+    /* ✅ QUICK ACCESS: 3 across, 110px buttons */
+    .quick-access-buttons {
+        gap: 0.75rem;
+        display: grid;
+        grid-template-columns: repeat(3, 110px);
+        justify-content: center;
+    }
 
-            /* ✅ TRADITIONS: 4 across with medium buttons */
-            .traditions-grid {
-                grid-template-columns: repeat(4, 140px);
-                gap: 1rem;
-                justify-content: center;
-            }
+    .quick-btn, .print-btn {
+        width: 110px;
+        height: 110px;
+        font-size: 0.75rem;
+    }
 
-            .tradition-btn {
-                width: 140px;
-                height: 140px;
-                font-size: 0.75rem;
-            }
+    /* ✅ TRADITIONS: 3 across (not 4), 110px buttons */
+    .traditions-grid {
+        grid-template-columns: repeat(3, 110px);
+        gap: 0.75rem;
+        justify-content: center;
+    }
 
-            /* ✅ CHAT SECTION: Ensure centering */
-            .chat-section {
-                margin: 0 auto;
-            }
+    .tradition-btn {
+        width: 110px;
+        height: 110px;
+        font-size: 0.65rem;
+        padding: 0.5rem;
+    }
 
-            /* ✅ INPUT: Keep desktop layout (buttons beside input) */
-            .input-container {
-                display: flex;
-                flex-direction: row;
-                align-items: stretch;
-            }
+    /* ✅ CHAT SECTION */
+    .chat-section {
+        margin: 0 auto;
+        padding: 1.5rem;
+    }
 
-            .buttons-row {
-                display: flex;
-                gap: 1rem;
-            }
+    .welcome-section h2 {
+        font-size: 1.5rem;
+    }
 
-            #userInput {
-                font-size: 1.1rem;
-            }
+    .welcome-section p {
+        font-size: 1rem;
+    }
 
-            #sendBtn, .image-upload-label {
-                width: 90px;
-                height: 90px;
-            }
+    /* ✅ INPUT: Desktop layout, smaller buttons */
+    .input-container {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+    }
 
-            .image-upload-label {
-                font-size: 0.65rem;
-            }
+    .buttons-row {
+        display: flex;
+        gap: 0.75rem;
+    }
 
-            /* ✅ PRINT BUTTON: Medium size */
-            .print-chat-btn {
-                width: 140px;
-                height: 140px;
-                font-size: 0.85rem;
-            }
+    #userInput {
+        font-size: 1rem;
+        min-height: 70px;
+    }
+
+    #sendBtn, .image-upload-label {
+        width: 80px;
+        height: 80px;
+    }
+
+    .image-upload-label {
+        font-size: 0.6rem;
+    }
+
+    /* ✅ PRINT BUTTON: Small */
+    .print-chat-btn {
+        width: 110px;
+        height: 110px;
+        font-size: 0.75rem;
+    }
+}
         }
     </style>
 </head>
