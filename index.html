@@ -578,6 +578,60 @@
             color: var(--peach-gold);
             filter: brightness(1.2);
         }
+        /* 💬 TOOLTIP FOR ADD IMAGE BUTTON - APPEARS BELOW */
+        .image-upload-label {
+            position: relative;
+        }
+        
+        .image-upload-label::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: 100%;  /* This makes it appear BELOW */
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 10px;
+            
+            /* Styling */
+            background: rgba(0, 0, 0, 0.9);
+            color: var(--amber-light);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            
+            /* Hidden by default */
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            
+            /* Arrow pointing up */
+            border: 1px solid var(--bronze-deep);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Arrow/triangle pointing up to button */
+        .image-upload-label::before {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 2px;
+            
+            border: 6px solid transparent;
+            border-bottom-color: rgba(0, 0, 0, 0.9);
+            
+            /* Hidden by default */
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        
+        /* Show tooltip on hover */
+        .image-upload-label:hover::after,
+        .image-upload-label:hover::before {
+            opacity: 1;
+        }
 
         #imageInput {
             display: none;
