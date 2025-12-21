@@ -532,12 +532,12 @@
     </div>
 
     <script>
-        const API_BASE = 'https://treeoflife-vn25.onrender.com';
+        const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:10000' : 'https://tree-of-life-ai.onrender.com';
         let conversations = [];
         let conversationToDelete = null;
 
         // Check auth
-        const authToken = localStorage.getItem('authToken');
+        const authToken = localStorage.getItem('token');
         if (!authToken) {
             window.location.href = 'auth.html?returnTo=chat-history.html';
         }
