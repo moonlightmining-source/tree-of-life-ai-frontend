@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Accounts - Tree of Life AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --amber-light: #D4A574;
+            --amber-medium: #C19A6B;
+            --bronze-deep: #B8860B;
+            --bronze-light: #A0826D;
+            --peach-gold: #EEC591;
+            --pure-black: #000;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: url('Images/Background.png') center center fixed;
+            background-size: cover;
+            color: var(--amber-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: -1;
+        }
+
+        /* 🎨 TRANSPARENT HEADER */
+        .top-header {
+            background: transparent;
+            border-bottom: 0px solid rgba(212, 165, 116, 0.3);
+            padding: 20px 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .header-left, .header-right {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .header-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 🎨 LOGO INSIDE OCTAGONAL FRAME */
+        .logo-container {
+            position: relative;
+            width: 600px;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: url('Images/Logoframe.png') center center;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .logo-img {
+            height: 320px !important;
+            width: auto !important;
+            cursor: pointer;
+            display: block;
+            position: relative;
+            z-index: 2;
+            mix-blend-mode: screen;
+        }
+
+        /* 🛑 HEADER BUTTONS */
+        .header-btn {
+            width: 180px;
+            height: 180px;
+            background: url('Images/Button.png') center center;
+            background-size: cover;
+            background-color: transparent !important;
+            color: var(--amber-light);
+            border: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            clip-path: polygon(
+                30% 0%, 70% 0%, 
+                100% 30%, 100% 70%, 
+                70% 100%, 30% 100%, 
+                0% 70%, 0% 30%
+            );
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.4);
+        }
+
+        .header-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 25px rgba(212, 165, 116, 0.7);
+            color: var(--peach-gold);
+            filter: brightness(1.2);
+        }
+
+        /* CONTAINER */
+        .container {
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+            color: var(--amber-light);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .subtitle {
+            color: var(--amber-medium);
+            margin-bottom: 2rem;
+            text-align: center;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        /* TIER NOTICE */
+        .tier-notice {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .tier-notice.premium {
+            border-color: #4CAF50;
+        }
+
+        .tier-notice h3 {
+            color: var(--peach-gold);
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        /* FAMILY GRID */
+        .family-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .family-card {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .family-card:hover {
+            border-color: var(--amber-light);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(212, 165, 116, 0.4);
+        }
+
+        .family-card.owner {
+            border-color: var(--peach-gold);
+            background: linear-gradient(135deg, rgba(212, 165, 116, 0.2), rgba(184, 134, 11, 0.2));
+        }
+
+        .member-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--pure-black);
+            margin: 0 auto 1rem;
+        }
+
+        .member-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            color: var(--peach-gold);
+        }
+
+        .member-role {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--bronze-light);
+            margin-bottom: 1rem;
+        }
+
+        .member-stats {
+            border-top: 1px solid rgba(184, 134, 11, 0.3);
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .stat-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4CAF50;
+            color: #4CAF50;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .member-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .member-actions.full {
+            grid-template-columns: 1fr;
+        }
+
+        .btn {
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+        }
+
+        .btn-secondary {
+            background: rgba(212, 165, 116, 0.2);
+            color: var(--amber-light);
+            border: 1px solid var(--bronze-deep);
+        }
+
+        .btn-success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+            border: 1px solid #4CAF50;
+        }
+
+        .btn-danger {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff6666;
+            border: 1px solid #ff0000;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-add {
+            width: 135px;
+            height: 135px;
+            background: url('Images/Button.png') center center;
+            background-size: cover;
+            background-color: transparent !important;
+            color: var(--amber-light);
+            border: none;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            clip-path: polygon(
+                30% 0%, 70% 0%, 
+                100% 30%, 100% 70%, 
+                70% 100%, 30% 100%, 
+                0% 70%, 0% 30%
+            );
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.4);
+        }
+
+        .btn-add:hover:not(:disabled) {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 25px rgba(212, 165, 116, 0.7);
+            color: var(--peach-gold);
+            filter: brightness(1.2);
+        }
+
+        .btn-add:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--peach-gold);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--amber-light);
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .close-btn:hover {
+            background: rgba(212, 165, 116, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--amber-light);
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 8px;
+            color: var(--amber-light);
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--amber-light);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--amber-medium);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--amber-medium);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+        }
+
+        .error-message {
+            background: rgba(255, 0, 0, 0.2);
+            border: 2px solid #ff0000;
+            color: #ff6666;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        /* 🎨 TRANSPARENT FOOTER */
+        .footer {
+            background: transparent;
+            border-top: 2px solid rgba(212, 165, 116, 0.3);
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+
+        .footer-info {
+            font-size: 0.75rem;
+            color: var(--amber-light);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+        }
+
+        /* 📱 TABLET / IPAD (768px - 1399px) */
+        @media (min-width: 768px) and (max-width: 1399px) {
+            .top-header {
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 15px 2rem;
+                justify-content: center;
+                gap: 1.5rem;
+            }
+
+            .header-left, .header-right {
+                gap: 0.75rem;
+            }
+
+            .logo-container {
+                width: 400px;
+                height: 400px;
+            }
+
+            .logo-img {
+                height: 220px !important;
+            }
+
+            .header-btn {
+                width: 120px;
+                height: 120px;
+                font-size: 0.75rem;
+                padding: 0.5rem;
+            }
+
+            .container {
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem 2rem;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .btn-add {
+                width: 120px;
+                height: 120px;
+                font-size: 0.75rem;
+            }
+        }
+
+        /* 📱 MOBILE RESPONSIVE (Phones) */
+        @media (max-width: 767px) {
+            .top-header {
+                flex-direction: column;
+                padding: 15px 1rem;
+                gap: 1rem;
+            }
+
+            .header-left, .header-right {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .header-btn {
+                width: 90px;
+                height: 90px;
+                font-size: 0.75rem;
+            }
+
+            .logo-container {
+                width: 240px;
+                height: 240px;
+            }
+
+            .logo-img {
+                height: 180px !important;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .family-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .member-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <div class="top-header">
+        <div class="header-left">
+            <button class="header-btn" onclick="window.location.href='about.html'">About</button>
+            <button class="header-btn" onclick="window.location.href='subscriptions.html'">Subscribe</button>
+            <button class="header-btn" onclick="window.location.href='resources.html'">Resources</button>
+        </div>
+        
+        <div class="header-center">
+            <div class="logo-container">
+                <img src="Images/Tree_of_life_logo_800x800.png" alt="Tree of Life AI" class="logo-img" onclick="window.location.href='index.html'">
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <button class="header-btn" onclick="window.location.href='settings.html'">Settings</button>
+            <button class="header-btn" onclick="window.location.href='terms.html'">Terms</button>
+            <button class="header-btn" onclick="window.location.href='index.html'">Chat</button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <h1>👨‍👩‍👧‍👦 Family Accounts</h1>
+        <p class="subtitle">Manage health profiles for your family members</p>
+
+        <!-- ERROR MESSAGE -->
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+        <!-- TIER NOTICE -->
+        <div class="tier-notice" id="tierNotice">
+            <h3>Loading subscription...</h3>
+        </div>
+
+        <!-- ADD MEMBER BUTTON -->
+        <div style="text-align: center; margin-bottom: 3rem;">
+            <button class="btn-add" id="addMemberBtn" onclick="openAddModal()">
+                ➕ Add<br>Member
+            </button>
+        </div>
+
+        <!-- LOADING STATE -->
+        <div class="loading" id="loadingState">
+            <p>🌿 Loading family members...</p>
+        </div>
+
+        <!-- FAMILY MEMBERS GRID -->
+        <div class="family-grid" id="familyGrid" style="display: none;">
+            <!-- Members will be loaded here -->
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-state-icon">👨‍👩‍👧‍👦</div>
+            <h3>No family members yet</h3>
+            <p>Add family members to manage their health profiles and chat as them</p>
+        </div>
+    </div>
+
+    <!-- ADD MEMBER MODAL -->
+    <div class="modal" id="addModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add Family Member</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+
+            <form id="addMemberForm">
+                <div class="form-group">
+                    <label for="memberName">Name *</label>
+                    <input type="text" id="memberName" required placeholder="John Doe">
+                </div>
+
+                <div class="form-group">
+                    <label for="memberRelation">Relationship *</label>
+                    <select id="memberRelation" required>
+                        <option value="">Select relationship...</option>
+                        <option value="spouse">Spouse/Partner</option>
+                        <option value="child">Child</option>
+                        <option value="parent">Parent</option>
+                        <option value="sibling">Sibling</option>
+                        <option value="grandparent">Grandparent</option>
+                        <option value="grandchild">Grandchild</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="memberAge">Age</label>
+                    <input type="number" id="memberAge" placeholder="35" min="0" max="120">
+                </div>
+
+                <div class="form-group">
+                    <label for="memberGender">Gender</label>
+                    <select id="memberGender">
+                        <option value="">Select gender...</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                        <option value="prefer_not_to_say">Prefer not to say</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="memberNotes">Notes (optional)</label>
+                    <textarea id="memberNotes" placeholder="Any important health information..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem;">
+                    Add Member
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- EDIT MEMBER MODAL -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Edit Family Member</h2>
+                <button class="close-btn" onclick="closeEditModal()">&times;</button>
+            </div>
+
+            <form id="editMemberForm">
+                <input type="hidden" id="editMemberId">
+                
+                <div class="form-group">
+                    <label for="editMemberName">Name *</label>
+                    <input type="text" id="editMemberName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editMemberRelation">Relationship *</label>
+                    <select id="editMemberRelation" required>
+                        <option value="spouse">Spouse/Partner</option>
+                        <option value="child">Child</option>
+                        <option value="parent">Parent</option>
+                        <option value="sibling">Sibling</option>
+                        <option value="grandparent">Grandparent</option>
+                        <option value="grandchild">Grandchild</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="editMemberAge">Age</label>
+                    <input type="number" id="editMemberAge" min="0" max="120">
+                </div>
+
+                <div class="form-group">
+                    <label for="editMemberGender">Gender</label>
+                    <select id="editMemberGender">
+                        <option value="">Select gender...</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                        <option value="prefer_not_to_say">Prefer not to say</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="editMemberNotes">Notes</label>
+                    <textarea id="editMemberNotes"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem;">
+                    Save Changes
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <div class="footer-info">
+            © 2024 Tree of Life AI • Educational information only • Not medical advice • Always consult qualified healthcare professionals
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://treeoflife-vn25.onrender.com';
+        let currentTier = 'free';
+        let maxMembers = 0;
+        let familyMembers = [];
+        
+        const authToken = localStorage.getItem('authToken');
+        if (!authToken) {
+            window.location.href = 'auth.html?returnTo=family-accounts.html';
+        }
+
+        loadSubscription();
+        loadFamilyMembers();
+
+        async function loadSubscription() {
+            try {
+                const response = await fetch(`${API_BASE}/api/subscription/status`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to load subscription');
+
+                const data = await response.json();
+                currentTier = data.tier || 'free';
+                
+                updateTierNotice();
+                
+            } catch (error) {
+                console.error('Error loading subscription:', error);
+                currentTier = 'free';
+                updateTierNotice();
+            }
+        }
+
+        function updateTierNotice() {
+            const notice = document.getElementById('tierNotice');
+            const addBtn = document.getElementById('addMemberBtn');
+            
+            if (currentTier === 'premium') {
+                maxMembers = 5;
+                notice.className = 'tier-notice premium';
+                notice.innerHTML = `
+                    <h3>💎 Premium Plan</h3>
+                    <p>You can add up to <strong>5 family members</strong></p>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.8;">${familyMembers.length}/${maxMembers} members added</p>
+                `;
+                addBtn.disabled = false;
+            } else if (currentTier === 'pro') {
+                maxMembers = 10;
+                notice.className = 'tier-notice premium';
+                notice.innerHTML = `
+                    <h3>🏆 Pro Plan</h3>
+                    <p>You can add up to <strong>10 family members</strong></p>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.8;">${familyMembers.length}/${maxMembers} members added</p>
+                `;
+                addBtn.disabled = false;
+            } else {
+                maxMembers = 0;
+                notice.className = 'tier-notice';
+                notice.innerHTML = `
+                    <h3>⚠️ Upgrade Required</h3>
+                    <p>Family accounts are available with <strong>Premium</strong> or <strong>Pro</strong> plans</p>
+                    <button class="btn-add" onclick="window.location.href='subscriptions.html'" style="margin-top: 1rem;">
+                        Upgrade<br>Now
+                    </button>
+                `;
+                addBtn.disabled = true;
+                addBtn.style.opacity = '0.5';
+                addBtn.title = 'Available with Premium or Pro subscription';
+            }
+        }
+
+        async function loadFamilyMembers() {
+            try {
+                document.getElementById('loadingState').style.display = 'block';
+                document.getElementById('familyGrid').style.display = 'none';
+                document.getElementById('emptyState').style.display = 'none';
+
+                const response = await fetch(`${API_BASE}/api/family/members`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                // Handle 404 - endpoint might not exist yet
+                if (response.status === 404) {
+                    console.log('Family members endpoint not yet available');
+                    familyMembers = [];
+                    document.getElementById('loadingState').style.display = 'none';
+                    displayFamilyMembers();
+                    updateTierNotice();
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                familyMembers = data.members || [];
+                
+                document.getElementById('loadingState').style.display = 'none';
+                displayFamilyMembers();
+                updateTierNotice();
+                
+            } catch (error) {
+                console.error('Error loading family members:', error);
+                document.getElementById('loadingState').style.display = 'none';
+                // Don't show error if endpoint doesn't exist yet - just show empty state
+                familyMembers = [];
+                displayFamilyMembers();
+                updateTierNotice();
+            }
+        }
+
+        function displayFamilyMembers() {
+            const grid = document.getElementById('familyGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (familyMembers.length === 0) {
+                grid.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            grid.style.display = 'grid';
+            emptyState.style.display = 'none';
+            
+            const userName = localStorage.getItem('userName') || 'You';
+            const userEmail = localStorage.getItem('userEmail') || '';
+            
+            let html = `
+                <div class="family-card owner">
+                    <div class="member-avatar">${getInitials(userName)}</div>
+                    <div class="member-name">${userName}</div>
+                    <div class="member-role">Account Owner</div>
+                    <div class="member-stats">
+                        <div class="stat-item">
+                            <span>Email:</span>
+                            <span style="font-size: 0.85rem;">${userEmail}</span>
+                        </div>
+                    </div>
+                    <div class="member-actions full">
+                        <button class="btn btn-secondary" onclick="window.location.href='health-profile.html'">
+                            🌿 Your Health Profile
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            html += familyMembers.map(member => `
+                <div class="family-card">
+                    <div class="member-avatar">${getInitials(member.name)}</div>
+                    <div class="member-name">${member.name}</div>
+                    <div class="member-role">${formatRelationship(member.relationship)}</div>
+                    
+                    <div class="member-stats">
+                        ${member.age ? `<div class="stat-item"><span>Age:</span><span>${member.age}</span></div>` : ''}
+                        ${member.gender ? `<div class="stat-item"><span>Gender:</span><span>${formatGender(member.gender)}</span></div>` : ''}
+                        ${member.notes ? `<div class="stat-item"><span>Notes:</span><span style="font-size: 0.85rem;">${member.notes}</span></div>` : ''}
+                        <div class="stat-item">
+                            <span>Conversations:</span>
+                            <span>${member.conversation_count || 0}</span>
+                        </div>
+                        ${member.has_health_profile ? '<div class="stat-badge">✓ Health Profile</div>' : ''}
+                    </div>
+                    
+                    <div class="member-actions">
+                        <button class="btn btn-success" onclick="chatAsMember('${member.id}', '${member.name}')">
+                            💬 Chat As
+                        </button>
+                        <button class="btn btn-primary" onclick="viewHealthProfile('${member.id}')">
+                            🌿 Profile
+                        </button>
+                        <button class="btn btn-secondary" onclick="editMember('${member.id}')">
+                            ✏️ Edit
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteMember('${member.id}', '${member.name}')">
+                            🗑️ Remove
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            grid.innerHTML = html;
+        }
+
+        function getInitials(name) {
+            return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+        }
+
+        function formatRelationship(rel) {
+            const map = {
+                'spouse': 'Spouse/Partner',
+                'child': 'Child',
+                'parent': 'Parent',
+                'sibling': 'Sibling',
+                'grandparent': 'Grandparent',
+                'grandchild': 'Grandchild',
+                'other': 'Other'
+            };
+            return map[rel] || rel;
+        }
+
+        function formatGender(gender) {
+            const map = {
+                'male': 'Male',
+                'female': 'Female',
+                'other': 'Other',
+                'prefer_not_to_say': 'Prefer not to say'
+            };
+            return map[gender] || gender;
+        }
+
+        function chatAsMember(memberId, memberName) {
+            localStorage.setItem('selectedMemberId', memberId);
+            localStorage.setItem('selectedMemberName', memberName);
+            window.location.href = 'index.html';
+        }
+
+        function viewHealthProfile(memberId) {
+            window.location.href = `health-profile.html?member_id=${memberId}`;
+        }
+
+        function openAddModal() {
+            if (currentTier === 'free') {
+                alert('Family accounts are only available with Premium or Pro plans.\n\nPlease upgrade to add family members!');
+                return;
+            }
+            
+            if (familyMembers.length >= maxMembers) {
+                alert(`You've reached the maximum of ${maxMembers} family members for your ${currentTier} plan.`);
+                return;
+            }
+            
+            document.getElementById('addModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('addModal').classList.remove('active');
+            document.getElementById('addMemberForm').reset();
+        }
+
+        function openEditModal(member) {
+            document.getElementById('editMemberId').value = member.id;
+            document.getElementById('editMemberName').value = member.name;
+            document.getElementById('editMemberRelation').value = member.relationship;
+            document.getElementById('editMemberAge').value = member.age || '';
+            document.getElementById('editMemberGender').value = member.gender || '';
+            document.getElementById('editMemberNotes').value = member.notes || '';
+            
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+            document.getElementById('editMemberForm').reset();
+        }
+
+        function editMember(memberId) {
+            const member = familyMembers.find(m => m.id === memberId);
+            if (member) {
+                openEditModal(member);
+            }
+        }
+
+        async function deleteMember(memberId, memberName) {
+            if (!confirm(`Remove ${memberName} from your family account?\n\nThis will delete their health profile and conversation history.`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/family/members/${memberId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to delete member');
+                }
+
+                alert(`✅ ${memberName} has been removed from your family account.`);
+                loadFamilyMembers();
+                
+            } catch (error) {
+                console.error('Error deleting member:', error);
+                showError(`Failed to remove ${memberName}. Please try again.`);
+            }
+        }
+
+        document.getElementById('addMemberForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Adding...';
+            
+            try {
+                const memberData = {
+                    name: document.getElementById('memberName').value,
+                    relationship: document.getElementById('memberRelation').value,
+                    age: document.getElementById('memberAge').value || null,
+                    gender: document.getElementById('memberGender').value || null,
+                    notes: document.getElementById('memberNotes').value || null
+                };
+                
+                const response = await fetch(`${API_BASE}/api/family/members`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(memberData)
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || 'Failed to add member');
+                }
+
+                const newMember = await response.json();
+                
+                alert(`✅ ${newMember.name} has been added to your family account!`);
+                closeModal();
+                loadFamilyMembers();
+                
+            } catch (error) {
+                console.error('Error adding member:', error);
+                showError(error.message);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Add Member';
+            }
+        });
+
+        document.getElementById('editMemberForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Saving...';
+            
+            try {
+                const memberId = document.getElementById('editMemberId').value;
+                
+                const memberData = {
+                    name: document.getElementById('editMemberName').value,
+                    relationship: document.getElementById('editMemberRelation').value,
+                    age: document.getElementById('editMemberAge').value || null,
+                    gender: document.getElementById('editMemberGender').value || null,
+                    notes: document.getElementById('editMemberNotes').value || null
+                };
+                
+                const response = await fetch(`${API_BASE}/api/family/members/${memberId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(memberData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to update member');
+                }
+
+                alert('✅ Family member updated successfully!');
+                closeEditModal();
+                loadFamilyMembers();
+                
+            } catch (error) {
+                console.error('Error updating member:', error);
+                showError('Failed to update member. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Save Changes';
+            }
+        });
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        console.log('👨‍👩‍👧‍👦 Family Accounts page loaded');
+    </script>
+</body>
+</html>
