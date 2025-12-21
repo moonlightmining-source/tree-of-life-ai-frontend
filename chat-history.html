@@ -550,7 +550,7 @@
         async function checkBackendHealth() {
             try {
                 console.log('🏥 Checking backend health...');
-                const response = await fetch(`${API_BASE}/health`);
+                const response = await fetch(`${API_URL}/`);
                 const data = await response.json();
                 console.log('✅ Backend health:', data);
                 return true;
@@ -564,7 +564,7 @@
 
         async function loadConversations() {
             try {
-                console.log('📡 Fetching conversations from:', `${API_BASE}/api/chat/conversations`);
+                console.log('📡 Fetching conversations from:', `${API_URL}/api/chat/conversations`);
                 console.log('🔑 Auth token present:', !!authToken);
                 
                 const response = await fetch(`${API_BASE}/api/chat/conversations`, {
