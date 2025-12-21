@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Dashboard - Tree of Life AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --amber-light: #D4A574;
+            --amber-medium: #C19A6B;
+            --bronze-deep: #B8860B;
+            --bronze-light: #A0826D;
+            --peach-gold: #EEC591;
+            --pure-black: #000;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: url('Images/Background.png') center center fixed;
+            background-size: cover;
+            color: var(--amber-light);
+            min-height: 100vh;
+            display: flex;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: -1;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 320px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-right: 2px solid var(--bronze-deep);
+            padding: 2rem 1rem;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .logo-container {
+            position: relative;
+            width: 240px;
+            height: 240px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: url('Images/Logoframe.png') center center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            margin: 0 auto 2rem;
+        }
+
+        .logo-img {
+            height: 144px !important;
+            width: auto !important;
+            cursor: pointer;
+            display: block;
+            position: relative;
+            z-index: 2;
+            mix-blend-mode: screen;
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-item {
+            margin-bottom: 0;
+        }
+
+        .nav-link {
+            width: 120px;
+            height: 120px;
+            background: url('Images/Button.png') center center;
+            background-size: cover;
+            background-color: transparent !important;
+            color: var(--amber-medium);
+            border: none;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            text-decoration: none;
+            clip-path: polygon(
+                30% 0%, 70% 0%, 
+                100% 30%, 100% 70%, 
+                70% 100%, 30% 100%, 
+                0% 70%, 0% 30%
+            );
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.3);
+        }
+
+        .nav-link:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 25px rgba(212, 165, 116, 0.6);
+            color: var(--peach-gold);
+            filter: brightness(1.2);
+        }
+
+        .nav-link.active {
+            color: var(--amber-light);
+            box-shadow: 0 6px 25px rgba(212, 165, 116, 0.8);
+            filter: brightness(1.3);
+        }
+
+        .nav-link .icon {
+            font-size: 1.8rem;
+            margin-bottom: 0.25rem;
+            margin-right: 0;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            margin-left: 320px;
+            padding: 2rem;
+            flex: 1;
+            min-height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--amber-light);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .user-badge {
+            padding: 0.75rem 1.5rem;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 10px;
+            color: var(--amber-light);
+            font-weight: bold;
+        }
+
+        /* UPGRADE NOTICE */
+        .upgrade-notice {
+            background: rgba(255, 193, 7, 0.15);
+            border: 3px solid #FFC107;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .upgrade-notice h2 {
+            margin-bottom: 1rem;
+            color: #FFC107;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .upgrade-notice p {
+            margin-bottom: 1.5rem;
+            color: var(--amber-light);
+        }
+
+        .upgrade-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #FFC107, #FF9800);
+            color: var(--pure-black);
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upgrade-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(255, 193, 7, 0.5);
+        }
+
+        /* STATS GRID */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--amber-light);
+            box-shadow: 0 6px 20px rgba(212, 165, 116, 0.3);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--amber-medium);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--amber-light);
+        }
+
+        .stat-change {
+            font-size: 0.8rem;
+            color: #22c55e;
+        }
+
+        /* SECTIONS */
+        .section {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--peach-gold);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 165, 116, 0.3);
+        }
+
+        /* TABLE */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            text-align: left;
+            padding: 1rem;
+            background: rgba(212, 165, 116, 0.1);
+            color: var(--amber-light);
+            border-bottom: 2px solid var(--bronze-deep);
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(184, 134, 11, 0.3);
+            color: var(--amber-medium);
+        }
+
+        .table tr:hover {
+            background: rgba(212, 165, 116, 0.05);
+        }
+
+        /* PROTOCOL CARDS */
+        .protocols-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .protocol-card {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .protocol-card:hover {
+            border-color: var(--amber-light);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(212, 165, 116, 0.3);
+        }
+
+        .protocol-title {
+            font-size: 1.2rem;
+            color: var(--peach-gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .protocol-tag {
+            padding: 0.25rem 0.75rem;
+            background: rgba(212, 165, 116, 0.2);
+            border: 1px solid var(--bronze-deep);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .protocol-description {
+            color: var(--amber-medium);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .protocol-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            background: var(--bronze-deep);
+            color: var(--pure-black);
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-small:hover {
+            background: var(--amber-light);
+        }
+
+        /* CHART PLACEHOLDER */
+        .chart-placeholder {
+            height: 300px;
+            background: rgba(212, 165, 116, 0.05);
+            border: 2px dashed var(--bronze-deep);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--amber-medium);
+        }
+
+        /* FOOTER */
+        .footer {
+            background: transparent;
+            border-top: 2px solid rgba(212, 165, 116, 0.3);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            margin-left: 320px;
+        }
+
+        .footer-info {
+            font-size: 0.75rem;
+            color: var(--amber-light);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+        }
+
+        /* 📱 TABLET / IPAD (768px - 1399px) */
+        @media (min-width: 768px) and (max-width: 1399px) {
+            .sidebar {
+                width: 280px;
+                padding: 1.5rem 0.75rem;
+            }
+
+            .logo-container {
+                width: 200px;
+                height: 200px;
+                margin-bottom: 1.5rem;
+            }
+
+            .logo-img {
+                height: 120px !important;
+            }
+
+            .nav-link {
+                width: 110px;
+                height: 110px;
+                font-size: 0.75rem;
+            }
+
+            .nav-link .icon {
+                font-size: 1.5rem;
+            }
+
+            .main-content {
+                margin-left: 280px;
+                padding: 1.5rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .footer {
+                margin-left: 280px;
+            }
+        }
+
+        /* 📱 MOBILE RESPONSIVE (Phones) */
+        @media (max-width: 767px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 2px solid var(--bronze-deep);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .footer {
+                margin-left: 0;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .protocols-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="Images/Tree_of_life_logo_800x800.png" alt="Tree of Life AI" class="logo-img" onclick="window.location.href='index.html'">
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="#" class="nav-link active" onclick="showSection('dashboard')">
+                    <span class="icon">📊</span>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" onclick="showSection('clients')">
+                    <span class="icon">👥</span>
+                    Clients
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" onclick="showSection('protocols')">
+                    <span class="icon">📋</span>
+                    Protocols
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" onclick="showSection('analytics')">
+                    <span class="icon">📈</span>
+                    Analytics
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" onclick="showSection('resources')">
+                    <span class="icon">📚</span>
+                    Resources
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="index.html" class="nav-link">
+                    <span class="icon">💬</span>
+                    AI Chat
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="settings.html" class="nav-link">
+                    <span class="icon">⚙️</span>
+                    Settings
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- UPGRADE NOTICE -->
+        <div id="upgrade-notice" class="upgrade-notice" style="display: none;">
+            <h2>🔒 Unlock Pro Features</h2>
+            <p>Upgrade to Pro to access client management, custom protocols, advanced analytics, and more!</p>
+            <button class="upgrade-btn" onclick="window.location.href='subscriptions.html'">
+                Upgrade to Pro - $29.99/month
+            </button>
+        </div>
+
+        <!-- DASHBOARD SECTION -->
+        <div id="dashboard-section" class="content-section">
+            <div class="header">
+                <h1>Pro Dashboard</h1>
+                <div class="user-badge">👤 <span id="user-name">Loading...</span></div>
+            </div>
+
+            <!-- STATS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-label">Active Clients</div>
+                    <div class="stat-value" id="client-count">0</div>
+                    <div class="stat-change">+3 this month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📋</div>
+                    <div class="stat-label">Custom Protocols</div>
+                    <div class="stat-value" id="protocol-count">0</div>
+                    <div class="stat-change">5 active</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💬</div>
+                    <div class="stat-label">Consultations</div>
+                    <div class="stat-value" id="consultation-count">0</div>
+                    <div class="stat-change">+12 this week</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-label">Success Rate</div>
+                    <div class="stat-value">94%</div>
+                    <div class="stat-change">Client satisfaction</div>
+                </div>
+            </div>
+
+            <!-- RECENT ACTIVITY -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Client Activity</h2>
+                    <button class="btn" onclick="showSection('clients')">View All</button>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Client</th>
+                            <th>Last Active</th>
+                            <th>Protocol</th>
+                            <th>Progress</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-activity">
+                        <tr>
+                            <td colspan="4" style="text-align: center;">No recent activity</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- CLIENTS SECTION -->
+        <div id="clients-section" class="content-section" style="display: none;">
+            <div class="header">
+                <h1>Client Management</h1>
+                <button class="btn" onclick="addClient()">+ Add Client</button>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Your Clients</h2>
+                    <input type="text" placeholder="Search clients..." style="padding: 0.5rem; border-radius: 6px; background: rgba(0,0,0,0.5); border: 1px solid var(--bronze-deep); color: var(--amber-light);">
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Constitution</th>
+                            <th>Active Protocol</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clients-table">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 2rem;">No clients added yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PROTOCOLS SECTION -->
+        <div id="protocols-section" class="content-section" style="display: none;">
+            <div class="header">
+                <h1>Custom Protocols</h1>
+                <button class="btn" onclick="createProtocol()">+ Create Protocol</button>
+            </div>
+
+            <div class="protocols-grid" id="protocols-grid">
+                <div class="protocol-card">
+                    <div class="protocol-title">Sleep Optimization</div>
+                    <div class="protocol-tag">Ayurveda + TCM</div>
+                    <div class="protocol-description">
+                        6-week protocol combining Ayurvedic herbs and TCM acupressure for improved sleep quality
+                    </div>
+                    <div class="protocol-actions">
+                        <button class="btn-small">Edit</button>
+                        <button class="btn-small">Assign</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANALYTICS SECTION -->
+        <div id="analytics-section" class="content-section" style="display: none;">
+            <div class="header">
+                <h1>Analytics & Insights</h1>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Client Retention</div>
+                    <div class="stat-value">92%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg Protocol Completion</div>
+                    <div class="stat-value">78%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Client Satisfaction</div>
+                    <div class="stat-value">4.8/5</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Client Progress Over Time</h2>
+                <div class="chart-placeholder">
+                    📊 Chart visualization coming soon
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Most Effective Protocols</h2>
+                <div class="chart-placeholder">
+                    📈 Analytics visualization coming soon
+                </div>
+            </div>
+        </div>
+
+        <!-- RESOURCES SECTION -->
+        <div id="resources-section" class="content-section" style="display: none;">
+            <div class="header">
+                <h1>Practitioner Resources</h1>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">📚 Resource Library</h2>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 1rem; border-bottom: 1px solid rgba(184,134,11,0.3);">
+                        <strong style="color: var(--peach-gold);">Ayurvedic Protocols Database</strong> - 200+ traditional protocols
+                    </li>
+                    <li style="padding: 1rem; border-bottom: 1px solid rgba(184,134,11,0.3);">
+                        <strong style="color: var(--peach-gold);">TCM Point Reference</strong> - Complete acupressure guide
+                    </li>
+                    <li style="padding: 1rem; border-bottom: 1px solid rgba(184,134,11,0.3);">
+                        <strong style="color: var(--peach-gold);">Herb Interaction Checker</strong> - Drug-herb interaction database
+                    </li>
+                    <li style="padding: 1rem; border-bottom: 1px solid rgba(184,134,11,0.3);">
+                        <strong style="color: var(--peach-gold);">Continuing Education</strong> - Earn CE credits (coming soon)
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <div class="footer-info">
+            © 2024 Tree of Life AI • Educational information only • Not medical advice • Always consult qualified healthcare professionals
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://treeoflife-vn25.onrender.com';
+        let currentPlan = 'free';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('authToken');
+            const userName = localStorage.getItem('userName');
+            
+            if (!token) {
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            document.getElementById('user-name').textContent = userName || 'User';
+            await checkSubscription();
+        });
+
+        async function checkSubscription() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await fetch(`${API_BASE}/api/subscription/status`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    currentPlan = data.tier || 'free';
+
+                    if (currentPlan !== 'pro') {
+                        document.getElementById('upgrade-notice').style.display = 'block';
+                        document.querySelectorAll('.btn').forEach(btn => {
+                            if (!btn.classList.contains('upgrade-btn')) {
+                                btn.disabled = true;
+                                btn.style.opacity = '0.5';
+                            }
+                        });
+                    } else {
+                        loadDashboardData();
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking subscription:', error);
+            }
+        }
+
+        async function loadDashboardData() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await fetch(`${API_BASE}/api/pro/dashboard`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('client-count').textContent = data.client_count || 0;
+                    document.getElementById('protocol-count').textContent = data.protocol_count || 0;
+                    document.getElementById('consultation-count').textContent = data.consultation_count || 0;
+                }
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        function showSection(sectionName) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.style.display = 'none';
+            });
+
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            document.getElementById(`${sectionName}-section`).style.display = 'block';
+            event.target.closest('.nav-link').classList.add('active');
+        }
+
+        function addClient() {
+            if (currentPlan !== 'pro') {
+                window.location.href = 'subscriptions.html';
+                return;
+            }
+            alert('Client management coming soon!');
+        }
+
+        function createProtocol() {
+            if (currentPlan !== 'pro') {
+                window.location.href = 'subscriptions.html';
+                return;
+            }
+            alert('Protocol creator coming soon!');
+        }
+    </script>
+</body>
+</html>
