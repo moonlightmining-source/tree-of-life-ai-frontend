@@ -567,7 +567,7 @@
                 console.log('📡 Fetching conversations from:', `${API_URL}/api/chat/conversations`);
                 console.log('🔑 Auth token present:', !!authToken);
                 
-                const response = await fetch(`${API_BASE}/api/chat/conversations`, {
+                const response = await fetch(`${API_URL}/api/chat/conversations`, {
                     headers: {
                         'Authorization': `Bearer ${authToken}`
                     }
