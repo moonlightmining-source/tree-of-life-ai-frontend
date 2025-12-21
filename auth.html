@@ -569,7 +569,7 @@
     </div>
 
     <script>
-        const API_URL = 'https://treeoflife-vn25.onrender.com';
+        const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:10000' : 'https://tree-of-life-ai.onrender.com';
 
         function switchTab(tab) {
             document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
@@ -612,7 +612,7 @@
                 const fullName = data.user?.name && data.user.name !== 'undefined' ? data.user.name : email.split('@')[0];
                 const firstName = fullName.split(' ')[0];
                 
-                localStorage.setItem('authToken', data.token);
+                localStorage.setItem('token', data.token);
                 localStorage.setItem('userEmail', email);
                 localStorage.setItem('userName', firstName);
                 localStorage.setItem('userFirstName', firstName);
@@ -658,7 +658,7 @@
 
                 console.log('🔍 Registration response:', JSON.stringify(data, null, 2));
                 
-                localStorage.setItem('authToken', data.token);
+                localStorage.setItem('token', data.token);
                 localStorage.setItem('userEmail', email);
                 localStorage.setItem('userName', firstName);
                 localStorage.setItem('userFirstName', firstName);
