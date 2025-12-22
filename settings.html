@@ -685,7 +685,7 @@
         let userSettings = {};
         let currentTier = 'free';
         
-        const authToken = localStorage.getItem('Token');
+        const authToken = localStorage.getItem('token');
         if (!authToken) {
             window.location.href = 'auth.html?returnTo=settings.html';
         }
