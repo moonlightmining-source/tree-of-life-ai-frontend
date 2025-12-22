@@ -7,7 +7,7 @@
 const API_BASE = 'https://treeoflife-vn25.onrender.com';
 
 let currentConversationId = null;
-let authToken = localStorage.getItem('authToken');
+let authToken = localStorage.getItem('token');
 let userName = localStorage.getItem('userName') || 'friend'; // Get user's first name
 
 // ✅ Image handling (declared only ONCE here in app.js)
