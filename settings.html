@@ -979,27 +979,26 @@
             }
         }
 
-       async function deleteAccount() {
-    try {
-        const response = await fetch(`${API_BASE}/api/auth/account`, {
-            method: 'DELETE',
-            headers: { 'Authorization': `Bearer ${authToken}` }
-        });
-        
-        if (response.ok) {
-            alert('✅ Account deleted successfully.\n\nAll your data has been permanently removed.');
-            localStorage.clear();
-            window.location.href = 'auth.html';
-        } else {
-            const error = await response.json().catch(() => ({}));
-            alert('❌ Error deleting account: ' + (error.detail || 'Unknown error'));
+      async function deleteAccount() {
+            try {
+                const response = await fetch(`${API_BASE}/api/auth/account`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                
+                if (response.ok) {
+                    alert('✅ Account deleted successfully.\n\nAll your data has been permanently removed.');
+                    localStorage.clear();
+                    window.location.href = 'auth.html';
+                } else {
+                    const error = await response.json().catch(() => ({}));
+                    alert('❌ Error deleting account: ' + (error.detail || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Error deleting account. Please try again or contact support.');
+            }
         }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('❌ Error deleting account. Please try again or contact support.');
-    }
-}
-
         function showSuccess() {
             const msg = document.getElementById('successMessage');
             msg.classList.add('active');
