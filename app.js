@@ -116,6 +116,7 @@ ${authToken ? 'What health topic can I help you explore?' : 'Please log in to st
 
 function handleAuthError() {
     // Clear invalid auth data
+    localStorage.removeItem('token');
     localStorage.removeItem('authToken');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userName');
@@ -135,12 +136,17 @@ function handleAuthError() {
 }
 
 // Logout function - called by logout button
-function logout() {
+    function logout() {
     // Clear all auth data
-    localStorage.removeItem('authToken');
+    localStorage.removeItem('token');
+    localStorage.removeItem('authToken'); 
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userName');
     localStorage.removeItem('currentConversationId');
+    
+    // Redirect to login
+    window.location.href = 'auth.html';
+}
     
     // Redirect immediately to login
     window.location.href = 'auth.html';
