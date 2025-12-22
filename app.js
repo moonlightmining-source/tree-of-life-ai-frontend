@@ -148,9 +148,6 @@ function handleAuthError() {
     window.location.href = 'auth.html';
 }
     
-    // Redirect immediately to login
-    window.location.href = 'auth.html';
-}
 
 function setupEventListeners() {
     // Send message on button click
