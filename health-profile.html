@@ -1087,8 +1087,8 @@
         // ==================== PREMIUM FEATURE CHECKING ====================
 
         function isPremiumUser() {
-            return userSubscriptionTier !== 'free' || userSubscriptionTier === 'family';
-        }
+            return userSubscriptionTier !== 'free';
+       }
 
         function handleTestResultsClick() {
             if (!isPremiumUser()) {
