@@ -760,7 +760,7 @@
             try {
                 const response = await fetch(`${API_BASE}/api/subscription/status`, {
                     headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-                    }
+           
                 });
 
                 if (!response.ok) {
