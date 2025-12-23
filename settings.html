@@ -759,8 +759,7 @@
         async function loadSubscription() {
             try {
                 const response = await fetch(`${API_BASE}/api/subscription/status`, {
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
                     }
                 });
 
