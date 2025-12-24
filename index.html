@@ -1175,68 +1175,72 @@
     <script>
         
         // Tradition button handling - MULTI-SELECT!
-document.querySelectorAll('.tradition-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const tradition = this.dataset.tradition || 'all';
-        
-        // If "All Traditions" is clicked
-        if (tradition === 'all') {
-            // Deselect everything, select only "All"
-            document.querySelectorAll('.tradition-btn').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            selectedTraditions = ['all'];
-        } else {
-            // Remove "All Traditions" if selecting specific ones
-            const allBtn = document.querySelector('.tradition-btn[data-tradition="all"]');
-            if (allBtn) allBtn.classList.remove('active');
+<script src="app.js"></script>
+<script>
+    // Tradition button handling - MULTI-SELECT!
+    document.querySelectorAll('.tradition-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const tradition = this.dataset.tradition || 'all';
             
-            // Toggle this tradition
-            this.classList.toggle('active');
-            
-            // Update selectedTraditions array
-            if (this.classList.contains('active')) {
-                selectedTraditions = selectedTraditions.filter(t => t !== 'all');
-                if (!selectedTraditions.includes(tradition)) {
-                    selectedTraditions.push(tradition);
-                }
-            } else {
-                selectedTraditions = selectedTraditions.filter(t => t !== tradition);
-            }
-            
-            // If nothing selected, default back to "All"
-            if (selectedTraditions.length === 0) {
-                if (allBtn) allBtn.classList.add('active');
+            // If "All Traditions" is clicked
+            if (tradition === 'all') {
+                // Deselect everything, select only "All"
+                document.querySelectorAll('.tradition-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
                 selectedTraditions = ['all'];
-            }
-        }
-        
-        console.log('🎨 Selected traditions:', selectedTraditions);
-        
-        // Update placeholder
-        const input = document.getElementById('userInput');
-        if (input) {
-            if (selectedTraditions.includes('all')) {
-                input.placeholder = 'Ask about your health from multiple traditions...';
-            } else if (selectedTraditions.length === 1) {
-                input.placeholder = `Ask from ${this.textContent.trim()} perspective...`;
             } else {
-                input.placeholder = `Ask from ${selectedTraditions.length} selected traditions...`;
+                // Remove "All Traditions" if selecting specific ones
+                const allBtn = document.querySelector('.tradition-btn[data-tradition="all"]');
+                if (allBtn) allBtn.classList.remove('active');
+                
+                // Toggle this tradition
+                this.classList.toggle('active');
+                
+                // Update selectedTraditions array
+                if (this.classList.contains('active')) {
+                    selectedTraditions = selectedTraditions.filter(t => t !== 'all');
+                    if (!selectedTraditions.includes(tradition)) {
+                        selectedTraditions.push(tradition);
+                    }
+                } else {
+                    selectedTraditions = selectedTraditions.filter(t => t !== tradition);
+                }
+                
+                // If nothing selected, default back to "All"
+                if (selectedTraditions.length === 0) {
+                    if (allBtn) allBtn.classList.add('active');
+                    selectedTraditions = ['all'];
+                }
             }
-        }
-        
-        document.querySelector('.chat-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            console.log('🎨 Selected traditions:', selectedTraditions);
+            
+            // Update placeholder
+            const input = document.getElementById('userInput');
+            if (input) {
+                if (selectedTraditions.includes('all')) {
+                    input.placeholder = 'Ask about your health from multiple traditions...';
+                } else if (selectedTraditions.length === 1) {
+                    input.placeholder = `Ask from ${this.textContent.trim()} perspective...`;
+                } else {
+                    input.placeholder = `Ask from ${selectedTraditions.length} selected traditions...`;
+                }
+            }
+            
+            document.querySelector('.chat-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
     });
-});
-        // Auto-resize textarea
-        const textarea = document.getElementById('userInput');
-        if (textarea) {
-            textarea.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = Math.min(this.scrollHeight, 150) + 'px';
-            });
-        }
 
-        console.log('✅ Tree of Life AI - PERFECTLY CENTERED!');
-    </script>
+    // Auto-resize textarea
+    const textarea = document.getElementById('userInput');
+    if (textarea) {
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+        });
+    }
+
+    console.log('✅ Tree of Life AI - Multi-select traditions enabled!');
+</script>
 </body>
 </html>
