@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Tree of Life AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --amber-light: #D4A574;
+            --amber-medium: #C19A6B;
+            --bronze-deep: #B8860B;
+            --bronze-light: #A0826D;
+            --peach-gold: #EEC591;
+            --pure-black: #000;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: url('Images/Background.png') center center fixed;
+            background-size: cover;
+            color: var(--amber-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: -1;
+        }
+
+        /* 🎨 TRANSPARENT HEADER */
+        .top-header {
+            background: transparent;
+            border-bottom: 0px solid rgba(212, 165, 116, 0.3);
+            padding: 20px 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .header-left, .header-right {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .header-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 🎨 LOGO INSIDE OCTAGONAL FRAME */
+        .logo-container {
+            position: relative;
+            width: 600px;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: url('Images/Logoframe.png') center center;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .logo-img {
+            height: 320px !important;
+            width: auto !important;
+            cursor: pointer;
+            display: block;
+            position: relative;
+            z-index: 2;
+            mix-blend-mode: screen;
+        }
+
+        /* 🛑 HEADER BUTTONS */
+        .header-btn {
+            width: 180px;
+            height: 180px;
+            background: url('Images/Button.png') center center;
+            background-size: cover;
+            background-color: transparent !important;
+            color: var(--amber-light);
+            border: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            clip-path: polygon(
+                30% 0%, 70% 0%, 
+                100% 30%, 100% 70%, 
+                70% 100%, 30% 100%, 
+                0% 70%, 0% 30%
+            );
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.4);
+        }
+
+        .header-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 25px rgba(212, 165, 116, 0.7);
+            color: var(--peach-gold);
+            filter: brightness(1.2);
+        }
+
+        /* CONTENT WRAPPER */
+        .content-wrapper {
+            flex: 1;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* CONTENT SECTIONS */
+        .content-section {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: var(--amber-light);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: var(--peach-gold);
+            text-align: center;
+            margin-bottom: 3rem;
+            font-style: italic;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: var(--amber-light);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--bronze-deep);
+            padding-bottom: 0.75rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: var(--peach-gold);
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--amber-light);
+            margin-bottom: 1.5rem;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--amber-light);
+            margin-bottom: 0.75rem;
+        }
+
+        .highlight-box {
+            background: rgba(212, 165, 116, 0.1);
+            border-left: 4px solid var(--peach-gold);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 10px;
+        }
+
+        .tradition-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .tradition-card {
+            background: rgba(212, 165, 116, 0.05);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .tradition-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(212, 165, 116, 0.3);
+            border-color: var(--amber-light);
+            background: rgba(212, 165, 116, 0.1);
+        }
+
+        .tradition-card h3 {
+            color: var(--amber-light);
+            margin-top: 0;
+            font-size: 1.3rem;
+        }
+
+        .tradition-card p {
+            font-size: 1rem;
+            margin-bottom: 0;
+        }
+
+        .feature-list {
+            background: rgba(184, 134, 11, 0.1);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-list li::marker {
+            color: var(--peach-gold);
+        }
+
+        strong {
+            color: var(--peach-gold);
+            font-weight: 700;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, rgba(212, 165, 116, 0.2), rgba(184, 134, 11, 0.2));
+            border: 3px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .cta-box h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-box a {
+            color: var(--peach-gold);
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+
+        .cta-box a:hover {
+            color: var(--amber-light);
+        }
+
+        /* 🎨 TRANSPARENT FOOTER */
+        .footer {
+            background: transparent;
+            border-top: 2px solid rgba(212, 165, 116, 0.3);
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+
+        .footer-info {
+            font-size: 0.75rem;
+            color: var(--amber-light);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+        }
+
+        /* 📱 TABLET / IPAD (768px - 1399px) */
+        @media (min-width: 768px) and (max-width: 1399px) {
+            .top-header {
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 15px 2rem;
+                justify-content: center;
+                gap: 1.5rem;
+            }
+
+            .header-left, .header-right {
+                gap: 0.75rem;
+            }
+
+            .logo-container {
+                width: 400px;
+                height: 400px;
+            }
+
+            .logo-img {
+                height: 220px !important;
+            }
+
+            .header-btn {
+                width: 120px;
+                height: 120px;
+                font-size: 0.75rem;
+                padding: 0.5rem;
+            }
+
+            .content-wrapper {
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem 2rem;
+            }
+
+            .content-section {
+                padding: 2.5rem;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .tagline {
+                font-size: 1.3rem;
+            }
+
+            h2 {
+                font-size: 1.75rem;
+            }
+        }
+
+        /* 📱 MOBILE RESPONSIVE (Phones) */
+        @media (max-width: 767px) {
+            .top-header {
+                flex-direction: column;
+                padding: 15px 1rem;
+                gap: 1rem;
+            }
+
+            .header-left, .header-right {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .header-btn {
+                width: 90px;
+                height: 90px;
+                font-size: 0.75rem;
+            }
+
+            .logo-container {
+                width: 240px;
+                height: 240px;
+            }
+
+            .logo-img {
+                height: 180px !important;
+            }
+
+            .content-wrapper {
+                padding: 2rem 1rem;
+            }
+
+            .content-section {
+                padding: 2rem 1.5rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .tagline {
+                font-size: 1.1rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .tradition-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <div class="top-header">
+        <div class="header-left">
+            <button class="header-btn" onclick="window.location.href='about.html'">About</button>
+            <button class="header-btn" onclick="window.location.href='subscriptions.html'">Subscribe</button>
+            <button class="header-btn" onclick="window.location.href='resources.html'">Resources</button>
+        </div>
+        
+        <div class="header-center">
+            <div class="logo-container">
+                <img src="Images/Tree_of_life_logo_800x800.png" alt="Tree of Life AI" class="logo-img" onclick="window.location.href='index.html'">
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <button class="header-btn" onclick="window.location.href='privacy.html'">Privacy</button>
+            <button class="header-btn" onclick="window.location.href='terms.html'">Terms</button>
+            <button class="header-btn" onclick="window.location.href='auth.html'">Login</button>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="content-section">
+            <h1>Tree of Life AI</h1>
+            <p class="tagline">An Integrative Health Intelligence Platform</p>
+
+            <p>Tree of Life AI is a comprehensive health platform that synthesizes 11 medical traditions with specialized artificial intelligence. We bridge ancient healing wisdom with modern science, providing personalized health guidance that integrates Western medicine, Ayurveda, Traditional Chinese Medicine, and eight other complete medical systems.</p>
+
+            <div class="highlight-box">
+                <h3>🎯 Addressing Healthcare Fragmentation</h3>
+                <p>Modern healthcare is specialized but disconnected. Your physician focuses on Western medicine. Your acupuncturist knows TCM. Your nutritionist addresses diet. Your chiropractor works with structure. Each perspective is valuable, but rarely do they communicate or integrate.</p>
+                <p><strong>Tree of Life AI provides the comprehensive, multi-perspective health intelligence that practitioners and patients have always needed</strong>—synthesizing insights from multiple healing traditions into actionable, personalized guidance.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>🏥 Your Comprehensive Health Profile</h2>
+            
+            <p>At the core of Tree of Life AI is your Advanced Health Profile—a sophisticated health management system that goes far beyond basic demographics to create a complete picture of your health across multiple dimensions.</p>
+
+            <h3>Personal Health Information</h3>
+            <div class="feature-list">
+                <ul>
+                    <li><strong>Basic Demographics:</strong> Name, date of birth, sex, blood type, height, weight, ethnicity</li>
+                    <li><strong>Emergency Contacts:</strong> Critical information readily accessible</li>
+                    <li><strong>Medical History:</strong> Current conditions, past diagnoses, allergies, medications</li>
+                    <li><strong>Lifestyle Factors:</strong> Diet type, sleep hours, stress levels, exercise habits</li>
+                </ul>
+            </div>
+
+            <h3>Constitutional Assessment</h3>
+            <p>Understanding your unique constitution across different medical frameworks:</p>
+            <div class="feature-list">
+                <ul>
+                    <li><strong>Ayurvedic Dosha:</strong> Identify your Vata, Pitta, or Kapha constitution</li>
+                    <li><strong>TCM Pattern:</strong> Determine your primary energetic pattern and imbalances</li>
+                    <li><strong>Preferred Traditions:</strong> Select which healing systems resonate most with your philosophy</li>
+                </ul>
+            </div>
+
+            <h3>Health Metrics Tracking</h3>
+            <p>Monitor your health over time with visual trend analysis:</p>
+            <div class="feature-list">
+                <ul>
+                    <li><strong>Weight Tracking:</strong> Chart your weight changes with date-stamped entries</li>
+                    <li><strong>Blood Pressure Monitoring:</strong> Track systolic/diastolic readings and identify patterns</li>
+                    <li><strong>Blood Sugar Logs:</strong> Record glucose levels and observe trends</li>
+                    <li><strong>Visual Charts:</strong> Interactive graphs showing your health metrics over time</li>
+                    <li><strong>Pattern Recognition:</strong> AI identifies correlations between metrics and lifestyle factors</li>
+                </ul>
+            </div>
+
+            <h3>Lab Results Management</h3>
+            <p>Upload and analyze your lab work with AI-powered insights:</p>
+            <div class="feature-list">
+                <ul>
+                    <li><strong>PDF & Image Upload:</strong> Scan or upload lab reports from any provider</li>
+                    <li><strong>Automatic Extraction:</strong> AI reads and organizes test values automatically</li>
+                    <li><strong>Visual Analysis:</strong> Color-coded values (normal/warning/abnormal at a glance)</li>
+                    <li><strong>Trend Tracking:</strong> Compare lab values over time to identify improvements or concerns</li>
+                    <li><strong>Multi-Result Comparison:</strong> Side-by-side comparison of different test dates</li>
+                    <li><strong>Value Explanations:</strong> Click any lab value for a detailed, personalized explanation</li>
+                    <li><strong>Integrative Recommendations:</strong> Suggestions from multiple traditions based on your results</li>
+                </ul>
+            </div>
+
+            <h3>AI Health Analysis</h3>
+            <p>Generate comprehensive health assessments combining all your data:</p>
+            <div class="feature-list">
+                <ul>
+                    <li><strong>Overall Health Assessment:</strong> Holistic view of your current health status</li>
+                    <li><strong>Lab Results Interpretation:</strong> Detailed analysis of abnormal values and what they mean</li>
+                    <li><strong>Metrics Trends Analysis:</strong> Patterns in your weight, blood pressure, and blood sugar</li>
+                    <li><strong>Medication Review:</strong> Potential interactions and considerations</li>
+                    <li><strong>Clinical Nutrition:</strong> Specific nutritional therapy based on deficiencies and goals</li>
+                    <li><strong>Herbal Medicine:</strong> Evidence-based botanical recommendations with safety considerations</li>
+                    <li><strong>Supplement Protocols:</strong> Specific supplements with dosages, timing, and rationale</li>
+                    <li><strong>Western Medicine Perspective:</strong> Evidence-based medical insights</li>
+                    <li><strong>Ayurvedic Recommendations:</strong> Dosha-specific guidance (if applicable)</li>
+                    <li><strong>TCM Recommendations:</strong> Pattern-based Chinese medicine suggestions (if applicable)</li>
+                    <li><strong>Lifestyle Modifications:</strong> Diet, exercise, sleep, and stress management</li>
+                    <li><strong>Action Items:</strong> Specific, prioritized steps to improve health</li>
+                </ul>
+            </div>
+
+            <h3>Family Health Management</h3>
+            <p>Track health for your entire family:</p>
+            <div class="feature-list">
+                <ul>
+                    <li><strong>Multiple Profiles:</strong> Manage health information for family members</li>
+                    <li><strong>Subscription Tiers:</strong> Free (0 members), Basic (1 member), Premium (5 members), Pro (Unlimited)</li>
+                    <li><strong>Individual Tracking:</strong> Each family member gets their own health profile and metrics</li>
+                    <li><strong>Aggregate Insights:</strong> Identify family health patterns and genetic predispositions</li>
+                </ul>
+            </div>
+
+            <div class="cta-box">
+                <h3>Start Building Your Health Profile</h3>
+                <p><a href="auth.html">Create Free Account →</a></p>
+                <p style="font-size: 0.9rem; color: var(--amber-medium); margin-top: 0.5rem;">No credit card required • Full health profile access</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>🤖 AI Technology & Specialized Skills</h2>
+            
+            <p>Tree of Life AI is powered by <strong>Claude 4 Sonnet (Anthropic)</strong> enhanced with custom-engineered Skills for deep domain specialization. Each Skill functions as an expert practitioner module, providing sophisticated guidance within specific healing traditions.</p>
+
+            <h3>Our Specialized Skills</h3>
+            <div class="feature-list">
+                <ul>
+                    <li><strong>Elder Care & Law:</strong> Medicare/Medicaid navigation, nursing home selection, estate planning, power of attorney, and elder law matters</li>
+                    <li><strong>Fitness & Physical Therapy:</strong> Exercise science, program design, injury prevention, rehabilitation protocols, and performance optimization</li>
+                    <li><strong>Consciousness Mapping:</strong> Integration of Tarot, Astrology, I Ching, and Hero's Journey through analytic idealism</li>
+                    <li><strong>Clinical Nutrition:</strong> Therapeutic nutrition, supplement protocols, and metabolic optimization</li>
+                    <li><strong>Herbal Medicine:</strong> Global botanical traditions with safety profiles and drug interactions</li>
+                    <li><strong>Ayurvedic Medicine:</strong> Constitutional assessment, dosha balancing, and traditional protocols</li>
+                    <li><strong>Traditional Chinese Medicine:</strong> Pattern diagnosis, meridian theory, and herbal pharmacy</li>
+                </ul>
+            </div>
+
+            <h3>What This Means for You</h3>
+            <ul>
+                <li><strong>Multi-Tradition Synthesis:</strong> Recommendations that integrate insights from all relevant healing systems</li>
+                <li><strong>Context-Aware Responses:</strong> The AI remembers your health profile, goals, and preferences</li>
+                <li><strong>Evidence-Based + Traditional:</strong> Scientific research combined with traditional empirical wisdom</li>
+                <li><strong>Constitutional Profiling:</strong> Personalized guidance based on your unique Ayurvedic dosha and TCM pattern</li>
+                <li><strong>Image Analysis:</strong> Upload photos of herbs, supplements, skin conditions, meals, or medical documents</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>🌟 Platform Features</h2>
+
+            <h3>Professional Document Generation</h3>
+            <p>Export your health protocols in multiple professional formats:</p>
+            <div class="feature-list">
+                <ul>
+                    <li><strong>PDF Reports:</strong> Comprehensive health analyses with tradition breakdowns and references</li>
+                    <li><strong>Word Documents:</strong> Editable protocols to share with your healthcare team</li>
+                    <li><strong>PowerPoint Presentations:</strong> Visual guides for complex health strategies</li>
+                    <li><strong>Excel Spreadsheets:</strong> Pre-formatted tracking sheets for symptoms and protocols</li>
+                </ul>
+            </div>
+
+            <h3>Image Recognition & Analysis</h3>
+            <p>Upload images for instant AI analysis:</p>
+            <ul>
+                <li>Herbs and supplements (identification and safety information)</li>
+                <li>Medical documents (lab reports, prescriptions, discharge summaries)</li>
+                <li>Skin conditions or symptoms (educational information about visible conditions)</li>
+                <li>Meals and food (nutritional analysis and recommendations)</li>
+            </ul>
+
+            <h3>Conversation Management</h3>
+            <ul>
+                <li><strong>Chat History:</strong> All conversations automatically saved and searchable</li>
+                <li><strong>Print & Export:</strong> Save important conversations as PDFs</li>
+                <li><strong>Tradition Selection:</strong> Choose specific traditions for focused responses</li>
+                <li><strong>Multi-Modal Input:</strong> Text, images, and documents all supported</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>🏥 Pro Plan for Practitioners</h2>
+            
+            <p>Tree of Life AI Pro is designed for healthcare practitioners who want to offer comprehensive, integrative care. Whether you're an MD, DO, naturopath, acupuncturist, herbalist, chiropractor, or wellness coach, the Pro plan amplifies your expertise.</p>
+
+            <h3>Pro Features</h3>
+            <div class="feature-list">
+                <ul>
+                    <li><strong>Unlimited Client Profiles:</strong> Manage your entire practice with no limits</li>
+                    <li><strong>Advanced Health Profiles:</strong> Complete health tracking for all clients</li>
+                    <li><strong>Custom Protocol Templates:</strong> Save and reuse your most effective integrative protocols</li>
+                    <li><strong>Professional Document Generation:</strong> Create branded reports and protocols</li>
+                    <li><strong>Lab Results Management:</strong> Track client lab work and provide integrative interpretation</li>
+                    <li><strong>Health Metrics Dashboard:</strong> Monitor client progress across all health metrics</li>
+                </ul>
+            </div>
+
+            <h3>Real-World Applications</h3>
+            <p><strong>Integrative MD:</strong> Generate comprehensive treatment plans that include conventional therapies plus complementary approaches—Ayurvedic diet, TCM acupuncture points, herbal support—all evidence-informed.</p>
+            
+            <p><strong>Acupuncturist:</strong> Access instant cross-tradition insights. See how a patient's TCM pattern correlates with their Ayurvedic dosha, recommend complementary herbs and dietary changes.</p>
+            
+            <p><strong>Naturopath/Herbalist:</strong> Build sophisticated protocols combining Western botanical medicine with Ayurvedic and Chinese herbs, backed by safety interactions and research.</p>
+            
+            <p><strong>Chiropractor/PT:</strong> Develop holistic treatment plans that address not just structure but underlying constitutional imbalances through nutrition, herbs, and lifestyle.</p>
+
+            <div class="cta-box">
+                <h3>🚀 Transform Your Practice</h3>
+                <p><a href="subscriptions.html">Explore Pro Plan → $29.99/month</a></p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>🌍 Our 11 Medical Traditions</h2>
+            
+            <div class="tradition-grid">
+                <div class="tradition-card">
+                    <h3>🏥 Western Medicine</h3>
+                    <p>Evidence-based diagnostics, pharmacology, surgery, and treatments grounded in clinical research and scientific method.</p>
+                </div>
+
+                <div class="tradition-card">
+                    <h3>🌿 Ayurveda</h3>
+                    <p>5,000-year-old Indian system focused on constitutional balance through diet, herbs, lifestyle, and seasonal routines.</p>
+                </div>
+
+                <div class="tradition-card">
+                    <h3>☯️ Traditional Chinese Medicine</h3>
+                    <p>Ancient system including acupuncture, herbal formulas, Qi Gong, and pattern-based diagnosis.</p>
+                </div>
+
+                <div class="tradition-card">
+                    <h3>🌱 Herbal Medicine</h3>
+                    <p>Global botanical traditions—Western, Chinese, Ayurvedic, Native American—using plant medicines for healing.</p>
+                </div>
+
+                <div class="tradition-card">
+                    <h3>💧 Homeopathy</h3>
+                    <p>Energetic medicine using ultradiluted substances to stimulate the body's self-healing capacity.</p>
+                </div>
+
+                <div class="tradition-card">
+                    <h3>🦴 Chiropractic</h3>
+                    <p>Structural optimization through spinal alignment, joint manipulation, and nervous system support.</p>
+                </div>
+
+                <div class="tradition-card">
+                    <h3>🥗 Clinical Nutrition</h3>
+                    <p>Science-based dietary therapy, functional nutrition, supplementation, and metabolic optimization.</p>
+                </div>
+
+                <div class="tradition-card">
+                    <h3>🔮 Vibrational Healing</h3>
+                    <p>Energy medicine including sound therapy, crystal healing, color therapy, and frequency work.</p>
+                </div>
+
+                <div class="tradition-card">
+                    <h3>💪 Fitness & Physical Therapy</h3>
+                    <p>Exercise science, athletic training, rehabilitation, mobility work, and performance optimization.</p>
+                </div>
+
+                <div class="tradition-card">
+                    <h3>👴 Elder Care & Law</h3>
+                    <p>Medicare/Medicaid navigation, nursing home selection, estate planning, elder law, and caregiver support.</p>
+                </div>
+
+                <div class="tradition-card">
+                    <h3>🧘 Consciousness Mapping</h3>
+                    <p>Tarot, Astrology, I Ching, and Hero's Journey archetypes as maps of consciousness and transformation.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>🎯 Our Mission</h2>
+            <p>We believe that <strong>true health requires multiple perspectives.</strong> No single medical tradition has all the answers. Western medicine excels at acute care and diagnostics. Ayurveda offers constitutional understanding. TCM provides energy-based frameworks. Nutrition addresses root causes through diet. Each tradition brings unique insights.</p>
+            
+            <p>The future of medicine is integrative, but integration has been challenging to implement at scale. AI technology now makes it possible to synthesize insights from multiple healing traditions in real-time, providing personalized guidance that was previously only accessible to those who could afford multiple practitioners or spend years studying diverse traditions.</p>
+
+            <p>Tree of Life AI makes comprehensive integrative health intelligence accessible to everyone.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>⚠️ Important Information</h2>
+            
+            <div class="highlight-box">
+                <p><strong>Educational Information Only:</strong> Tree of Life AI provides educational information only. It is NOT a substitute for professional medical advice, diagnosis, or treatment.</p>
+                
+                <p><strong>Emergency Situations:</strong> If you are experiencing a medical emergency, call 911 immediately. Do not use Tree of Life AI for emergency situations.</p>
+                
+                <p><strong>Consult Healthcare Professionals:</strong> Always consult licensed healthcare professionals before starting any new health protocol, supplement, or treatment approach. The information provided is for educational purposes to help you make informed decisions with your healthcare team.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>📧 Contact</h2>
+            <p>Questions, feedback, or partnership inquiries?</p>
+            <p><strong>Email:</strong> <a href="mailto:support@treeoflifeai.com" style="color: var(--peach-gold);">support@treeoflifeai.com</a></p>
+            
+            <div class="cta-box">
+                <h3>Ready to Get Started?</h3>
+                <p><a href="auth.html">Create Free Account →</a></p>
+                <p style="font-size: 0.9rem; color: var(--amber-medium); margin-top: 0.5rem;">10 conversations/month • Full health profile access • No credit card required</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <div class="footer-info">
+            © 2024 Tree of Life AI • Educational information only • Not medical advice • Always consult qualified healthcare professionals
+        </div>
+    </div>
+</body>
+</html>
