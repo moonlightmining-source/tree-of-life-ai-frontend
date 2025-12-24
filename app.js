@@ -13,6 +13,38 @@ let userName = localStorage.getItem('userName') || 'friend'; // Get user's first
 // ✅ Image handling (declared only ONCE here in app.js)
 let pendingImage = null;
 
+// Track selected medical traditions
+let selectedTraditions = ['all']; // Default to 'all'
+// Build system prompt based on selected traditions
+function buildSystemPrompt() {
+    if (selectedTraditions.includes('all') || selectedTraditions.length === 0) {
+        return null; // Use default Claude behavior
+    }
+    
+    const traditionNames = {
+        'western': 'Western Medicine',
+        'ayurveda': 'Ayurveda',
+        'tcm': 'Traditional Chinese Medicine',
+        'herbal': 'Herbal Medicine',
+        'homeopathy': 'Homeopathy',
+        'chiropractic': 'Chiropractic',
+        'nutrition': 'Clinical Nutrition',
+        'vibrational': 'Vibrational Healing',
+        'fitness': 'Fitness & Physical Therapy',
+        'eldercare': 'Elder Care & Law',
+        'consciousness': 'Consciousness Mapping'
+    };
+    
+    const selected = selectedTraditions.map(t => traditionNames[t] || t);
+    
+    return `You are Tree of Life AI. The user has specifically selected these healing traditions: ${selected.join(', ')}. 
+
+IMPORTANT: Respond PRIMARILY from these selected tradition(s). Focus your analysis, recommendations, and insights through the lens of ${selected.length === 1 ? 'this tradition' : 'these traditions'}. 
+
+${selected.length > 1 ? 'You may briefly mention other perspectives for context, but your main response should center on the selected traditions.' : 'Stay focused on this single tradition unless the user asks for other perspectives.'}
+
+Provide specific, actionable guidance from ${selected.length === 1 ? 'this tradition\'s' : 'these traditions\''} framework.`;
+}
 // ✨ CUSTOM MODAL FUNCTIONS - ADDED (replaces alert/confirm with styled modals)
 function showCustomAlert(message) {
     return new Promise((resolve) => {
@@ -323,9 +355,14 @@ async function sendMessage() {
 
 // ✅ UPDATED: Create conversation with optional image
 async function createConversation(initialMessage, imageData = null) {
-    // Build request body with optional image
+    // Build system prompt based on selected traditions
+    const systemPrompt = buildSystemPrompt();
+    
+    // Build request body with optional image and system prompt
     const requestBody = {
-        initial_message: initialMessage
+        initial_message: systemPrompt 
+            ? `${systemPrompt}\n\nUser question: ${initialMessage}`
+            : initialMessage
     };
     
     // Add image if present
@@ -379,9 +416,14 @@ async function createConversation(initialMessage, imageData = null) {
 
 // ✅ UPDATED: Send message to conversation with optional image
 async function sendMessageToConversation(message, imageData = null) {
-    // Build request body with optional image
+    // Build system prompt based on selected traditions
+    const systemPrompt = buildSystemPrompt();
+    
+    // Build request body with optional image and system prompt
     const requestBody = {
-        message: message
+        message: systemPrompt 
+            ? `${systemPrompt}\n\nUser question: ${message}`
+            : message
     };
     
     // Add image if present
