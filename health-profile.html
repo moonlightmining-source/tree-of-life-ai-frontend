@@ -3054,21 +3054,32 @@
     }
 }
         function showExtractionPreview(data) {
-            const preview = document.getElementById('extractionPreview');
-            const container = document.getElementById('extractedValues');
+    const preview = document.getElementById('extractionPreview');
+    const container = document.getElementById('extractedValues');
 
-            container.innerHTML = data.results.map((result, index) => `
-                <div class="extracted-value">
-                    <input type="text" value="${result.name}" data-index="${index}" data-field="name" placeholder="Test name">
-                    <input type="text" value="${result.value}" data-index="${index}" data-field="value" placeholder="Value">
-                    <input type="text" value="${result.unit}" data-index="${index}" data-field="unit" placeholder="Unit">
-                    <input type="text" value="${result.reference_range}" data-index="${index}" data-field="reference_range" placeholder="Range">
-                </div>
-            `).join('');
+    // ✅ SAFETY CHECKS
+    if (!data || !data.results || !Array.isArray(data.results)) {
+        showMessage('testMessage', '❌ Invalid response from server. Please try again.', 'error');
+        console.error('Invalid extraction data:', data);
+        return;
+    }
 
-            preview.classList.add('active');
-        }
+    if (data.results.length === 0) {
+        showMessage('testMessage', '⚠️ No lab values detected. Please upload a different file or enter manually.', 'warning');
+        return;
+    }
 
+    container.innerHTML = data.results.map((result, index) => `
+        <div class="extracted-value">
+            <input type="text" value="${result.name || ''}" data-index="${index}" data-field="name" placeholder="Test name">
+            <input type="text" value="${result.value || ''}" data-index="${index}" data-field="value" placeholder="Value">
+            <input type="text" value="${result.unit || ''}" data-index="${index}" data-field="unit" placeholder="Unit">
+            <input type="text" value="${result.reference_range || ''}" data-index="${index}" data-field="reference_range" placeholder="Range">
+        </div>
+    `).join('');
+
+    preview.classList.add('active');
+}
         async function saveLabResults() {
             try {
                 const inputs = document.querySelectorAll('.extracted-value input');
