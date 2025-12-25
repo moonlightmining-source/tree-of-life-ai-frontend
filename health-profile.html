@@ -2993,47 +2993,66 @@
         // ==================== LAB RESULTS (keeping existing functions) ====================
 
         async function handleFileSelect() {
-            const file = document.getElementById('fileInput').files[0];
-            if (!file) return;
+    const file = document.getElementById('fileInput').files[0];
+    if (!file) return;
 
-            const provider = document.getElementById('providerInput').value.trim();
-            const testDate = document.getElementById('testDateInput').value;
+    // ✅ VALIDATE FILE TYPE
+    const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+    if (!allowedTypes.includes(file.type)) {
+        showMessage('testMessage', `❌ Invalid file type. Please upload JPG, PNG, or PDF only.`, 'error');
+        document.getElementById('fileInput').value = '';
+        return;
+    }
 
-            if (!provider || !testDate) {
-                showMessage('testMessage', '⚠️ Please enter provider and test date', 'error');
-                return;
-            }
+    // ✅ VALIDATE FILE SIZE (10MB MAX)
+    const maxSize = 10 * 1024 * 1024;
+    if (file.size > maxSize) {
+        showMessage('testMessage', '❌ File too large. Maximum size is 10MB.', 'error');
+        document.getElementById('fileInput').value = '';
+        return;
+    }
 
-            currentFile = file;
+    const provider = document.getElementById('providerInput').value.trim();
+    const testDate = document.getElementById('testDateInput').value;
 
-            document.getElementById('uploadSpinner').classList.add('active');
+    if (!provider || !testDate) {
+        showMessage('testMessage', '⚠️ Please enter provider and test date', 'error');
+        return;
+    }
 
-            try {
-                const formData = new FormData();
-                formData.append('file', file);
-                formData.append('provider', provider);
-                formData.append('test_date', testDate);
+    currentFile = file;
+    document.getElementById('uploadSpinner').classList.add('active');
 
-                const response = await fetch(`${API_URL}/api/lab-results/upload`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    },
-                    body: formData
-                });
+    try {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('provider', provider);
+        formData.append('test_date', testDate);
 
-                if (!response.ok) throw new Error('Upload failed');
+        const response = await fetch(`${API_URL}/api/lab-results/upload`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: formData
+        });
 
-                extractedData = await response.json();
-                showExtractionPreview(extractedData);
-
-            } catch (error) {
-                showMessage('testMessage', '❌ Upload error: ' + error.message, 'error');
-            } finally {
-                document.getElementById('uploadSpinner').classList.remove('active');
-            }
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.detail || errorData.message || 'Upload failed');
         }
 
+        extractedData = await response.json();
+        showExtractionPreview(extractedData);
+
+    } catch (error) {
+        console.error('Upload error:', error);
+        showMessage('testMessage', '❌ Upload error: ' + error.message, 'error');
+    } finally {
+        document.getElementById('uploadSpinner').classList.remove('active');
+        document.getElementById('fileInput').value = ''; // Clear input
+    }
+}
         function showExtractionPreview(data) {
             const preview = document.getElementById('extractionPreview');
             const container = document.getElementById('extractedValues');
