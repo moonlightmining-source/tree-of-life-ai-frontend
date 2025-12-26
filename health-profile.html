@@ -4303,17 +4303,7 @@ function isPaidUser() {
                     showExportUpgradePrompt();
                     return;
                 }
-                // Check if user has Pro tier
-                const userTier = localStorage.getItem('subscription_tier') || 'free';
                 
-                if (userTier !== 'pro') {
-                    // Show upgrade message
-                    if (confirm('PowerPoint export is a PRO feature.\n\nUpgrade to PRO to unlock:\n✨ PowerPoint exports\n✨ Unlimited family members\n✨ Priority support\n\nGo to subscription settings?')) {
-                        window.location.href = '/subscriptions.html';
-                    }
-                    return;
-                }
-
                 if (!window.lastAnalysisData) {
                     showMessage('personalMessage', '❌ No analysis data to export', 'error');
                     return;
