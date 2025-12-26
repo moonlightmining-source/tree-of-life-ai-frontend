@@ -1329,11 +1329,18 @@
         <div class="profile-container">
             <h1 class="profile-title"> Health Profile </h1>
 
-            <!-- AI ANALYSIS BUTTON -->
-            <button class="ai-analysis-btn" onclick="openAIAnalysis()">
-                 <span class="ai-text-top">AI</span>
-                 <span class="ai-text-bottom">Health Analysis</span>
-            </button>
+                      <!-- AI ANALYSIS BUTTON -->
+            <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                <button class="ai-analysis-btn" onclick="openAIAnalysis()">
+                     <span class="ai-text-top">🤖 AI</span>
+                     <span class="ai-text-bottom">Health Analysis</span>
+                </button>
+                
+                <button class="ai-analysis-btn" onclick="exportCompleteDataJSON()" style="background: linear-gradient(135deg, #2C5530 0%, #1a3a1f 100%);">
+                     <span class="ai-text-top">💾</span>
+                     <span class="ai-text-bottom">Export All Data</span>
+                </button>
+            </div>
 
             <!-- AI ANALYSIS MODAL -->
             <div id="aiModal" class="ai-modal">
@@ -1360,6 +1367,14 @@
                         <button class="export-pdf-btn" onclick="exportAnalysisPDF()" style="display: none;" id="exportPdfBtn">
                             <span>📄</span>
                             <span>Export as PDF</span>
+                        </button>
+                        <button class="export-pdf-btn" onclick="exportAnalysisText()" style="display: none;" id="exportTextBtn">
+                            <span>📝</span>
+                            <span>Export as Text</span>
+                        </button>
+                        <button class="export-pdf-btn" onclick="printAnalysis()" style="display: none;" id="printAnalysisBtn">
+                            <span>🖨️</span>
+                            <span>Print Analysis</span>
                         </button>
                     </div>
                 </div>
@@ -1669,6 +1684,14 @@
             <div id="metricsTab" class="tab-content">
                 <div id="metricsMessage" class="message"></div>
 
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <h3 style="color: var(--peach-gold); margin: 0;">📈 Health Metrics</h3>
+                    <button class="export-pdf-btn" onclick="exportMetricsCSV()" title="Export all health metrics to CSV" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
+                        <span>📊</span>
+                        <span>Export CSV</span>
+                    </button>
+                </div>
+
                 <div class="metrics-grid">
                     <!-- WEIGHT TRACKING -->
                     <div class="metric-card">
@@ -1728,10 +1751,16 @@
                 <!-- VIEW TOGGLE -->
                 <div class="lab-results-header">
                     <h3 style="color: var(--peach-gold); font-size: 1.5rem;">📊 Lab Results</h3>
-                    <div class="view-toggle">
-                        <button class="active" id="listViewBtn" onclick="switchLabView('list')">List View</button>
-                        <button id="trendsViewBtn" onclick="switchLabView('trends')">Trends</button>
-                        <button id="compareViewBtn" onclick="switchLabView('compare')">Compare</button>
+                    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                        <div class="view-toggle">
+                            <button class="active" id="listViewBtn" onclick="switchLabView('list')">List View</button>
+                            <button id="trendsViewBtn" onclick="switchLabView('trends')">Trends</button>
+                            <button id="compareViewBtn" onclick="switchLabView('compare')">Compare</button>
+                        </div>
+                        <button class="export-pdf-btn" onclick="exportLabResultsCSV()" title="Export all lab results to CSV" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
+                            <span>📊</span>
+                            <span>Export CSV</span>
+                        </button>
                     </div>
                 </div>
 
