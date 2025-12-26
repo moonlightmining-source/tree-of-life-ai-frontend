@@ -3788,6 +3788,10 @@ function isPaidUser() {
 // ==================== EXPORT LAB RESULTS CSV ====================
         function exportLabResultsCSV() {
             try {
+                if (!isPaidUser()) {
+                    showExportUpgradePrompt();
+                    return;
+                }
                 if (!allLabResults || allLabResults.length === 0) {
                     showMessage('testMessage', '❌ No lab results to export', 'error');
                     return;
@@ -3829,6 +3833,10 @@ function isPaidUser() {
         // ==================== EXPORT ANALYSIS AS PDF ====================
         function exportAnalysisPDF() {
             try {
+                if (!isPaidUser()) {
+                    showExportUpgradePrompt();
+                    return;
+                }
                 if (!window.lastAnalysisData) {
                     showMessage('personalMessage', '❌ No analysis data to export', 'error');
                     return;
@@ -3982,6 +3990,10 @@ function isPaidUser() {
         // ==================== EXPORT ANALYSIS AS CSV ====================
         function exportAnalysisCSV() {
             try {
+                if (!isPaidUser()) {
+                    showExportUpgradePrompt();
+                    return;
+                }
                 if (!window.lastAnalysisData) {
                     showMessage('personalMessage', '❌ No analysis data to export', 'error');
                     return;
@@ -4047,6 +4059,10 @@ function isPaidUser() {
         // ==================== EXPORT LAB RESULTS AS PDF ====================
         function exportLabResultsPDF() {
             try {
+                if (!isPaidUser()) {
+                    showExportUpgradePrompt();
+                    return;
+                }
                 if (!allLabResults || allLabResults.length === 0) {
                     showMessage('testMessage', '❌ No lab results to export', 'error');
                     return;
@@ -4117,6 +4133,10 @@ function isPaidUser() {
         // ==================== EXPORT HEALTH METRICS AS PDF ====================
         function exportMetricsPDF() {
             try {
+                if (!isPaidUser()) {
+                    showExportUpgradePrompt();
+                    return;
+                }
                 const hasWeight = weightData && weightData.length > 0;
                 const hasBP = bpData && bpData.length > 0;
                 const hasBS = bsData && bsData.length > 0;
@@ -4221,13 +4241,15 @@ function isPaidUser() {
             }
         }
 
-        // ==================== EXPORT HEALTH METRICS CSV ====================
-      
-
+        
       
         // ==================== EXPORT HEALTH METRICS CSV ====================
         function exportMetricsCSV() {
             try {
+                if (!isPaidUser()) {
+                    showExportUpgradePrompt();
+                    return;
+                }
                 const hasWeight = weightData && weightData.length > 0;
                 const hasBP = bpData && bpData.length > 0;
                 const hasBS = bsData && bsData.length > 0;
@@ -4276,6 +4298,10 @@ function isPaidUser() {
 // ==================== EXPORT ANALYSIS AS PDF ====================
         function exportAnalysisPDF() {
             try {
+                if (!isPaidUser()) {
+                    showExportUpgradePrompt();
+                    return;
+                }
                 if (!window.lastAnalysisData) {
                     showMessage('personalMessage', '❌ No analysis data to export', 'error');
                     return;
@@ -4502,6 +4528,10 @@ function isPaidUser() {
         // ==================== EXPORT LAB RESULTS AS PDF ====================
         function exportLabResultsPDF() {
             try {
+               if (!isPaidUser()) {
+                    showExportUpgradePrompt();
+                    return;
+                } 
                 if (!allLabResults || allLabResults.length === 0) {
                     showMessage('testMessage', '❌ No lab results to export', 'error');
                     return;
@@ -4574,6 +4604,10 @@ function isPaidUser() {
         // ==================== EXPORT HEALTH METRICS AS PDF ====================
         function exportMetricsPDF() {
             try {
+                if (!isPaidUser()) {
+                    showExportUpgradePrompt();
+                    return;
+                }
                 const hasWeight = weightData && weightData.length > 0;
                 const hasBP = bpData && bpData.length > 0;
                 const hasBS = bsData && bsData.length > 0;
@@ -4684,6 +4718,10 @@ function isPaidUser() {
              // ==================== EXPORT ANALYSIS AS POWERPOINT ====================
         async function exportAnalysisPowerPoint() {
             try {
+                if (!isPaidUser()) {
+                    showExportUpgradePrompt();
+                    return;
+                }
                 // Check if user has Pro tier
                 const userTier = localStorage.getItem('subscription_tier') || 'free';
                 
