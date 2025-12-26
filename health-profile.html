@@ -1762,9 +1762,13 @@
                             <button id="trendsViewBtn" onclick="switchLabView('trends')">Trends</button>
                             <button id="compareViewBtn" onclick="switchLabView('compare')">Compare</button>
                         </div>
-                        <button class="export-pdf-btn" onclick="exportLabResultsCSV()" title="Export all lab results to CSV" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
+                        <button class="export-pdf-btn" onclick="exportLabResultsPDF()" title="Export lab results as PDF" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
+                            <span>📄</span>
+                            <span>PDF</span>
+                        </button>
+                        <button class="export-pdf-btn" onclick="exportLabResultsCSV()" title="Export lab results as CSV" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
                             <span>📊</span>
-                            <span>Export CSV</span>
+                            <span>CSV</span>
                         </button>
                     </div>
                 </div>
