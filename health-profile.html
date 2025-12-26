@@ -1360,23 +1360,26 @@
                         <div id="aiResults" style="display: none;"></div>
                     </div>
 
-                    <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
-                        <button class="export-pdf-btn" onclick="exportAnalysisPDF()" style="display: none;" id="exportPdfBtn">
+                    <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;" id="analysisExportButtons" style="display: none;">
+                        <button class="export-pdf-btn" onclick="exportAnalysisPDF()">
                             <span>📄</span>
-                            <span>Export as PDF</span>
+                            <span>Export PDF</span>
                         </button>
-                        <button class="export-pdf-btn" onclick="exportAnalysisPowerPoint()" style="display: none;" id="exportPptBtn">
+                        <button class="export-pdf-btn" onclick="exportAnalysisCSV()">
+                            <span>📊</span>
+                            <span>Export CSV</span>
+                        </button>
+                        <button class="export-pdf-btn" onclick="exportAnalysisPowerPoint()">
                             <span>📊</span>
                             <span>Export PowerPoint</span>
                             <span style="font-size: 0.7rem; color: var(--peach-gold);">PRO</span>
                         </button>
-                        <button class="export-pdf-btn" onclick="exportAnalysisText()" style="display: none;" id="exportTextBtn">
-                            <span>📝</span>
-                            <span>Export as Text</span>
-                        </button>
-                        <button class="export-pdf-btn" onclick="printAnalysis()" style="display: none;" id="printAnalysisBtn">
-                            <span>🖨️</span>
-                            <span>Print Analysis</span>
+                    </div>
+                    
+                    <!-- Close button at bottom -->
+                    <div style="display: flex; justify-content: center; margin-top: 2rem;" id="analysisBottomClose" style="display: none;">
+                        <button class="ai-close-btn" onclick="closeAIModal()" style="position: relative; font-size: 2rem; padding: 0.5rem 1.5rem; background: var(--bronze-deep); color: var(--peach-gold); border: 2px solid var(--peach-gold); border-radius: 8px; cursor: pointer;">
+                            ✕ Close
                         </button>
                     </div>
                 </div>
