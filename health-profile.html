@@ -3298,13 +3298,94 @@
         // ==================== AI HEALTH ANALYSIS ====================
 
         function openAIAnalysis() {
-            const modal = document.getElementById('aiModal');
-            modal.classList.add('active');
-            
-            // Start analysis
-            performAIAnalysis();
-        }
+    // Check if user has Basic tier or higher
+    const userTier = localStorage.getItem('subscription_tier') || 'free';
+    
+    if (userTier === 'free') {
+        // Show upgrade message
+        const upgradeModal = document.createElement('div');
+        upgradeModal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s;
+        `;
 
+        upgradeModal.innerHTML = `
+            <div style="
+                background: rgba(0, 0, 0, 0.95);
+                border: 3px solid var(--bronze-deep);
+                border-radius: 20px;
+                padding: 3rem;
+                max-width: 500px;
+                text-align: center;
+                box-shadow: 0 10px 50px rgba(212, 165, 116, 0.8);
+            ">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">🤖</div>
+                <h2 style="color: var(--peach-gold); font-size: 2rem; margin-bottom: 1rem;">AI Health Analysis</h2>
+                <p style="color: var(--amber-light); font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem;">
+                    Upgrade to <strong>Basic or higher</strong> to unlock:
+                </p>
+                <ul style="color: var(--amber-light); font-size: 1rem; text-align: left; margin-bottom: 2rem; line-height: 2;">
+                    <li>✨ AI-powered comprehensive health analysis</li>
+                    <li>✨ Multi-tradition health insights (9 traditions)</li>
+                    <li>✨ Personalized recommendations</li>
+                    <li>✨ Lab results interpretation</li>
+                    <li>✨ Export analysis as PDF, CSV, PowerPoint</li>
+                    <li>✨ Medication & supplement guidance</li>
+                </ul>
+                <button onclick="window.location.href='subscriptions.html'" style="
+                    background: linear-gradient(135deg, var(--bronze-deep), var(--peach-gold));
+                    color: var(--pure-black);
+                    border: none;
+                    padding: 1rem 3rem;
+                    font-size: 1.2rem;
+                    font-weight: 700;
+                    border-radius: 10px;
+                    cursor: pointer;
+                    box-shadow: 0 4px 15px rgba(238, 197, 145, 0.5);
+                    margin-right: 1rem;
+                    transition: all 0.3s;
+                " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    ⭐ Upgrade Now ⭐
+                </button>
+                <button onclick="this.parentElement.parentElement.remove()" style="
+                    background: rgba(255, 255, 255, 0.1);
+                    color: var(--amber-light);
+                    border: 2px solid var(--bronze-deep);
+                    padding: 1rem 2rem;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    border-radius: 10px;
+                    cursor: pointer;
+                    transition: all 0.3s;
+                " onmouseover="this.style.background='rgba(255, 255, 255, 0.2)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.1)'">
+                    Maybe Later
+                </button>
+            </div>
+        `;
+
+        document.body.appendChild(upgradeModal);
+        upgradeModal.addEventListener('click', (e) => {
+            if (e.target === upgradeModal) upgradeModal.remove();
+        });
+        return;
+    }
+    
+    // User has Basic or higher - proceed with analysis
+    const modal = document.getElementById('aiModal');
+    modal.classList.add('active');
+    
+    // Start analysis
+    performAIAnalysis();
+}
         function closeAIModal() {
             const modal = document.getElementById('aiModal');
             modal.classList.remove('active');
