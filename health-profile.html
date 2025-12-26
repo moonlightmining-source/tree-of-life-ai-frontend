@@ -3904,6 +3904,199 @@ Name: ${profile.full_name || 'Not provided'}
                 showMessage('personalMessage', '❌ Failed to export: ' + error.message, 'error');
             }
         }
+        // ==================== EXPORT ANALYSIS AS POWERPOINT ====================
+        async function exportAnalysisPowerPoint() {
+            try {
+                // Check if user has Pro tier
+                const userTier = localStorage.getItem('subscription_tier') || 'free';
+                
+                if (userTier !== 'pro') {
+                    // Show upgrade message
+                    if (confirm('PowerPoint export is a PRO feature.\n\nUpgrade to PRO to unlock:\n✨ PowerPoint exports\n✨ Unlimited family members\n✨ Priority support\n\nGo to subscription settings?')) {
+                        window.location.href = '/subscriptions.html';
+                    }
+                    return;
+                }
+
+                if (!window.lastAnalysisData) {
+                    showMessage('personalMessage', '❌ No analysis data to export', 'error');
+                    return;
+                }
+
+                showMessage('personalMessage', '📊 Creating PowerPoint...', 'success');
+
+                const pptx = new PptxGenJS();
+                const analysis = window.lastAnalysisData;
+                const profile = window.healthProfile;
+
+                // Define Tree of Life theme colors
+                const colors = {
+                    gold: 'DAA520',
+                    bronze: '8B5A2B',
+                    darkGreen: '1a3a1f',
+                    cream: 'FFF8DC',
+                    white: 'FFFFFF',
+                    black: '333333'
+                };
+
+                // Configure slide master
+                pptx.layout = 'LAYOUT_WIDE';
+                pptx.author = 'Tree of Life AI';
+                pptx.company = 'Tree of Life AI';
+                pptx.subject = 'Comprehensive Health Analysis';
+                pptx.title = 'Health Analysis Report';
+
+                // Helper function to clean text
+                const cleanText = (text) => {
+                    if (!text) return '';
+                    return text
+                        .replace(/#{1,6}\s/g, '')
+                        .replace(/\*\*/g, '')
+                        .replace(/\*/g, '')
+                        .replace(/\n{3,}/g, '\n\n')
+                        .trim();
+                };
+
+                // SLIDE 1: Title Slide
+                let slide = pptx.addSlide();
+                slide.background = { fill: colors.darkGreen };
+                
+                slide.addText('🌳 Tree of Life AI', {
+                    x: 0.5, y: 2.0, w: 9.0, h: 1.5,
+                    fontSize: 54,
+                    bold: true,
+                    color: colors.gold,
+                    align: 'center'
+                });
+                
+                slide.addText('Comprehensive Health Analysis', {
+                    x: 0.5, y: 3.5, w: 9.0, h: 0.8,
+                    fontSize: 32,
+                    color: colors.cream,
+                    align: 'center'
+                });
+                
+                slide.addText(new Date().toLocaleDateString(), {
+                    x: 0.5, y: 4.5, w: 9.0, h: 0.5,
+                    fontSize: 18,
+                    color: colors.cream,
+                    align: 'center'
+                });
+
+                // SLIDE 2: Patient Information
+                if (profile) {
+                    slide = pptx.addSlide();
+                    slide.background = { fill: colors.white };
+                    
+                    slide.addText('Patient Information', {
+                        x: 0.5, y: 0.3, w: 9.0, h: 0.6,
+                        fontSize: 32,
+                        bold: true,
+                        color: colors.bronze
+                    });
+                    
+                    let patientInfo = [];
+                    if (profile.full_name) patientInfo.push({ text: `Name: ${profile.full_name}` });
+                    if (profile.age) patientInfo.push({ text: `Age: ${profile.age} years` });
+                    if (profile.sex) patientInfo.push({ text: `Sex: ${profile.sex}` });
+                    if (profile.blood_type) patientInfo.push({ text: `Blood Type: ${profile.blood_type}` });
+                    
+                    slide.addText(patientInfo, {
+                        x: 0.5, y: 1.2, w: 9.0, h: 3.0,
+                        fontSize: 18,
+                        color: colors.black,
+                        bullet: true
+                    });
+                }
+
+                // Helper to add content slides
+                const addContentSlide = (title, content, icon = '📋') => {
+                    if (!content) return;
+                    
+                    const slide = pptx.addSlide();
+                    slide.background = { fill: colors.white };
+                    
+                    // Title with icon
+                    slide.addText(`${icon} ${title}`, {
+                        x: 0.5, y: 0.3, w: 9.0, h: 0.6,
+                        fontSize: 28,
+                        bold: true,
+                        color: colors.bronze
+                    });
+                    
+                    // Content
+                    const cleanedContent = cleanText(content);
+                    const contentLines = cleanedContent.split('\n').slice(0, 15);
+                    
+                    slide.addText(contentLines.join('\n'), {
+                        x: 0.5, y: 1.1, w: 9.0, h: 4.5,
+                        fontSize: 14,
+                        color: colors.black,
+                        valign: 'top'
+                    });
+                    
+                    // Footer
+                    slide.addText('Tree of Life AI - For informational purposes only', {
+                        x: 0.5, y: 5.8, w: 9.0, h: 0.3,
+                        fontSize: 10,
+                        color: '999999',
+                        align: 'center'
+                    });
+                };
+
+                // Add all analysis sections
+                addContentSlide('Overall Health Assessment', analysis.overall_assessment, '📋');
+                addContentSlide('Lab Results Analysis', analysis.lab_results_analysis, '🔬');
+                addContentSlide('Health Metrics Trends', analysis.metrics_trends, '📈');
+                addContentSlide('Medication Review', analysis.medication_review, '💊');
+                addContentSlide('Integrative Recommendations', analysis.integrative_recommendations, '🌿');
+                addContentSlide('Lifestyle Suggestions', analysis.lifestyle_suggestions, '💫');
+                addContentSlide('Western Medicine', analysis.western_medicine, '🏥');
+                addContentSlide('Clinical Nutrition', analysis.clinical_nutrition, '🥗');
+                addContentSlide('Herbal Medicine', analysis.herbal_medicine, '🌱');
+                addContentSlide('Supplement Recommendations', analysis.supplement_recommendations, '💊');
+                
+                if (analysis.ayurvedic_perspective && profile.ayurvedic_dosha) {
+                    addContentSlide('Ayurvedic Perspective', analysis.ayurvedic_perspective, '🕉️');
+                }
+                
+                if (analysis.tcm_perspective && profile.tcm_pattern) {
+                    addContentSlide('TCM Perspective', analysis.tcm_perspective, '☯️');
+                }
+                
+                addContentSlide('Action Items', analysis.action_items, '✅');
+
+                // FINAL SLIDE: Disclaimer
+                slide = pptx.addSlide();
+                slide.background = { fill: colors.cream };
+                
+                slide.addText('⚠️ Important Disclaimer', {
+                    x: 0.5, y: 1.5, w: 9.0, h: 0.8,
+                    fontSize: 32,
+                    bold: true,
+                    color: colors.bronze,
+                    align: 'center'
+                });
+                
+                slide.addText('This AI analysis is for informational purposes only and does not constitute medical advice. Always consult with qualified healthcare professionals before making any health-related decisions or changes to your treatment plan.', {
+                    x: 1.0, y: 2.8, w: 8.0, h: 2.0,
+                    fontSize: 16,
+                    color: colors.black,
+                    align: 'center',
+                    valign: 'middle'
+                });
+
+                // Save the presentation
+                const filename = `Tree-of-Life-Health-Analysis-${new Date().toISOString().split('T')[0]}.pptx`;
+                await pptx.writeFile({ fileName: filename });
+
+                showMessage('personalMessage', '✅ PowerPoint exported successfully!', 'success');
+
+            } catch (error) {
+                console.error('PowerPoint export error:', error);
+                showMessage('personalMessage', '❌ Failed to export PowerPoint: ' + error.message, 'error');
+            }
+        }
     </script>
 </body>
 </html>
