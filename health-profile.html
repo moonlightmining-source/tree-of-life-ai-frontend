@@ -1691,10 +1691,16 @@
 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
                     <h3 style="color: var(--peach-gold); margin: 0;">📈 Health Metrics</h3>
-                    <button class="export-pdf-btn" onclick="exportMetricsCSV()" title="Export all health metrics to CSV" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
-                        <span>📊</span>
-                        <span>Export CSV</span>
-                    </button>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="export-pdf-btn" onclick="exportMetricsPDF()" title="Export metrics as PDF" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
+                            <span>📄</span>
+                            <span>PDF</span>
+                        </button>
+                        <button class="export-pdf-btn" onclick="exportMetricsCSV()" title="Export metrics as CSV" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
+                            <span>📊</span>
+                            <span>CSV</span>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="metrics-grid">
