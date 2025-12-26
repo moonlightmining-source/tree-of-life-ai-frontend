@@ -3751,7 +3751,414 @@ Name: ${profile.full_name || 'Not provided'}
                 showMessage('metricsMessage', '❌ Failed to export: ' + error.message, 'error');
             }
         }
+// ==================== EXPORT ANALYSIS AS PDF ====================
+        function exportAnalysisPDF() {
+            try {
+                if (!window.lastAnalysisData) {
+                    showMessage('personalMessage', '❌ No analysis data to export', 'error');
+                    return;
+                }
 
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                const analysis = window.lastAnalysisData;
+                const profile = window.healthProfile;
+                const now = new Date();
+                
+                const margin = 20;
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const pageHeight = doc.internal.pageSize.getHeight();
+                let y = margin;
+                let pageNumber = 1;
+
+                // Helper to add page footer
+                const addFooter = () => {
+                    doc.setFontSize(8);
+                    doc.setTextColor(150, 150, 150);
+                    doc.text(`Tree of Life AI - Page ${pageNumber}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
+                    pageNumber++;
+                };
+
+                // Helper to check page break
+                const checkPageBreak = (requiredSpace = 20) => {
+                    if (y > pageHeight - margin - requiredSpace) {
+                        addFooter();
+                        doc.addPage();
+                        y = margin;
+                    }
+                };
+
+                // Title Page
+                doc.setFontSize(28);
+                doc.setTextColor(218, 165, 32);
+                doc.text('Tree of Life AI', pageWidth / 2, 80, { align: 'center' });
+                
+                doc.setFontSize(18);
+                doc.setTextColor(139, 90, 43);
+                doc.text('Comprehensive Health Analysis', pageWidth / 2, 100, { align: 'center' });
+                
+                doc.setFontSize(12);
+                doc.setTextColor(100, 100, 100);
+                doc.text(`Generated: ${now.toLocaleDateString()}`, pageWidth / 2, 120, { align: 'center' });
+                
+                addFooter();
+                doc.addPage();
+                y = margin;
+
+                // Patient Information
+                if (profile) {
+                    doc.setFontSize(16);
+                    doc.setTextColor(139, 90, 43);
+                    doc.text('Patient Information', margin, y);
+                    y += 10;
+
+                    doc.setFontSize(11);
+                    doc.setTextColor(50, 50, 50);
+                    if (profile.full_name) {
+                        doc.text(`Name: ${profile.full_name}`, margin + 5, y);
+                        y += 7;
+                    }
+                    if (profile.age) {
+                        doc.text(`Age: ${profile.age} years`, margin + 5, y);
+                        y += 7;
+                    }
+                    if (profile.sex) {
+                        doc.text(`Sex: ${profile.sex}`, margin + 5, y);
+                        y += 7;
+                    }
+                    if (profile.blood_type) {
+                        doc.text(`Blood Type: ${profile.blood_type}`, margin + 5, y);
+                        y += 7;
+                    }
+                    y += 10;
+                }
+
+                // Helper to add section
+                const addSection = (title, content) => {
+                    if (!content) return;
+                    
+                    checkPageBreak(30);
+                    
+                    doc.setFontSize(14);
+                    doc.setTextColor(139, 90, 43);
+                    doc.text(title, margin, y);
+                    y += 8;
+                    
+                    doc.setFontSize(10);
+                    doc.setTextColor(50, 50, 50);
+                    
+                    const cleanedContent = content
+                        .replace(/#{1,6}\s/g, '')
+                        .replace(/\*\*/g, '')
+                        .replace(/\*/g, '')
+                        .trim();
+                    
+                    const lines = doc.splitTextToSize(cleanedContent, pageWidth - (margin * 2));
+                    
+                    lines.forEach(line => {
+                        checkPageBreak();
+                        doc.text(line, margin + 5, y);
+                        y += 5;
+                    });
+                    
+                    y += 5;
+                };
+
+                // Add all sections
+                addSection('Overall Health Assessment', analysis.overall_assessment);
+                addSection('Lab Results Analysis', analysis.lab_results_analysis);
+                addSection('Health Metrics Trends', analysis.metrics_trends);
+                addSection('Medication Review', analysis.medication_review);
+                addSection('Integrative Recommendations', analysis.integrative_recommendations);
+                addSection('Lifestyle Suggestions', analysis.lifestyle_suggestions);
+                addSection('Western Medicine', analysis.western_medicine);
+                addSection('Clinical Nutrition', analysis.clinical_nutrition);
+                addSection('Herbal Medicine', analysis.herbal_medicine);
+                addSection('Supplement Recommendations', analysis.supplement_recommendations);
+                
+                if (analysis.ayurvedic_perspective) {
+                    addSection('Ayurvedic Perspective', analysis.ayurvedic_perspective);
+                }
+                if (analysis.tcm_perspective) {
+                    addSection('TCM Perspective', analysis.tcm_perspective);
+                }
+                
+                addSection('Action Items', analysis.action_items);
+
+                // Disclaimer
+                checkPageBreak(40);
+                doc.setFontSize(12);
+                doc.setTextColor(139, 90, 43);
+                doc.text('⚠️ DISCLAIMER', margin, y);
+                y += 8;
+                
+                doc.setFontSize(9);
+                doc.setTextColor(100, 100, 100);
+                const disclaimer = 'This AI analysis is for informational purposes only and does not constitute medical advice. Always consult with qualified healthcare professionals before making any health-related decisions.';
+                const disclaimerLines = doc.splitTextToSize(disclaimer, pageWidth - (margin * 2));
+                disclaimerLines.forEach(line => {
+                    doc.text(line, margin, y);
+                    y += 5;
+                });
+
+                addFooter();
+                doc.save(`Tree-of-Life-Analysis-${now.toISOString().split('T')[0]}.pdf`);
+                showMessage('personalMessage', '✅ PDF exported successfully!', 'success');
+
+            } catch (error) {
+                console.error('PDF export error:', error);
+                showMessage('personalMessage', '❌ Failed to export PDF: ' + error.message, 'error');
+            }
+        }
+
+        // ==================== EXPORT ANALYSIS AS CSV ====================
+        function exportAnalysisCSV() {
+            try {
+                if (!window.lastAnalysisData) {
+                    showMessage('personalMessage', '❌ No analysis data to export', 'error');
+                    return;
+                }
+
+                const analysis = window.lastAnalysisData;
+                const profile = window.healthProfile;
+                
+                let csv = 'Section,Content\n';
+                
+                // Patient info
+                if (profile) {
+                    let patientInfo = `Name: ${profile.full_name || 'Not provided'}`;
+                    if (profile.age) patientInfo += ` | Age: ${profile.age}`;
+                    if (profile.sex) patientInfo += ` | Sex: ${profile.sex}`;
+                    if (profile.blood_type) patientInfo += ` | Blood Type: ${profile.blood_type}`;
+                    csv += `"Patient Information","${patientInfo.replace(/"/g, '""')}"\n`;
+                }
+
+                const cleanText = (text) => {
+                    if (!text) return '';
+                    return text.replace(/#{1,6}\s/g, '').replace(/\*\*/g, '').replace(/\*/g, '').replace(/"/g, '""').replace(/\n/g, ' ');
+                };
+
+                const sections = [
+                    { title: 'Overall Health Assessment', content: analysis.overall_assessment },
+                    { title: 'Lab Results Analysis', content: analysis.lab_results_analysis },
+                    { title: 'Health Metrics Trends', content: analysis.metrics_trends },
+                    { title: 'Medication Review', content: analysis.medication_review },
+                    { title: 'Integrative Recommendations', content: analysis.integrative_recommendations },
+                    { title: 'Lifestyle Suggestions', content: analysis.lifestyle_suggestions },
+                    { title: 'Western Medicine', content: analysis.western_medicine },
+                    { title: 'Clinical Nutrition', content: analysis.clinical_nutrition },
+                    { title: 'Herbal Medicine', content: analysis.herbal_medicine },
+                    { title: 'Supplement Recommendations', content: analysis.supplement_recommendations },
+                    { title: 'Ayurvedic Perspective', content: analysis.ayurvedic_perspective },
+                    { title: 'TCM Perspective', content: analysis.tcm_perspective },
+                    { title: 'Action Items', content: analysis.action_items }
+                ];
+
+                sections.forEach(section => {
+                    if (section.content) {
+                        csv += `"${section.title}","${cleanText(section.content)}"\n`;
+                    }
+                });
+
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Tree-of-Life-Analysis-${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                showMessage('personalMessage', '✅ CSV exported successfully!', 'success');
+            } catch (error) {
+                console.error('CSV export error:', error);
+                showMessage('personalMessage', '❌ Failed to export CSV: ' + error.message, 'error');
+            }
+        }
+
+        // ==================== EXPORT LAB RESULTS AS PDF ====================
+        function exportLabResultsPDF() {
+            try {
+                if (!allLabResults || allLabResults.length === 0) {
+                    showMessage('testMessage', '❌ No lab results to export', 'error');
+                    return;
+                }
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                const now = new Date();
+                
+                const margin = 20;
+                const pageWidth = doc.internal.pageSize.getWidth();
+                let y = margin;
+
+                // Title
+                doc.setFontSize(22);
+                doc.setTextColor(218, 165, 32);
+                doc.text('Tree of Life AI - Lab Results', pageWidth / 2, y, { align: 'center' });
+                
+                y += 10;
+                doc.setFontSize(10);
+                doc.setTextColor(100, 100, 100);
+                doc.text(`Generated: ${now.toLocaleDateString()}`, pageWidth / 2, y, { align: 'center' });
+                
+                y += 15;
+                doc.setDrawColor(218, 165, 32);
+                doc.line(margin, y, pageWidth - margin, y);
+                y += 10;
+
+                // Add each lab result
+                allLabResults.forEach((result, index) => {
+                    if (y > 250) {
+                        doc.addPage();
+                        y = margin;
+                    }
+
+                    doc.setFontSize(14);
+                    doc.setTextColor(139, 90, 43);
+                    doc.text(`${result.test_type}`, margin, y);
+                    y += 6;
+                    
+                    doc.setFontSize(10);
+                    doc.setTextColor(100, 100, 100);
+                    doc.text(`Date: ${result.test_date} | Provider: ${result.provider}`, margin, y);
+                    y += 8;
+
+                    result.results.forEach(val => {
+                        if (y > 270) {
+                            doc.addPage();
+                            y = margin;
+                        }
+
+                        doc.setFontSize(10);
+                        doc.setTextColor(50, 50, 50);
+                        doc.text(`${val.name}: ${val.value} ${val.unit} (Ref: ${val.reference_range})`, margin + 5, y);
+                        y += 6;
+                    });
+
+                    y += 5;
+                });
+
+                doc.save(`Tree-of-Life-Lab-Results-${now.toISOString().split('T')[0]}.pdf`);
+                showMessage('testMessage', '✅ PDF exported successfully!', 'success');
+                
+            } catch (error) {
+                console.error('PDF export error:', error);
+                showMessage('testMessage', '❌ Failed to export PDF: ' + error.message, 'error');
+            }
+        }
+
+        // ==================== EXPORT HEALTH METRICS AS PDF ====================
+        function exportMetricsPDF() {
+            try {
+                const hasWeight = weightData && weightData.length > 0;
+                const hasBP = bpData && bpData.length > 0;
+                const hasBS = bsData && bsData.length > 0;
+
+                if (!hasWeight && !hasBP && !hasBS) {
+                    showMessage('metricsMessage', '❌ No metrics to export', 'error');
+                    return;
+                }
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                const now = new Date();
+                
+                const margin = 20;
+                const pageWidth = doc.internal.pageSize.getWidth();
+                let y = margin;
+
+                // Title
+                doc.setFontSize(22);
+                doc.setTextColor(218, 165, 32);
+                doc.text('Tree of Life AI - Health Metrics', pageWidth / 2, y, { align: 'center' });
+                
+                y += 10;
+                doc.setFontSize(10);
+                doc.setTextColor(100, 100, 100);
+                doc.text(`Generated: ${now.toLocaleDateString()}`, pageWidth / 2, y, { align: 'center' });
+                
+                y += 15;
+                doc.setDrawColor(218, 165, 32);
+                doc.line(margin, y, pageWidth - margin, y);
+                y += 10;
+
+                // Weight data
+                if (hasWeight) {
+                    doc.setFontSize(14);
+                    doc.setTextColor(139, 90, 43);
+                    doc.text('Weight Tracking', margin, y);
+                    y += 8;
+
+                    weightData.slice(-20).forEach(entry => {
+                        if (y > 270) {
+                            doc.addPage();
+                            y = margin;
+                        }
+                        doc.setFontSize(10);
+                        doc.setTextColor(50, 50, 50);
+                        doc.text(`${new Date(entry.recorded_at).toLocaleDateString()}: ${entry.value} ${entry.unit}`, margin + 5, y);
+                        y += 6;
+                    });
+                    y += 5;
+                }
+
+                // Blood Pressure data
+                if (hasBP) {
+                    if (y > 250) {
+                        doc.addPage();
+                        y = margin;
+                    }
+                    doc.setFontSize(14);
+                    doc.setTextColor(139, 90, 43);
+                    doc.text('Blood Pressure', margin, y);
+                    y += 8;
+
+                    bpData.slice(-20).forEach(entry => {
+                        if (y > 270) {
+                            doc.addPage();
+                            y = margin;
+                        }
+                        doc.setFontSize(10);
+                        doc.setTextColor(50, 50, 50);
+                        doc.text(`${new Date(entry.recorded_at).toLocaleDateString()}: ${entry.value} ${entry.unit}`, margin + 5, y);
+                        y += 6;
+                    });
+                    y += 5;
+                }
+
+                // Blood Sugar data
+                if (hasBS) {
+                    if (y > 250) {
+                        doc.addPage();
+                        y = margin;
+                    }
+                    doc.setFontSize(14);
+                    doc.setTextColor(139, 90, 43);
+                    doc.text('Blood Sugar', margin, y);
+                    y += 8;
+
+                    bsData.slice(-20).forEach(entry => {
+                        if (y > 270) {
+                            doc.addPage();
+                            y = margin;
+                        }
+                        doc.setFontSize(10);
+                        doc.setTextColor(50, 50, 50);
+                        doc.text(`${new Date(entry.recorded_at).toLocaleDateString()}: ${entry.value} ${entry.unit}`, margin + 5, y);
+                        y += 6;
+                    });
+                }
+
+                doc.save(`Tree-of-Life-Metrics-${now.toISOString().split('T')[0]}.pdf`);
+                showMessage('metricsMessage', '✅ PDF exported successfully!', 'success');
+                
+            } catch (error) {
+                console.error('PDF export error:', error);
+                showMessage('metricsMessage', '❌ Failed to export PDF: ' + error.message, 'error');
+            }
+        }
              // ==================== EXPORT ANALYSIS AS POWERPOINT ====================
         async function exportAnalysisPowerPoint() {
             try {
