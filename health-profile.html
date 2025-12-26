@@ -3298,6 +3298,8 @@
             document.getElementById('aiLoading').style.display = 'block';
             document.getElementById('aiResults').style.display = 'none';
             document.getElementById('exportPdfBtn').style.display = 'none';
+            document.getElementById('exportTextBtn').style.display = 'none';
+            document.getElementById('printAnalysisBtn').style.display = 'none';
         }
 
         async function performAIAnalysis() {
@@ -3517,8 +3519,14 @@
                 </div>
             `;
             
+            // ✅ Store analysis data for export
+            window.lastAnalysisData = analysis;
+            window.healthProfile = profileData;
+            
             resultsDiv.style.display = 'block';
             document.getElementById('exportPdfBtn').style.display = 'flex';
+            document.getElementById('exportTextBtn').style.display = 'flex';
+            document.getElementById('printAnalysisBtn').style.display = 'flex';
         }
 
         function formatAnalysisText(text) {
@@ -3616,6 +3624,278 @@
             // const doc = new jsPDF();
             // ... add content ...
             // doc.save('health-analysis.pdf');
+        }
+        // ==================== EXPORT ANALYSIS AS TEXT ====================
+        function exportAnalysisText() {
+            try {
+                if (!window.lastAnalysisData) {
+                    showMessage('personalMessage', '❌ No analysis data to export', 'error');
+                    return;
+                }
+
+                const analysis = window.lastAnalysisData;
+                const profile = window.healthProfile;
+                const now = new Date();
+                
+                let textContent = `TREE OF LIFE AI - COMPREHENSIVE HEALTH ANALYSIS
+Generated: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}
+================================================================================
+
+`;
+
+                if (profile) {
+                    textContent += `PATIENT INFORMATION
+-------------------
+Name: ${profile.full_name || 'Not provided'}
+`;
+                    if (profile.age) textContent += `Age: ${profile.age} years\n`;
+                    if (profile.sex) textContent += `Sex: ${profile.sex}\n`;
+                    if (profile.blood_type) textContent += `Blood Type: ${profile.blood_type}\n`;
+                    textContent += `\n`;
+                }
+
+                const cleanText = (text) => {
+                    if (!text) return '';
+                    return text.replace(/#{1,6}\s/g, '').replace(/\*\*/g, '').replace(/\*/g, '').replace(/\n{3,}/g, '\n\n').trim();
+                };
+
+                const sections = [
+                    { title: 'OVERALL HEALTH ASSESSMENT', content: analysis.overall_assessment },
+                    { title: 'LAB RESULTS ANALYSIS', content: analysis.lab_results_analysis },
+                    { title: 'HEALTH METRICS TRENDS', content: analysis.metrics_trends },
+                    { title: 'MEDICATION REVIEW', content: analysis.medication_review },
+                    { title: 'INTEGRATIVE RECOMMENDATIONS', content: analysis.integrative_recommendations },
+                    { title: 'LIFESTYLE SUGGESTIONS', content: analysis.lifestyle_suggestions },
+                    { title: 'WESTERN MEDICINE PERSPECTIVE', content: analysis.western_medicine },
+                    { title: 'CLINICAL NUTRITION', content: analysis.clinical_nutrition },
+                    { title: 'HERBAL MEDICINE', content: analysis.herbal_medicine },
+                    { title: 'SUPPLEMENT RECOMMENDATIONS', content: analysis.supplement_recommendations },
+                    { title: 'AYURVEDIC PERSPECTIVE', content: analysis.ayurvedic_perspective },
+                    { title: 'TCM PERSPECTIVE', content: analysis.tcm_perspective },
+                    { title: 'ACTION ITEMS', content: analysis.action_items }
+                ];
+
+                sections.forEach(section => {
+                    if (section.content) {
+                        textContent += `\n${section.title}\n`;
+                        textContent += `${'='.repeat(section.title.length)}\n\n`;
+                        textContent += cleanText(section.content) + '\n\n';
+                    }
+                });
+
+                textContent += `\n${'='.repeat(80)}\nDISCLAIMER: This analysis is for informational purposes only.\n${'='.repeat(80)}\n`;
+
+                const blob = new Blob([textContent], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Tree-of-Life-Health-Analysis-${now.toISOString().split('T')[0]}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                showMessage('personalMessage', '✅ Text file exported!', 'success');
+            } catch (error) {
+                console.error('Text export error:', error);
+                showMessage('personalMessage', '❌ Failed to export: ' + error.message, 'error');
+            }
+        }
+
+        // ==================== PRINT ANALYSIS ====================
+        function printAnalysis() {
+            try {
+                if (!window.lastAnalysisData) {
+                    showMessage('personalMessage', '❌ No analysis data to print', 'error');
+                    return;
+                }
+
+                const printWindow = window.open('', '_blank');
+                const analysis = window.lastAnalysisData;
+                const profile = window.healthProfile;
+                
+                let printContent = `<!DOCTYPE html><html><head><title>Tree of Life AI - Health Analysis</title><style>
+                    @media print { @page { margin: 1in; } }
+                    body { font-family: Georgia, serif; line-height: 1.6; color: #333; max-width: 8.5in; margin: 0 auto; padding: 20px; }
+                    h1 { color: #DAA520; text-align: center; border-bottom: 3px solid #8B5A2B; padding-bottom: 10px; }
+                    h2 { color: #8B5A2B; border-bottom: 2px solid #DAA520; padding-bottom: 5px; margin-top: 30px; }
+                    .patient-info { background: #f5f5f5; padding: 15px; border-left: 4px solid #DAA520; margin: 20px 0; }
+                    .disclaimer { border: 2px solid #8B5A2B; padding: 15px; margin-top: 30px; background: #fff8dc; }
+                </style></head><body>
+                    <h1>🌳 Tree of Life AI<br/>Comprehensive Health Analysis</h1>
+                    <p style="text-align: center; color: #666;">${new Date().toLocaleDateString()}</p>`;
+
+                if (profile) {
+                    printContent += `<div class="patient-info"><strong>Patient Information</strong><br/>
+                        Name: ${profile.full_name || 'Not provided'}<br/>`;
+                    if (profile.age) printContent += `Age: ${profile.age} years<br/>`;
+                    if (profile.sex) printContent += `Sex: ${profile.sex}<br/>`;
+                    if (profile.blood_type) printContent += `Blood Type: ${profile.blood_type}`;
+                    printContent += `</div>`;
+                }
+
+                const sections = [
+                    { title: 'Overall Health Assessment', content: analysis.overall_assessment },
+                    { title: 'Lab Results Analysis', content: analysis.lab_results_analysis },
+                    { title: 'Health Metrics Trends', content: analysis.metrics_trends },
+                    { title: 'Medication Review', content: analysis.medication_review },
+                    { title: 'Integrative Recommendations', content: analysis.integrative_recommendations },
+                    { title: 'Lifestyle Suggestions', content: analysis.lifestyle_suggestions },
+                    { title: 'Western Medicine Perspective', content: analysis.western_medicine },
+                    { title: 'Clinical Nutrition', content: analysis.clinical_nutrition },
+                    { title: 'Herbal Medicine', content: analysis.herbal_medicine },
+                    { title: 'Supplement Recommendations', content: analysis.supplement_recommendations },
+                    { title: 'Ayurvedic Perspective', content: analysis.ayurvedic_perspective },
+                    { title: 'TCM Perspective', content: analysis.tcm_perspective },
+                    { title: 'Action Items', content: analysis.action_items }
+                ];
+
+                sections.forEach(section => {
+                    if (section.content) {
+                        printContent += `<h2>${section.title}</h2><div>${formatAnalysisText(section.content)}</div>`;
+                    }
+                });
+
+                printContent += `<div class="disclaimer"><strong>⚠️ DISCLAIMER</strong><br/>This analysis is for informational purposes only.</div></body></html>`;
+
+                printWindow.document.write(printContent);
+                printWindow.document.close();
+                printWindow.onload = function() { printWindow.print(); };
+
+                showMessage('personalMessage', '✅ Opening print dialog...', 'success');
+            } catch (error) {
+                console.error('Print error:', error);
+                showMessage('personalMessage', '❌ Failed to print: ' + error.message, 'error');
+            }
+        }
+
+        // ==================== EXPORT LAB RESULTS CSV ====================
+        function exportLabResultsCSV() {
+            try {
+                if (!allLabResults || allLabResults.length === 0) {
+                    showMessage('testMessage', '❌ No lab results to export', 'error');
+                    return;
+                }
+
+                let csv = 'Test Type,Test Date,Provider,Test Name,Value,Unit,Reference Range\n';
+
+                allLabResults.forEach(result => {
+                    const testType = (result.test_type || '').replace(/,/g, ';');
+                    const testDate = result.test_date || '';
+                    const provider = (result.provider || '').replace(/,/g, ';');
+
+                    result.results.forEach(val => {
+                        const name = (val.name || '').replace(/,/g, ';');
+                        const value = (val.value || '').replace(/,/g, ';');
+                        const unit = (val.unit || '').replace(/,/g, ';');
+                        const range = (val.reference_range || '').replace(/,/g, ';');
+                        csv += `"${testType}","${testDate}","${provider}","${name}","${value}","${unit}","${range}"\n`;
+                    });
+                });
+
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Tree-of-Life-Lab-Results-${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                showMessage('testMessage', '✅ Lab results exported to CSV!', 'success');
+            } catch (error) {
+                console.error('CSV export error:', error);
+                showMessage('testMessage', '❌ Failed to export: ' + error.message, 'error');
+            }
+        }
+
+        // ==================== EXPORT HEALTH METRICS CSV ====================
+        function exportMetricsCSV() {
+            try {
+                const hasWeight = weightData && weightData.length > 0;
+                const hasBP = bpData && bpData.length > 0;
+                const hasBS = bsData && bsData.length > 0;
+
+                if (!hasWeight && !hasBP && !hasBS) {
+                    showMessage('metricsMessage', '❌ No metrics to export', 'error');
+                    return;
+                }
+
+                let csv = 'Metric Type,Date,Value,Unit,Notes\n';
+
+                if (hasWeight) {
+                    weightData.forEach(entry => {
+                        csv += `"Weight","${entry.recorded_at}","${entry.value}","${entry.unit}","${(entry.notes || '').replace(/,/g, ';')}"\n`;
+                    });
+                }
+
+                if (hasBP) {
+                    bpData.forEach(entry => {
+                        csv += `"Blood Pressure","${entry.recorded_at}","${entry.value}","${entry.unit}","${(entry.notes || '').replace(/,/g, ';')}"\n`;
+                    });
+                }
+
+                if (hasBS) {
+                    bsData.forEach(entry => {
+                        csv += `"Blood Sugar","${entry.recorded_at}","${entry.value}","${entry.unit}","${(entry.notes || '').replace(/,/g, ';')}"\n`;
+                    });
+                }
+
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Tree-of-Life-Health-Metrics-${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                showMessage('metricsMessage', '✅ Metrics exported to CSV!', 'success');
+            } catch (error) {
+                console.error('Metrics export error:', error);
+                showMessage('metricsMessage', '❌ Failed to export: ' + error.message, 'error');
+            }
+        }
+
+        // ==================== EXPORT COMPLETE DATA JSON ====================
+        async function exportCompleteDataJSON() {
+            try {
+                showMessage('personalMessage', '📦 Gathering all health data...', 'success');
+
+                const completeData = {
+                    export_info: {
+                        export_date: new Date().toISOString(),
+                        platform: 'Tree of Life AI',
+                        version: '1.0'
+                    },
+                    profile: profileData,
+                    lab_results: allLabResults || [],
+                    health_metrics: {
+                        weight: weightData || [],
+                        blood_pressure: bpData || [],
+                        blood_sugar: bsData || []
+                    },
+                    last_ai_analysis: window.lastAnalysisData || null
+                };
+
+                const jsonString = JSON.stringify(completeData, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Tree-of-Life-Complete-Data-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                showMessage('personalMessage', '✅ Complete data exported!', 'success');
+            } catch (error) {
+                console.error('JSON export error:', error);
+                showMessage('personalMessage', '❌ Failed to export: ' + error.message, 'error');
+            }
         }
     </script>
 </body>
