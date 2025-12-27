@@ -725,7 +725,7 @@
         let currentPlan = 'free';
 
         document.addEventListener('DOMContentLoaded', async () => {
-            const token = localStorage.getItem('authToken');
+            const token = localStorage.getItem('token');
             const userName = localStorage.getItem('userName');
             
             if (!token) {
@@ -739,7 +739,7 @@
 
         async function checkSubscription() {
             try {
-                const token = localStorage.getItem('authToken');
+                const token = localStorage.getItem('token');
                 const response = await fetch(`${API_BASE}/api/subscription/status`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -767,7 +767,7 @@
 
         async function loadDashboardData() {
             try {
-                const token = localStorage.getItem('authToken');
+                const token = localStorage.getItem('token');
                 const response = await fetch(`${API_BASE}/api/pro/dashboard`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
