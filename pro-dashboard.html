@@ -720,7 +720,7 @@
         </div>
     </div>
 
-   <script>
+  <script>
         const API_BASE = 'https://treeoflife-vn25.onrender.com';
         let currentPlan = 'free';
         let clients = [];
@@ -925,9 +925,12 @@
             const analyticsSection = document.getElementById('analytics-section');
             if (!analyticsSection) return;
 
-            analyticsSection.querySelector('.stat-card:nth-child(1) .stat-value').textContent = `${data.client_retention || 92}%`;
-            analyticsSection.querySelector('.stat-card:nth-child(2) .stat-value').textContent = `${data.avg_completion || 0}%`;
-            analyticsSection.querySelector('.stat-card:nth-child(3) .stat-value').textContent = `${data.avg_compliance || 0}/100`;
+            const statCards = analyticsSection.querySelectorAll('.stat-card .stat-value');
+            if (statCards.length >= 3) {
+                statCards[0].textContent = `${data.client_retention || 92}%`;
+                statCards[1].textContent = `${data.avg_completion || 0}%`;
+                statCards[2].textContent = `${data.avg_compliance || 0}/100`;
+            }
         }
 
         function showSection(sectionName) {
@@ -943,7 +946,6 @@
             event.target.closest('.nav-link').classList.add('active');
         }
 
-        // CLIENT FUNCTIONS
         async function addClient() {
             if (currentPlan !== 'pro') {
                 window.location.href = 'subscriptions.html';
@@ -1043,48 +1045,13 @@
             }
         }
 
-        // PROTOCOL FUNCTIONS
-       async function createProtocol() {
+        async function createProtocol() {
             if (currentPlan !== 'pro') {
                 window.location.href = 'subscriptions.html';
                 return;
             }
-           window.location.href = 'protocol-editor.html';
-        }
 
-            const name = prompt('Protocol Name:');
-            if (!name) return;
-
-            const traditions = prompt('Traditions (e.g., Ayurveda + TCM):');
-            const description = prompt('Description:');
-            const weeks = prompt('Duration (weeks):', '4');
-
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE}/api/protocols`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        name,
-                        traditions: traditions || 'Custom',
-                        description: description || '',
-                        duration_weeks: parseInt(weeks) || 4
-                    })
-                });
-
-                if (response.ok) {
-                    alert('Protocol created! Now add phases/weeks to it.');
-                    await loadProtocols();
-                } else {
-                    alert('Failed to create protocol');
-                }
-            } catch (error) {
-                console.error('Error creating protocol:', error);
-                alert('Failed to create protocol');
-            }
+            window.location.href = 'protocol-editor.html';
         }
 
         async function viewProtocol(protocolId) {
@@ -1119,72 +1086,6 @@
 
         async function editProtocol(protocolId) {
             window.location.href = `protocol-editor.html?id=${protocolId}`;
-        }
-
-            const action = prompt('Edit Protocol - Type:\n1 = Edit Info\n2 = Add Week/Phase\n3 = View Phases');
-            
-            if (action === '1') {
-                const name = prompt('Protocol Name:', protocol.name);
-                if (!name) return;
-
-                const traditions = prompt('Traditions:', protocol.traditions);
-                const description = prompt('Description:', protocol.description);
-                const weeks = prompt('Duration (weeks):', protocol.duration_weeks);
-
-                try {
-                    const token = localStorage.getItem('token');
-                    const response = await fetch(`${API_BASE}/api/protocols/${protocolId}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            name,
-                            traditions,
-                            description,
-                            duration_weeks: parseInt(weeks)
-                        })
-                    });
-
-                    if (response.ok) {
-                        alert('Protocol updated!');
-                        await loadProtocols();
-                    }
-                } catch (error) {
-                    console.error('Error updating protocol:', error);
-                }
-            } else if (action === '2') {
-                const weekNum = prompt('Week Number:');
-                const title = prompt('Week Title (e.g., "Foundation Week"):');
-                const instructions = prompt('Instructions:');
-
-                try {
-                    const token = localStorage.getItem('token');
-                    const response = await fetch(`${API_BASE}/api/protocols/${protocolId}/phases`, {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            week_number: parseInt(weekNum),
-                            title,
-                            instructions,
-                            herbs_supplements: [],
-                            lifestyle_changes: []
-                        })
-                    });
-
-                    if (response.ok) {
-                        alert('Phase added!');
-                    }
-                } catch (error) {
-                    console.error('Error adding phase:', error);
-                }
-            } else if (action === '3') {
-                viewProtocol(protocolId);
-            }
         }
 
         async function deleteProtocol(protocolId) {
