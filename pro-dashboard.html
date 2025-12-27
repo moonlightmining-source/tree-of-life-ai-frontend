@@ -723,6 +723,8 @@
     <script>
         const API_BASE = 'https://treeoflife-vn25.onrender.com';
         let currentPlan = 'free';
+        let clients = [];
+        let protocols = [];
 
         document.addEventListener('DOMContentLoaded', async () => {
             const token = localStorage.getItem('token');
@@ -758,6 +760,8 @@
                         });
                     } else {
                         loadDashboardData();
+                        loadClients();
+                        loadProtocols();
                     }
                 }
             } catch (error) {
@@ -768,19 +772,99 @@
         async function loadDashboardData() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE}/api/pro/dashboard`, {
+                
+                // Load clients from family members API
+                const clientsResponse = await fetch(`${API_BASE}/api/family/members`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    document.getElementById('client-count').textContent = data.client_count || 0;
-                    document.getElementById('protocol-count').textContent = data.protocol_count || 0;
-                    document.getElementById('consultation-count').textContent = data.consultation_count || 0;
+                if (clientsResponse.ok) {
+                    const clientsData = await clientsResponse.json();
+                    clients = clientsData.members || [];
+                    
+                    document.getElementById('client-count').textContent = clients.length;
+                    document.getElementById('protocol-count').textContent = protocols.length;
+                    document.getElementById('consultation-count').textContent = clients.reduce((sum, c) => sum + (c.conversation_count || 0), 0);
+                    
+                    updateRecentActivity();
                 }
             } catch (error) {
                 console.error('Error loading dashboard:', error);
             }
+        }
+
+        function updateRecentActivity() {
+            const tbody = document.getElementById('recent-activity');
+            if (clients.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No recent activity</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = clients.slice(0, 5).map(client => `
+                <tr>
+                    <td>${client.name}</td>
+                    <td>Recently active</td>
+                    <td>Custom Protocol</td>
+                    <td>In Progress</td>
+                </tr>
+            `).join('');
+        }
+
+        async function loadClients() {
+            const tbody = document.getElementById('clients-table');
+            if (clients.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem;">No clients added yet</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = clients.map(client => `
+                <tr>
+                    <td>${client.name}</td>
+                    <td>${client.relationship || 'N/A'}</td>
+                    <td>${client.notes || 'Not assessed'}</td>
+                    <td>None assigned</td>
+                    <td>
+                        <button class="btn-small" onclick="editClient(${client.id})">Edit</button>
+                        <button class="btn-small" onclick="deleteClient(${client.id})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function loadProtocols() {
+            // Load protocols from localStorage
+            const stored = localStorage.getItem('customProtocols');
+            protocols = stored ? JSON.parse(stored) : [];
+            
+            const grid = document.getElementById('protocols-grid');
+            
+            if (protocols.length === 0) {
+                grid.innerHTML = `
+                    <div class="protocol-card">
+                        <div class="protocol-title">Sleep Optimization</div>
+                        <div class="protocol-tag">Ayurveda + TCM</div>
+                        <div class="protocol-description">
+                            6-week protocol combining Ayurvedic herbs and TCM acupressure for improved sleep quality
+                        </div>
+                        <div class="protocol-actions">
+                            <button class="btn-small">Example Protocol</button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = protocols.map((protocol, index) => `
+                <div class="protocol-card">
+                    <div class="protocol-title">${protocol.name}</div>
+                    <div class="protocol-tag">${protocol.traditions}</div>
+                    <div class="protocol-description">${protocol.description}</div>
+                    <div class="protocol-actions">
+                        <button class="btn-small" onclick="editProtocol(${index})">Edit</button>
+                        <button class="btn-small" onclick="deleteProtocol(${index})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function showSection(sectionName) {
@@ -796,12 +880,106 @@
             event.target.closest('.nav-link').classList.add('active');
         }
 
-        function addClient() {
+        async function addClient() {
             if (currentPlan !== 'pro') {
                 window.location.href = 'subscriptions.html';
                 return;
             }
-            alert('Client management coming soon!');
+
+            const name = prompt('Client Name:');
+            if (!name) return;
+
+            const relationship = prompt('Client Type (e.g., Patient, Client, Member):');
+            const notes = prompt('Constitution/Notes (optional):');
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/family/members`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name,
+                        relationship: relationship || 'Client',
+                        notes: notes || ''
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Client added successfully!');
+                    await loadDashboardData();
+                    loadClients();
+                } else {
+                    const error = await response.json();
+                    alert(`Error: ${error.detail || 'Failed to add client'}`);
+                }
+            } catch (error) {
+                console.error('Error adding client:', error);
+                alert('Failed to add client. Please try again.');
+            }
+        }
+
+        async function editClient(clientId) {
+            const client = clients.find(c => c.id === clientId);
+            if (!client) return;
+
+            const name = prompt('Client Name:', client.name);
+            if (!name) return;
+
+            const relationship = prompt('Client Type:', client.relationship);
+            const notes = prompt('Constitution/Notes:', client.notes);
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/family/members/${clientId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: name || client.name,
+                        relationship: relationship || client.relationship,
+                        notes: notes || client.notes
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Client updated successfully!');
+                    await loadDashboardData();
+                    loadClients();
+                } else {
+                    alert('Failed to update client');
+                }
+            } catch (error) {
+                console.error('Error updating client:', error);
+                alert('Failed to update client');
+            }
+        }
+
+        async function deleteClient(clientId) {
+            if (!confirm('Are you sure you want to delete this client?')) return;
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/family/members/${clientId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    alert('Client deleted successfully!');
+                    await loadDashboardData();
+                    loadClients();
+                } else {
+                    alert('Failed to delete client');
+                }
+            } catch (error) {
+                console.error('Error deleting client:', error);
+                alert('Failed to delete client');
+            }
         }
 
         function createProtocol() {
@@ -809,7 +987,55 @@
                 window.location.href = 'subscriptions.html';
                 return;
             }
-            alert('Protocol creator coming soon!');
+
+            const name = prompt('Protocol Name:');
+            if (!name) return;
+
+            const traditions = prompt('Traditions (e.g., Ayurveda + TCM):');
+            const description = prompt('Description:');
+
+            const newProtocol = {
+                name,
+                traditions: traditions || 'Custom',
+                description: description || 'No description provided',
+                created: new Date().toISOString()
+            };
+
+            protocols.push(newProtocol);
+            localStorage.setItem('customProtocols', JSON.stringify(protocols));
+            
+            alert('Protocol created successfully!');
+            loadProtocols();
+        }
+
+        function editProtocol(index) {
+            const protocol = protocols[index];
+            
+            const name = prompt('Protocol Name:', protocol.name);
+            if (!name) return;
+
+            const traditions = prompt('Traditions:', protocol.traditions);
+            const description = prompt('Description:', protocol.description);
+
+            protocols[index] = {
+                name: name || protocol.name,
+                traditions: traditions || protocol.traditions,
+                description: description || protocol.description,
+                created: protocol.created
+            };
+
+            localStorage.setItem('customProtocols', JSON.stringify(protocols));
+            alert('Protocol updated!');
+            loadProtocols();
+        }
+
+        function deleteProtocol(index) {
+            if (!confirm('Delete this protocol?')) return;
+
+            protocols.splice(index, 1);
+            localStorage.setItem('customProtocols', JSON.stringify(protocols));
+            alert('Protocol deleted!');
+            loadProtocols();
         }
     </script>
 </body>
