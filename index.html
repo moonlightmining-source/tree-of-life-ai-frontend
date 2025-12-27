@@ -1178,10 +1178,46 @@
     </div>
 
     <script src="app.js"></script>
+
     <script>
-        
+        // Show Pro Dashboard button only for Pro users
+        async function checkProStatus() {
+            const API_URL = window.location.hostname === 'localhost' 
+                ? 'http://localhost:10000' 
+                : 'https://treeoflife-vn25.onrender.com';
+            
+            const token = localStorage.getItem('token');
+            
+            if (token) {
+                try {
+                    const response = await fetch(`${API_URL}/api/auth/me`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        const userTier = data.subscription_tier || 'free';
+                        
+                        // Show Pro Dashboard button only for Pro users
+                        const proDashboardBtn = document.getElementById('proDashboardBtn');
+                        if (proDashboardBtn && userTier === 'pro') {
+                            proDashboardBtn.style.display = 'flex';
+                        }
+                    }
+                } catch (error) {
+                    console.log('Could not check Pro status:', error);
+                }
+            }
+        }
+
+        // Call on page load
+        document.addEventListener('DOMContentLoaded', checkProStatus);
+    </script>
+
+    <script>
         // Tradition button handling - MULTI-SELECT!
-<script src="app.js"></script>
 <script>
     // Tradition button handling - MULTI-SELECT!
     document.querySelectorAll('.tradition-btn').forEach(btn => {
