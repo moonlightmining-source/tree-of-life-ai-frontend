@@ -1044,11 +1044,13 @@
         }
 
         // PROTOCOL FUNCTIONS
-        async function createProtocol() {
+       async function createProtocol() {
             if (currentPlan !== 'pro') {
                 window.location.href = 'subscriptions.html';
                 return;
             }
+           window.location.href = 'protocol-editor.html';
+        }
 
             const name = prompt('Protocol Name:');
             if (!name) return;
@@ -1116,8 +1118,8 @@
         }
 
         async function editProtocol(protocolId) {
-            const protocol = protocols.find(p => p.id === protocolId);
-            if (!protocol) return;
+            window.location.href = `protocol-editor.html?id=${protocolId}`;
+        }
 
             const action = prompt('Edit Protocol - Type:\n1 = Edit Info\n2 = Add Week/Phase\n3 = View Phases');
             
