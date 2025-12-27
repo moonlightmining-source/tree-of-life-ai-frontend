@@ -720,11 +720,12 @@
         </div>
     </div>
 
-    <script>
+   <script>
         const API_BASE = 'https://treeoflife-vn25.onrender.com';
         let currentPlan = 'free';
         let clients = [];
         let protocols = [];
+        let assignments = [];
 
         document.addEventListener('DOMContentLoaded', async () => {
             const token = localStorage.getItem('token');
@@ -759,9 +760,7 @@
                             }
                         });
                     } else {
-                        loadDashboardData();
-                        loadClients();
-                        loadProtocols();
+                        await loadAllData();
                     }
                 }
             } catch (error) {
@@ -769,102 +768,166 @@
             }
         }
 
-        async function loadDashboardData() {
+        async function loadAllData() {
+            await loadClients();
+            await loadProtocols();
+            await loadAssignments();
+            await loadAnalytics();
+            updateDashboard();
+        }
+
+        async function loadClients() {
             try {
                 const token = localStorage.getItem('token');
-                
-                // Load clients from family members API
-                const clientsResponse = await fetch(`${API_BASE}/api/family/members`, {
+                const response = await fetch(`${API_BASE}/api/family/members`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
-                if (clientsResponse.ok) {
-                    const clientsData = await clientsResponse.json();
-                    clients = clientsData.members || [];
-                    
-                    document.getElementById('client-count').textContent = clients.length;
-                    document.getElementById('protocol-count').textContent = protocols.length;
-                    document.getElementById('consultation-count').textContent = clients.reduce((sum, c) => sum + (c.conversation_count || 0), 0);
-                    
-                    updateRecentActivity();
+                if (response.ok) {
+                    const data = await response.json();
+                    clients = data.members || [];
                 }
             } catch (error) {
-                console.error('Error loading dashboard:', error);
+                console.error('Error loading clients:', error);
             }
+        }
+
+        async function loadProtocols() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/protocols`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    protocols = data.protocols || [];
+                    displayProtocols();
+                }
+            } catch (error) {
+                console.error('Error loading protocols:', error);
+            }
+        }
+
+        async function loadAssignments() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/client-protocols`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    assignments = data.assignments || [];
+                }
+            } catch (error) {
+                console.error('Error loading assignments:', error);
+            }
+        }
+
+        async function loadAnalytics() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/analytics/dashboard`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    updateAnalyticsDisplay(data);
+                }
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+            }
+        }
+
+        function updateDashboard() {
+            document.getElementById('client-count').textContent = clients.length;
+            document.getElementById('protocol-count').textContent = protocols.length;
+            document.getElementById('consultation-count').textContent = assignments.length;
+            
+            updateRecentActivity();
+            displayClients();
         }
 
         function updateRecentActivity() {
             const tbody = document.getElementById('recent-activity');
-            if (clients.length === 0) {
+            if (assignments.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No recent activity</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = clients.slice(0, 5).map(client => `
+            tbody.innerHTML = assignments.slice(0, 5).map(a => `
                 <tr>
-                    <td>${client.name}</td>
-                    <td>Recently active</td>
-                    <td>Custom Protocol</td>
-                    <td>In Progress</td>
+                    <td>${a.client_name}</td>
+                    <td>Week ${a.current_week}</td>
+                    <td>${a.protocol_name}</td>
+                    <td>${a.completion_percentage}%</td>
                 </tr>
             `).join('');
         }
 
-        async function loadClients() {
+        function displayClients() {
             const tbody = document.getElementById('clients-table');
             if (clients.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem;">No clients added yet</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = clients.map(client => `
+            tbody.innerHTML = clients.map(client => {
+                const assignment = assignments.find(a => a.client_id == client.id);
+                return `
                 <tr>
                     <td>${client.name}</td>
                     <td>${client.relationship || 'N/A'}</td>
                     <td>${client.notes || 'Not assessed'}</td>
-                    <td>None assigned</td>
+                    <td>${assignment ? assignment.protocol_name : 'None'}</td>
                     <td>
                         <button class="btn-small" onclick="editClient(${client.id})">Edit</button>
+                        <button class="btn-small" onclick="assignProtocolToClient(${client.id})">Assign</button>
                         <button class="btn-small" onclick="deleteClient(${client.id})">Delete</button>
                     </td>
                 </tr>
-            `).join('');
+            `}).join('');
         }
 
-        function loadProtocols() {
-            // Load protocols from localStorage
-            const stored = localStorage.getItem('customProtocols');
-            protocols = stored ? JSON.parse(stored) : [];
-            
+        function displayProtocols() {
             const grid = document.getElementById('protocols-grid');
             
             if (protocols.length === 0) {
                 grid.innerHTML = `
                     <div class="protocol-card">
-                        <div class="protocol-title">Sleep Optimization</div>
-                        <div class="protocol-tag">Ayurveda + TCM</div>
-                        <div class="protocol-description">
-                            6-week protocol combining Ayurvedic herbs and TCM acupressure for improved sleep quality
-                        </div>
-                        <div class="protocol-actions">
-                            <button class="btn-small">Example Protocol</button>
-                        </div>
+                        <div class="protocol-title">No protocols yet</div>
+                        <div class="protocol-description">Create your first protocol to get started!</div>
                     </div>
                 `;
                 return;
             }
 
-            grid.innerHTML = protocols.map((protocol, index) => `
+            grid.innerHTML = protocols.map(protocol => `
                 <div class="protocol-card">
                     <div class="protocol-title">${protocol.name}</div>
-                    <div class="protocol-tag">${protocol.traditions}</div>
-                    <div class="protocol-description">${protocol.description}</div>
+                    <div class="protocol-tag">${protocol.traditions || 'Custom'}</div>
+                    <div class="protocol-description">${protocol.description || 'No description'}</div>
+                    <div style="margin: 0.5rem 0; color: var(--amber-medium); font-size: 0.9rem;">
+                        ${protocol.duration_weeks} weeks
+                    </div>
                     <div class="protocol-actions">
-                        <button class="btn-small" onclick="editProtocol(${index})">Edit</button>
-                        <button class="btn-small" onclick="deleteProtocol(${index})">Delete</button>
+                        <button class="btn-small" onclick="viewProtocol(${protocol.id})">View</button>
+                        <button class="btn-small" onclick="editProtocol(${protocol.id})">Edit</button>
+                        <button class="btn-small" onclick="deleteProtocol(${protocol.id})">Delete</button>
                     </div>
                 </div>
             `).join('');
+        }
+
+        function updateAnalyticsDisplay(data) {
+            const analyticsSection = document.getElementById('analytics-section');
+            if (!analyticsSection) return;
+
+            analyticsSection.querySelector('.stat-card:nth-child(1) .stat-value').textContent = `${data.client_retention || 92}%`;
+            analyticsSection.querySelector('.stat-card:nth-child(2) .stat-value').textContent = `${data.avg_completion || 0}%`;
+            analyticsSection.querySelector('.stat-card:nth-child(3) .stat-value').textContent = `${data.avg_compliance || 0}/100`;
         }
 
         function showSection(sectionName) {
@@ -880,6 +943,7 @@
             event.target.closest('.nav-link').classList.add('active');
         }
 
+        // CLIENT FUNCTIONS
         async function addClient() {
             if (currentPlan !== 'pro') {
                 window.location.href = 'subscriptions.html';
@@ -889,7 +953,7 @@
             const name = prompt('Client Name:');
             if (!name) return;
 
-            const relationship = prompt('Client Type (e.g., Patient, Client, Member):');
+            const relationship = prompt('Client Type (e.g., Patient, Client):');
             const notes = prompt('Constitution/Notes (optional):');
 
             try {
@@ -909,8 +973,7 @@
 
                 if (response.ok) {
                     alert('Client added successfully!');
-                    await loadDashboardData();
-                    loadClients();
+                    await loadAllData();
                 } else {
                     const error = await response.json();
                     alert(`Error: ${error.detail || 'Failed to add client'}`);
@@ -922,7 +985,7 @@
         }
 
         async function editClient(clientId) {
-            const client = clients.find(c => c.id === clientId);
+            const client = clients.find(c => c.id == clientId);
             if (!client) return;
 
             const name = prompt('Client Name:', client.name);
@@ -948,8 +1011,7 @@
 
                 if (response.ok) {
                     alert('Client updated successfully!');
-                    await loadDashboardData();
-                    loadClients();
+                    await loadAllData();
                 } else {
                     alert('Failed to update client');
                 }
@@ -971,8 +1033,7 @@
 
                 if (response.ok) {
                     alert('Client deleted successfully!');
-                    await loadDashboardData();
-                    loadClients();
+                    await loadAllData();
                 } else {
                     alert('Failed to delete client');
                 }
@@ -982,7 +1043,8 @@
             }
         }
 
-        function createProtocol() {
+        // PROTOCOL FUNCTIONS
+        async function createProtocol() {
             if (currentPlan !== 'pro') {
                 window.location.href = 'subscriptions.html';
                 return;
@@ -993,49 +1055,200 @@
 
             const traditions = prompt('Traditions (e.g., Ayurveda + TCM):');
             const description = prompt('Description:');
+            const weeks = prompt('Duration (weeks):', '4');
 
-            const newProtocol = {
-                name,
-                traditions: traditions || 'Custom',
-                description: description || 'No description provided',
-                created: new Date().toISOString()
-            };
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/protocols`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name,
+                        traditions: traditions || 'Custom',
+                        description: description || '',
+                        duration_weeks: parseInt(weeks) || 4
+                    })
+                });
 
-            protocols.push(newProtocol);
-            localStorage.setItem('customProtocols', JSON.stringify(protocols));
-            
-            alert('Protocol created successfully!');
-            loadProtocols();
+                if (response.ok) {
+                    alert('Protocol created! Now add phases/weeks to it.');
+                    await loadProtocols();
+                } else {
+                    alert('Failed to create protocol');
+                }
+            } catch (error) {
+                console.error('Error creating protocol:', error);
+                alert('Failed to create protocol');
+            }
         }
 
-        function editProtocol(index) {
-            const protocol = protocols[index];
-            
-            const name = prompt('Protocol Name:', protocol.name);
-            if (!name) return;
+        async function viewProtocol(protocolId) {
+            const protocol = protocols.find(p => p.id === protocolId);
+            if (!protocol) return;
 
-            const traditions = prompt('Traditions:', protocol.traditions);
-            const description = prompt('Description:', protocol.description);
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/protocols/${protocolId}/phases`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
 
-            protocols[index] = {
-                name: name || protocol.name,
-                traditions: traditions || protocol.traditions,
-                description: description || protocol.description,
-                created: protocol.created
-            };
-
-            localStorage.setItem('customProtocols', JSON.stringify(protocols));
-            alert('Protocol updated!');
-            loadProtocols();
+                if (response.ok) {
+                    const data = await response.json();
+                    const phases = data.phases || [];
+                    
+                    let message = `Protocol: ${protocol.name}\n\n`;
+                    if (phases.length === 0) {
+                        message += 'No phases added yet. Click Edit to add phases.';
+                    } else {
+                        phases.forEach(phase => {
+                            message += `Week ${phase.week_number}: ${phase.title}\n${phase.instructions || ''}\n\n`;
+                        });
+                    }
+                    
+                    alert(message);
+                }
+            } catch (error) {
+                console.error('Error viewing protocol:', error);
+            }
         }
 
-        function deleteProtocol(index) {
+        async function editProtocol(protocolId) {
+            const protocol = protocols.find(p => p.id === protocolId);
+            if (!protocol) return;
+
+            const action = prompt('Edit Protocol - Type:\n1 = Edit Info\n2 = Add Week/Phase\n3 = View Phases');
+            
+            if (action === '1') {
+                const name = prompt('Protocol Name:', protocol.name);
+                if (!name) return;
+
+                const traditions = prompt('Traditions:', protocol.traditions);
+                const description = prompt('Description:', protocol.description);
+                const weeks = prompt('Duration (weeks):', protocol.duration_weeks);
+
+                try {
+                    const token = localStorage.getItem('token');
+                    const response = await fetch(`${API_BASE}/api/protocols/${protocolId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            name,
+                            traditions,
+                            description,
+                            duration_weeks: parseInt(weeks)
+                        })
+                    });
+
+                    if (response.ok) {
+                        alert('Protocol updated!');
+                        await loadProtocols();
+                    }
+                } catch (error) {
+                    console.error('Error updating protocol:', error);
+                }
+            } else if (action === '2') {
+                const weekNum = prompt('Week Number:');
+                const title = prompt('Week Title (e.g., "Foundation Week"):');
+                const instructions = prompt('Instructions:');
+
+                try {
+                    const token = localStorage.getItem('token');
+                    const response = await fetch(`${API_BASE}/api/protocols/${protocolId}/phases`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            week_number: parseInt(weekNum),
+                            title,
+                            instructions,
+                            herbs_supplements: [],
+                            lifestyle_changes: []
+                        })
+                    });
+
+                    if (response.ok) {
+                        alert('Phase added!');
+                    }
+                } catch (error) {
+                    console.error('Error adding phase:', error);
+                }
+            } else if (action === '3') {
+                viewProtocol(protocolId);
+            }
+        }
+
+        async function deleteProtocol(protocolId) {
             if (!confirm('Delete this protocol?')) return;
 
-            protocols.splice(index, 1);
-            localStorage.setItem('customProtocols', JSON.stringify(protocols));
-            alert('Protocol deleted!');
-            loadProtocols();
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/protocols/${protocolId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    alert('Protocol deleted!');
+                    await loadProtocols();
+                }
+            } catch (error) {
+                console.error('Error deleting protocol:', error);
+                alert('Failed to delete protocol');
+            }
+        }
+
+        async function assignProtocolToClient(clientId) {
+            if (protocols.length === 0) {
+                alert('Create a protocol first!');
+                return;
+            }
+
+            const protocolList = protocols.map((p, i) => `${i + 1}. ${p.name}`).join('\n');
+            const choice = prompt(`Select Protocol:\n${protocolList}\n\nEnter number:`);
+            
+            if (!choice) return;
+            
+            const protocolId = protocols[parseInt(choice) - 1]?.id;
+            if (!protocolId) {
+                alert('Invalid selection');
+                return;
+            }
+
+            const startDate = prompt('Start Date (YYYY-MM-DD):', new Date().toISOString().split('T')[0]);
+            if (!startDate) return;
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/protocols/${protocolId}/assign`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        client_id: clientId,
+                        start_date: startDate
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Protocol assigned!');
+                    await loadAllData();
+                } else {
+                    alert('Failed to assign protocol');
+                }
+            } catch (error) {
+                console.error('Error assigning protocol:', error);
+                alert('Failed to assign protocol');
+            }
         }
     </script>
 </body>
