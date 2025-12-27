@@ -1043,16 +1043,22 @@
     <!-- CONTENT -->
     <div class="content-wrapper">
         <!-- PRIMARY BUTTONS -->
+        <!-- PRIMARY BUTTONS -->
         <div class="buttons-section">
             <div class="primary-buttons">
                 <button class="new-chat-btn" onclick="startNewConversation()">                    
                     New Chat
                 </button>
+                
+                <!-- PRO DASHBOARD BUTTON - Shows only for Pro users -->
+                <button class="new-chat-btn" id="proDashboardBtn" style="display: none;" onclick="window.location.href='pro-dashboard.html'">
+                    Pro Dashboard
+                </button>
+                
                 <button class="logout-btn" onclick="logout()">                  
                     Log Out
                 </button>
             </div>
-
             <!-- QUICK ACCESS BUTTONS -->
             <div class="quick-access-buttons">
                 <button class="quick-btn" onclick="window.location.href='chat-history.html'">
