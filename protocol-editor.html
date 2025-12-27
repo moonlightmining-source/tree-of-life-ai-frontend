@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocol Editor - Tree of Life AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --amber-light: #D4A574;
+            --amber-medium: #C19A6B;
+            --bronze-deep: #B8860B;
+            --bronze-light: #A0826D;
+            --peach-gold: #EEC591;
+            --pure-black: #000;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: url('Images/Background.png') center center fixed;
+            background-size: cover;
+            color: var(--amber-light);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--amber-light);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 165, 116, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(0, 0, 0, 0.6);
+            color: var(--amber-light);
+            border: 2px solid var(--bronze-deep);
+        }
+
+        .card {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            color: var(--peach-gold);
+            margin-bottom: 1.5rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            color: var(--amber-medium);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        input, textarea, select {
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 8px;
+            color: var(--amber-light);
+            font-size: 1rem;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--amber-light);
+            box-shadow: 0 0 10px rgba(212, 165, 116, 0.3);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .table th {
+            text-align: left;
+            padding: 1rem;
+            background: rgba(212, 165, 116, 0.1);
+            color: var(--amber-light);
+            border-bottom: 2px solid var(--bronze-deep);
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(184, 134, 11, 0.3);
+            color: var(--amber-medium);
+        }
+
+        .table tr:hover {
+            background: rgba(212, 165, 116, 0.05);
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            background: var(--bronze-deep);
+            color: var(--pure-black);
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: 0.5rem;
+        }
+
+        .btn-small:hover {
+            background: var(--amber-light);
+        }
+
+        .add-week-btn {
+            margin-top: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .add-week-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 165, 116, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1 id="page-title">Create Protocol</h1>
+            <div class="btn-group">
+                <button class="btn" onclick="saveProtocol()">💾 Save Protocol</button>
+                <button class="btn btn-secondary" onclick="window.location.href='pro-dashboard.html'">← Back to Dashboard</button>
+            </div>
+        </div>
+
+        <!-- PROTOCOL DETAILS -->
+        <div class="card">
+            <h2 class="card-title">Protocol Details</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="protocol-name">Protocol Name *</label>
+                    <input type="text" id="protocol-name" placeholder="e.g., Sleep Optimization Protocol" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="traditions">Traditions</label>
+                    <input type="text" id="traditions" placeholder="e.g., Ayurveda + TCM">
+                </div>
+
+                <div class="form-group">
+                    <label for="duration">Duration (weeks) *</label>
+                    <input type="number" id="duration" value="4" min="1" max="52" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status">
+                        <option value="active">Active</option>
+                        <option value="draft">Draft</option>
+                    </select>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="description">Description</label>
+                    <textarea id="description" placeholder="Brief description of this protocol..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- WEEKLY PHASES -->
+        <div class="card">
+            <h2 class="card-title">Weekly Phases</h2>
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width: 10%;">Week</th>
+                        <th style="width: 25%;">Title</th>
+                        <th style="width: 50%;">Instructions</th>
+                        <th style="width: 15%;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="phases-table">
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 2rem;">No phases added yet. Click "Add Week" to begin.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <button class="add-week-btn" onclick="addWeek()">+ Add Week</button>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://treeoflife-vn25.onrender.com';
+        let protocolId = null;
+        let phases = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            // Check if editing existing protocol
+            const urlParams = new URLSearchParams(window.location.search);
+            protocolId = urlParams.get('id');
+
+            if (protocolId) {
+                document.getElementById('page-title').textContent = 'Edit Protocol';
+                await loadProtocol();
+            }
+        });
+
+        async function loadProtocol() {
+            try {
+                const token = localStorage.getItem('token');
+                
+                // Load protocol details
+                const response = await fetch(`${API_BASE}/api/protocols`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const protocol = data.protocols.find(p => p.id == protocolId);
+                    
+                    if (protocol) {
+                        document.getElementById('protocol-name').value = protocol.name;
+                        document.getElementById('traditions').value = protocol.traditions || '';
+                        document.getElementById('duration').value = protocol.duration_weeks;
+                        document.getElementById('description').value = protocol.description || '';
+                    }
+                }
+
+                // Load phases
+                const phasesResponse = await fetch(`${API_BASE}/api/protocols/${protocolId}/phases`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (phasesResponse.ok) {
+                    const phasesData = await phasesResponse.json();
+                    phases = phasesData.phases || [];
+                    renderPhases();
+                }
+            } catch (error) {
+                console.error('Error loading protocol:', error);
+            }
+        }
+
+        function renderPhases() {
+            const tbody = document.getElementById('phases-table');
+            
+            if (phases.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 2rem;">No phases added yet. Click "Add Week" to begin.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = phases.sort((a, b) => a.week_number - b.week_number).map((phase, index) => `
+                <tr>
+                    <td><strong>Week ${phase.week_number}</strong></td>
+                    <td>${phase.title}</td>
+                    <td>${phase.instructions ? phase.instructions.substring(0, 100) + '...' : 'No instructions'}</td>
+                    <td>
+                        <button class="btn-small" onclick="editWeek(${index})">Edit</button>
+                        <button class="btn-small" onclick="deleteWeek(${index})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function addWeek() {
+            const weekNum = phases.length + 1;
+            const title = prompt(`Week ${weekNum} Title:`, `Week ${weekNum}`);
+            if (!title) return;
+
+            const instructions = prompt('Instructions for this week:', '');
+
+            phases.push({
+                week_number: weekNum,
+                title: title,
+                instructions: instructions || '',
+                herbs_supplements: [],
+                lifestyle_changes: []
+            });
+
+            renderPhases();
+        }
+
+        function editWeek(index) {
+            const phase = phases[index];
+            
+            const title = prompt('Week Title:', phase.title);
+            if (!title) return;
+
+            const instructions = prompt('Instructions:', phase.instructions);
+
+            phases[index] = {
+                ...phase,
+                title: title,
+                instructions: instructions || ''
+            };
+
+            renderPhases();
+        }
+
+        function deleteWeek(index) {
+            if (!confirm('Delete this week?')) return;
+            
+            phases.splice(index, 1);
+            
+            // Renumber weeks
+            phases.forEach((phase, i) => {
+                phase.week_number = i + 1;
+            });
+            
+            renderPhases();
+        }
+
+        async function saveProtocol() {
+            const name = document.getElementById('protocol-name').value.trim();
+            const traditions = document.getElementById('traditions').value.trim();
+            const duration = parseInt(document.getElementById('duration').value);
+            const description = document.getElementById('description').value.trim();
+
+            if (!name) {
+                alert('Please enter a protocol name');
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('token');
+                
+                // Save or update protocol
+                let savedProtocolId = protocolId;
+                
+                if (protocolId) {
+                    // Update existing
+                    const response = await fetch(`${API_BASE}/api/protocols/${protocolId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            name,
+                            traditions,
+                            duration_weeks: duration,
+                            description
+                        })
+                    });
+
+                    if (!response.ok) {
+                        alert('Failed to update protocol');
+                        return;
+                    }
+                } else {
+                    // Create new
+                    const response = await fetch(`${API_BASE}/api/protocols`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            name,
+                            traditions,
+                            duration_weeks: duration,
+                            description
+                        })
+                    });
+
+                    if (!response.ok) {
+                        alert('Failed to create protocol');
+                        return;
+                    }
+
+                    const data = await response.json();
+                    savedProtocolId = data.id;
+                }
+
+                // Save phases
+                for (const phase of phases) {
+                    if (!phase.id) {
+                        // Create new phase
+                        await fetch(`${API_BASE}/api/protocols/${savedProtocolId}/phases`, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(phase)
+                        });
+                    }
+                }
+
+                alert('Protocol saved successfully!');
+                window.location.href = 'pro-dashboard.html';
+            } catch (error) {
+                console.error('Error saving protocol:', error);
+                alert('Failed to save protocol. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>
