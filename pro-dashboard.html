@@ -952,75 +952,11 @@
                 return;
             }
 
-            const name = prompt('Client Name:');
-            if (!name) return;
-
-            const relationship = prompt('Client Type (e.g., Patient, Client):');
-            const notes = prompt('Constitution/Notes (optional):');
-
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE}/api/family/members`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        name,
-                        relationship: relationship || 'Client',
-                        notes: notes || ''
-                    })
-                });
-
-                if (response.ok) {
-                    alert('Client added successfully!');
-                    await loadAllData();
-                } else {
-                    const error = await response.json();
-                    alert(`Error: ${error.detail || 'Failed to add client'}`);
-                }
-            } catch (error) {
-                console.error('Error adding client:', error);
-                alert('Failed to add client. Please try again.');
-            }
+            window.location.href = 'client-editor.html';
         }
 
-        async function editClient(clientId) {
-            const client = clients.find(c => c.id == clientId);
-            if (!client) return;
-
-            const name = prompt('Client Name:', client.name);
-            if (!name) return;
-
-            const relationship = prompt('Client Type:', client.relationship);
-            const notes = prompt('Constitution/Notes:', client.notes);
-
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE}/api/family/members/${clientId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        name: name || client.name,
-                        relationship: relationship || client.relationship,
-                        notes: notes || client.notes
-                    })
-                });
-
-                if (response.ok) {
-                    alert('Client updated successfully!');
-                    await loadAllData();
-                } else {
-                    alert('Failed to update client');
-                }
-            } catch (error) {
-                console.error('Error updating client:', error);
-                alert('Failed to update client');
-            }
+       async function editClient(clientId) {
+            window.location.href = `client-editor.html?id=${clientId}`;
         }
 
         async function deleteClient(clientId) {
@@ -1108,50 +1044,8 @@
             }
         }
 
-        async function assignProtocolToClient(clientId) {
-            if (protocols.length === 0) {
-                alert('Create a protocol first!');
-                return;
-            }
-
-            const protocolList = protocols.map((p, i) => `${i + 1}. ${p.name}`).join('\n');
-            const choice = prompt(`Select Protocol:\n${protocolList}\n\nEnter number:`);
-            
-            if (!choice) return;
-            
-            const protocolId = protocols[parseInt(choice) - 1]?.id;
-            if (!protocolId) {
-                alert('Invalid selection');
-                return;
-            }
-
-            const startDate = prompt('Start Date (YYYY-MM-DD):', new Date().toISOString().split('T')[0]);
-            if (!startDate) return;
-
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE}/api/protocols/${protocolId}/assign`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        client_id: clientId,
-                        start_date: startDate
-                    })
-                });
-
-                if (response.ok) {
-                    alert('Protocol assigned!');
-                    await loadAllData();
-                } else {
-                    alert('Failed to assign protocol');
-                }
-            } catch (error) {
-                console.error('Error assigning protocol:', error);
-                alert('Failed to assign protocol');
-            }
+       async function assignProtocolToClient(clientId) {
+            window.location.href = `client-editor.html?id=${clientId}`;
         }
     </script>
 </body>
