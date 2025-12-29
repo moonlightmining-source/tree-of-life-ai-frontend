@@ -657,36 +657,41 @@
                 <h1>Analytics & Insights</h1>
             </div>
 
+            <!-- ANALYTICS STATS -->
             <div class="stats-grid">
                 <div class="stat-card">
+                    <div class="stat-icon">📊</div>
                     <div class="stat-label">Client Retention</div>
-                    <div class="stat-value">92%</div>
+                    <div class="stat-value" id="analytics-retention">--</div>
                 </div>
                 <div class="stat-card">
+                    <div class="stat-icon">✅</div>
                     <div class="stat-label">Avg Protocol Completion</div>
-                    <div class="stat-value">78%</div>
+                    <div class="stat-value" id="analytics-completion">--</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label">Client Satisfaction</div>
-                    <div class="stat-value">4.8/5</div>
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-label">Avg Compliance Score</div>
+                    <div class="stat-value" id="analytics-compliance">--</div>
                 </div>
             </div>
 
+            <!-- COMPLIANCE TREND CHART -->
             <div class="section">
-                <h2 class="section-title">Client Progress Over Time</h2>
-                <div class="chart-placeholder">
-                    📊 Chart visualization coming soon
+                <h2 class="section-title">Recent Compliance Trend</h2>
+                <div id="compliance-chart" class="bar-chart">
+                    <p style="text-align: center; color: var(--amber-medium); padding: 2rem;">No compliance data yet</p>
                 </div>
             </div>
 
+            <!-- PROTOCOL EFFECTIVENESS -->
             <div class="section">
-                <h2 class="section-title">Most Effective Protocols</h2>
-                <div class="chart-placeholder">
-                    📈 Analytics visualization coming soon
+                <h2 class="section-title">Protocol Effectiveness</h2>
+                <div id="protocol-effectiveness">
+                    <p style="text-align: center; color: var(--amber-medium); padding: 2rem;">No protocol data yet</p>
                 </div>
             </div>
         </div>
-
         <!-- RESOURCES SECTION -->
         <div id="resources-section" class="content-section" style="display: none;">
             <div class="header">
