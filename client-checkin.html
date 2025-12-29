@@ -508,14 +508,21 @@
             }
         }
 
-        function displayClients() {
+       function displayClients() {
             const listContainer = document.getElementById('clientList');
             
+            console.log('📊 Clients:', clients);
+            console.log('📋 Assignments:', assignments);
+            
             // Filter clients with active protocol assignments
+            // Use == instead of === to handle type coercion (client.id might be string or number)
             const activeClients = clients.filter(client => {
-                const assignment = assignments.find(a => a.client_id === client.id && a.status === 'active');
+                const assignment = assignments.find(a => a.client_id == client.id);
+                console.log(`Client ${client.name} (ID: ${client.id}):`, assignment ? 'HAS assignment' : 'NO assignment');
                 return assignment !== undefined;
             });
+            
+            console.log('✅ Active clients found:', activeClients.length);
 
             if (activeClients.length === 0) {
                 listContainer.innerHTML = `
