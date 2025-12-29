@@ -551,10 +551,9 @@
             document.querySelectorAll('.client-item').forEach(item => item.classList.remove('active'));
             event.target.closest('.client-item').classList.add('active');
 
-            // Get client and assignment
-            currentClient = clients.find(c => c.id === clientId);
-            currentAssignment = assignments.find(a => a.client_id === clientId && a.status === 'active');
-
+            // Get client and assignment (use == for type coercion)
+            currentClient = clients.find(c => c.id == clientId);
+            currentAssignment = assignments.find(a => a.client_id == clientId);
             if (!currentClient || !currentAssignment) {
                 alert('Error loading client data');
                 return;
