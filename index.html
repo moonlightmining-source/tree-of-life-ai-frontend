@@ -693,12 +693,24 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
-        .traditions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 1.5rem;
+       .traditions-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
             max-width: 1200px;
             margin: 0 auto;
+            align-items: center;
+        }
+
+        .all-modalities-row {
+            display: flex;
+            justify-content: center;
+        }
+
+        .modalities-main-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 220px);
+            gap: 1.5rem;
             justify-items: center;
         }
 
