@@ -1183,15 +1183,101 @@
         }
 
         function updateAnalyticsDisplay(data) {
-            const analyticsSection = document.getElementById('analytics-section');
-            if (!analyticsSection) return;
-
-            const statCards = analyticsSection.querySelectorAll('.stat-card .stat-value');
-            if (statCards.length >= 3) {
-                statCards[0].textContent = `${data.client_retention || 92}%`;
-                statCards[1].textContent = `${data.avg_completion || 0}%`;
-                statCards[2].textContent = `${data.avg_compliance || 0}/100`;
+            // Update stat cards
+            document.getElementById('analytics-retention').textContent = `${data.client_retention || 0}%`;
+            document.getElementById('analytics-completion').textContent = `${data.avg_completion || 0}%`;
+            document.getElementById('analytics-compliance').textContent = `${data.avg_compliance || 0}/100`;
+            
+            // Update compliance chart
+            if (data.recent_compliance && data.recent_compliance.length > 0) {
+                renderComplianceChart(data.recent_compliance);
             }
+            
+            // Update protocol effectiveness
+            renderProtocolEffectiveness();
+        }
+
+        function renderComplianceChart(complianceData) {
+            const chartContainer = document.getElementById('compliance-chart');
+            
+            if (complianceData.length === 0) {
+                chartContainer.innerHTML = '<p style="text-align: center; color: var(--amber-medium); padding: 2rem;">No compliance data yet</p>';
+                return;
+            }
+
+            // Reverse to show oldest to newest
+            const data = complianceData.slice().reverse();
+            
+            const maxScore = 100;
+            
+            const bars = data.map(item => {
+                const height = (item.score / maxScore) * 100;
+                return `
+                    <div class="chart-bar" style="height: ${height}%;">
+                        <div class="chart-bar-value">${item.score}</div>
+                        <div class="chart-bar-label">Week ${item.week}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            chartContainer.innerHTML = `<div class="chart-bar-container">${bars}</div>`;
+        }
+
+        function renderProtocolEffectiveness() {
+            const effectivenessContainer = document.getElementById('protocol-effectiveness');
+            
+            if (protocols.length === 0) {
+                effectivenessContainer.innerHTML = '<p style="text-align: center; color: var(--amber-medium); padding: 2rem;">No protocols created yet</p>';
+                return;
+            }
+
+            // Calculate effectiveness for each protocol
+            const protocolStats = protocols.map(protocol => {
+                const protocolAssignments = assignments.filter(a => a.protocol_id === protocol.id);
+                const activeCount = protocolAssignments.filter(a => a.status === 'active').length;
+                const completedCount = protocolAssignments.filter(a => a.completion_percentage === 100).length;
+                const avgCompletion = protocolAssignments.length > 0
+                    ? protocolAssignments.reduce((sum, a) => sum + a.completion_percentage, 0) / protocolAssignments.length
+                    : 0;
+                
+                return {
+                    name: protocol.name,
+                    totalClients: protocolAssignments.length,
+                    activeClients: activeCount,
+                    completedClients: completedCount,
+                    avgCompletion: Math.round(avgCompletion)
+                };
+            });
+
+            // Sort by total clients (most used)
+            protocolStats.sort((a, b) => b.totalClients - a.totalClients);
+
+            if (protocolStats.every(p => p.totalClients === 0)) {
+                effectivenessContainer.innerHTML = '<p style="text-align: center; color: var(--amber-medium); padding: 2rem;">No protocols assigned to clients yet</p>';
+                return;
+            }
+
+            const list = protocolStats.map(p => `
+                <div class="protocol-effectiveness-item">
+                    <div class="protocol-info">
+                        <div class="protocol-info-name">${p.name}</div>
+                        <div class="protocol-info-clients">${p.totalClients} client${p.totalClients !== 1 ? 's' : ''} • ${p.activeClients} active</div>
+                    </div>
+                    <div class="protocol-stats">
+                        <div class="protocol-stat">
+                            <div class="protocol-stat-label">Avg Completion</div>
+                            <div class="protocol-stat-value">${p.avgCompletion}%</div>
+                        </div>
+                        <div class="protocol-stat">
+                            <div class="protocol-stat-label">Completed</div>
+                            <div class="protocol-stat-value">${p.completedClients}</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            effectivenessContainer.innerHTML = `<div class="protocol-effectiveness-list">${list}</div>`;
+        }
         }
 
         function showSection(sectionName) {
