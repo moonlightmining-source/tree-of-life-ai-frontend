@@ -26,13 +26,13 @@ function buildSystemPrompt() {
         'ayurveda': 'Ayurveda',
         'tcm': 'Traditional Chinese Medicine',
         'herbal': 'Herbal Medicine',
-        'homeopathy': 'Homeopathy',
+        'naturopathy': 'Natureopathy',
         'chiropractic': 'Chiropractic',
         'nutrition': 'Clinical Nutrition',
         'vibrational': 'Vibrational Healing',
-        'fitness': 'Fitness & Physical Therapy',
-        'eldercare': 'Elder Care & Law',
-        'consciousness': 'Consciousness Mapping'
+        'fitness': 'Fitness & Exercise',
+        'physical therapy': 'Physical Therapy',
+        
     };
     
     const selected = selectedTraditions.map(t => traditionNames[t] || t);
@@ -132,12 +132,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function displayWelcomeMessage() {
     // Show personalized greeting in chat
-    const greeting = authToken ? `Hello ${userName}! 🌿` : `Welcome! 🌿`;
+    const greeting = authToken ? `Hello ${userName}! ` : `Welcome! `;
     
     // ✨ UPDATED: Removed image recognition paragraph (now in tooltip)
-    const welcomeMessage = {
-        role: 'assistant',
-        content: `${greeting} I'm Tree of Life AI. I provide health guidance from 11 medical traditions: Western Medicine, Ayurveda, TCM, Herbal Medicine, Homeopathy, Chiropractic, Clinical Nutrition, Vibrational Healing, Fitness & Physical Therapy, Elder Care & Law, and Consciousness Mapping.
+    const welcomeMessage = `Hello Robert! 🌿 I'm Tree of Life AI. I provide health guidance from 10 evidence-based modalities:
+
+**Modern Medicine:**
+- Western Medicine
+- Functional Medicine  
+- Clinical Nutrition
+- Physical Therapy
+
+**Traditional Systems:**
+- Ayurveda
+- Traditional Chinese Medicine
+- Naturopathy
+
+**Specialized Therapies:**
+- Herbal Medicine
+- Chiropractic
+- Fitness & Exercise Science
+
+What health topic can I help you explore?`;
 
 ${authToken ? 'What health topic can I help you explore?' : 'Please log in to start a conversation.'}`,
         timestamp: new Date().toISOString()
