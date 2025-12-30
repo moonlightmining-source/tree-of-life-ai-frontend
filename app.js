@@ -29,7 +29,7 @@ function buildSystemPrompt() {
         'naturopathy': 'Natureopathy',
         'chiropractic': 'Chiropractic',
         'nutrition': 'Clinical Nutrition',
-        'vibrational': 'Vibrational Healing',
+        'functional': 'Functional medicine',
         'fitness': 'Fitness & Exercise',
         'physical therapy': 'Physical Therapy',
         
