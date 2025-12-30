@@ -134,8 +134,9 @@ function displayWelcomeMessage() {
     // Show personalized greeting in chat
     const greeting = authToken ? `Hello ${userName}! ` : `Welcome! `;
     
-    // ✨ UPDATED: Removed image recognition paragraph (now in tooltip)
-    const welcomeMessage = `Hello Robert! 🌿 I'm Tree of Life AI. I provide health guidance from 10 evidence-based modalities:
+    const welcomeMessage = {
+        role: 'assistant',
+        content: `${greeting}🌿 I'm Tree of Life AI. I provide health guidance from 10 evidence-based modalities:
 
 **Modern Medicine:**
 - Western Medicine
@@ -152,8 +153,6 @@ function displayWelcomeMessage() {
 - Herbal Medicine
 - Chiropractic
 - Fitness & Exercise Science
-
-What health topic can I help you explore?`;
 
 ${authToken ? 'What health topic can I help you explore?' : 'Please log in to start a conversation.'}`,
         timestamp: new Date().toISOString()
