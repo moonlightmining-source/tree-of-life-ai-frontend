@@ -1417,19 +1417,36 @@
         if (response.ok) {
             const data = await response.json();
             
-            // Copy to clipboard
-            navigator.clipboard.writeText(data.link).then(() => {
-                alert(`✅ Client portal link copied to clipboard!\n\nLink: ${data.link}\n\nSend this link to ${clientName} via text or email.`);
-            }).catch(() => {
-                // Fallback if clipboard fails
-                prompt('Copy this link and send to your client:', data.link);
-            });
+            // Show link in a copyable text box
+            const linkText = data.link;
+            
+            // Create a temporary input to copy from
+            const tempInput = document.createElement('input');
+            tempInput.value = linkText;
+            tempInput.style.position = 'absolute';
+            tempInput.style.left = '-9999px';
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            tempInput.setSelectionRange(0, 99999); // For mobile
+            
+            try {
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                
+                // Show success message with the actual link
+                alert(`✅ Link copied to clipboard!\n\n${linkText}\n\nPaste this into an email or text message for ${clientName}.`);
+            } catch (err) {
+                document.body.removeChild(tempInput);
+                // Fallback: show in a prompt box
+                prompt('Copy this link (Ctrl+C or Cmd+C):', linkText);
+            }
         } else {
-            alert('Failed to generate link. Please try again.');
+            const errorData = await response.json();
+            alert('Failed to generate link: ' + (errorData.detail || 'Unknown error'));
         }
     } catch (error) {
         console.error('Error generating link:', error);
-        alert('Error generating link. Please try again.');
+        alert('Error generating link. Check console for details.');
     }
 }
     </script>
