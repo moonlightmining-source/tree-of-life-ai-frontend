@@ -1400,6 +1400,38 @@
        async function assignProtocolToClient(clientId) {
             window.location.href = `client-editor.html?id=${clientId}`;
         }
+      async function generateClientLink(clientId, clientName) {
+    if (!confirm(`Generate portal link for ${clientName}?`)) return;
+    
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_BASE}/api/client-view/generate`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({family_member_id: clientId})
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(data.link).then(() => {
+                alert(`✅ Client portal link copied to clipboard!\n\nLink: ${data.link}\n\nSend this link to ${clientName} via text or email.`);
+            }).catch(() => {
+                // Fallback if clipboard fails
+                prompt('Copy this link and send to your client:', data.link);
+            });
+        } else {
+            alert('Failed to generate link. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error generating link:', error);
+        alert('Error generating link. Please try again.');
+    }
+}
     </script>
 </body>
 </html>
