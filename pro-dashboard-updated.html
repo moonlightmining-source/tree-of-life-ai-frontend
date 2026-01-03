@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Dashboard - Tree of Life AI</title>
+    <style>
+        :root {
+            --amber-light: #D4A574;
+            --amber-medium: #C19A6B;
+            --bronze-deep: #B8860B;
+            --bronze-light: #A0826D;
+            --peach-gold: #EEC591;
+            --pure-black: #000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: var(--amber-light);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            color: var(--peach-gold);
+        }
+
+        .user-info {
+            padding: 10px 20px;
+            background: rgba(212, 165, 116, 0.1);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 10px;
+            color: var(--amber-light);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(184, 134, 11, 0.3);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--amber-medium);
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--peach-gold);
+        }
+
+        .stat-change {
+            font-size: 0.85rem;
+            color: #22c55e;
+            margin-top: 5px;
+        }
+
+        .stat-change.negative {
+            color: #ef4444;
+        }
+
+        .section {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--peach-gold);
+        }
+
+        /* Search Bar */
+        .search-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 8px;
+            color: var(--amber-light);
+            font-size: 1rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--amber-light);
+        }
+
+        .search-input::placeholder {
+            color: var(--bronze-light);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--bronze-deep), var(--amber-medium));
+            color: var(--pure-black);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(184, 134, 11, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--bronze-deep);
+            color: var(--amber-light);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(184, 134, 11, 0.2);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        /* Table */
+        .activity-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .activity-table th {
+            text-align: left;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            color: var(--peach-gold);
+            font-weight: 600;
+            border-bottom: 2px solid var(--bronze-deep);
+        }
+
+        .activity-table td {
+            padding: 15px 12px;
+            border-bottom: 1px solid rgba(184, 134, 11, 0.2);
+        }
+
+        .activity-table tr:hover {
+            background: rgba(184, 134, 11, 0.1);
+        }
+
+        .client-link {
+            color: var(--amber-light);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .client-link:hover {
+            color: var(--peach-gold);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--amber-medium);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--bronze-light);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Pro Dashboard</h1>
+        <div class="user-info">
+            👤 <span id="userName">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-label">Active Clients</div>
+            <div class="stat-value" id="activeClients">-</div>
+            <div class="stat-change" id="clientsChange">Loading...</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">📋</div>
+            <div class="stat-label">Custom Protocols</div>
+            <div class="stat-value" id="totalProtocols">-</div>
+            <div class="stat-change" id="protocolsChange">Loading...</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">💬</div>
+            <div class="stat-label">Consultations</div>
+            <div class="stat-value" id="consultations">-</div>
+            <div class="stat-change" id="consultationsChange">Loading...</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-label">Success Rate</div>
+            <div class="stat-value" id="successRate">-</div>
+            <div class="stat-change">Client satisfaction</div>
+        </div>
+    </div>
+
+    <!-- Recent Client Activity -->
+    <div class="section">
+        <div class="section-header">
+            <h2 class="section-title">Recent Client Activity</h2>
+            <button class="btn" onclick="window.location.href='client-editor.html'">
+                + Add New Client
+            </button>
+        </div>
+
+        <!-- Client Search -->
+        <div class="search-container">
+            <input 
+                type="text" 
+                id="clientSearch" 
+                class="search-input" 
+                placeholder="Search by client name, protocol, or email..."
+                onkeyup="filterClients()"
+            >
+            <button class="btn-secondary btn" onclick="clearSearch()">Clear</button>
+        </div>
+
+        <div id="activityLoading" class="loading">
+            Loading client activity...
+        </div>
+
+        <table class="activity-table" id="activityTable" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Client</th>
+                    <th>Last Active</th>
+                    <th>Protocol</th>
+                    <th>Progress</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="activityBody">
+            </tbody>
+        </table>
+
+        <div id="emptyState" class="empty-state" style="display: none;">
+            No client activity found. Add your first client to get started!
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="section">
+        <h2 class="section-title">Quick Actions</h2>
+        <div class="quick-actions">
+            <button class="btn" onclick="window.location.href='protocol-editor.html'">
+                📝 Create Protocol
+            </button>
+            <button class="btn" onclick="window.location.href='client-editor.html'">
+                👤 Add Client
+            </button>
+            <button class="btn-secondary btn" onclick="window.location.href='index.html'">
+                🏠 Main Dashboard
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:10000' 
+            : 'https://treeoflife-vn25.onrender.com';
+
+        let allClients = [];
+
+        async function loadDashboard() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            try {
+                // Load user info
+                const userResponse = await fetch(`${API_URL}/api/auth/me`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const userData = await userResponse.json();
+                document.getElementById('userName').textContent = userData.email;
+
+                // Load statistics
+                await loadStatistics(token);
+
+                // Load client activity
+                await loadClientActivity(token);
+
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                if (error.message.includes('401')) {
+                    localStorage.removeItem('token');
+                    window.location.href = 'auth.html';
+                }
+            }
+        }
+
+        async function loadStatistics(token) {
+            try {
+                const response = await fetch(`${API_URL}/api/pro/statistics`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const stats = await response.json();
+
+                // Update stat cards with REAL data
+                document.getElementById('activeClients').textContent = stats.active_clients || 0;
+                document.getElementById('totalProtocols').textContent = stats.total_protocols || 0;
+                document.getElementById('consultations').textContent = stats.consultations || 0;
+                document.getElementById('successRate').textContent = 
+                    stats.success_rate ? `${stats.success_rate}%` : '-';
+
+                // Update change indicators with REAL data
+                updateChangeIndicator('clientsChange', stats.clients_change);
+                updateChangeIndicator('protocolsChange', stats.protocols_active_count, ' active');
+                updateChangeIndicator('consultationsChange', stats.consultations_change);
+
+            } catch (error) {
+                console.error('Error loading statistics:', error);
+            }
+        }
+
+        function updateChangeIndicator(elementId, value, suffix = '') {
+            const element = document.getElementById(elementId);
+            if (value === undefined || value === null) {
+                element.textContent = 'No data';
+                return;
+            }
+
+            if (typeof value === 'number') {
+                if (value > 0) {
+                    element.textContent = `+${value}${suffix}`;
+                    element.className = 'stat-change';
+                } else if (value < 0) {
+                    element.textContent = `${value}${suffix}`;
+                    element.className = 'stat-change negative';
+                } else {
+                    element.textContent = `No change${suffix}`;
+                    element.className = 'stat-change';
+                }
+            } else {
+                element.textContent = value + suffix;
+                element.className = 'stat-change';
+            }
+        }
+
+        async function loadClientActivity(token) {
+            try {
+                const response = await fetch(`${API_URL}/api/pro/client-activity`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                
+                allClients = data.activities || [];
+
+                document.getElementById('activityLoading').style.display = 'none';
+
+                if (allClients.length === 0) {
+                    document.getElementById('emptyState').style.display = 'block';
+                    return;
+                }
+
+                renderClientActivity(allClients);
+
+            } catch (error) {
+                console.error('Error loading client activity:', error);
+                document.getElementById('activityLoading').style.display = 'none';
+                document.getElementById('emptyState').style.display = 'block';
+            }
+        }
+
+        function renderClientActivity(clients) {
+            const tbody = document.getElementById('activityBody');
+            tbody.innerHTML = '';
+
+            if (clients.length === 0) {
+                document.getElementById('activityTable').style.display = 'none';
+                document.getElementById('emptyState').style.display = 'block';
+                document.getElementById('emptyState').textContent = 'No clients match your search.';
+                return;
+            }
+
+            document.getElementById('activityTable').style.display = 'table';
+            document.getElementById('emptyState').style.display = 'none';
+
+            clients.forEach(activity => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <a href="client-editor.html?id=${activity.client_id}" class="client-link">
+                            ${activity.client_name}
+                        </a>
+                    </td>
+                    <td>${formatDate(activity.last_active)}</td>
+                    <td>${activity.protocol_name || 'No protocol assigned'}</td>
+                    <td>${activity.progress || 0}%</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-secondary btn" onclick="goToClient(${activity.client_id})">
+                                View
+                            </button>
+                            <button class="btn-danger btn" onclick="deleteActivity(${activity.id}, '${activity.client_name}')">
+                                Delete
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'Never';
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays === 0) return 'Today';
+            if (diffDays === 1) return 'Yesterday';
+            if (diffDays < 7) return `${diffDays} days ago`;
+            if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+            return date.toLocaleDateString();
+        }
+
+        function goToClient(clientId) {
+            window.location.href = `client-editor.html?id=${clientId}`;
+        }
+
+        async function deleteActivity(activityId, clientName) {
+            if (!confirm(`Remove ${clientName} from recent activity list?\n\nNote: This only removes them from this view, not from your client list.`)) {
+                return;
+            }
+
+            const token = localStorage.getItem('token');
+
+            try {
+                const response = await fetch(`${API_URL}/api/pro/client-activity/${activityId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    // Remove from local array
+                    allClients = allClients.filter(c => c.id !== activityId);
+                    renderClientActivity(allClients);
+                    
+                    // Reload statistics
+                    await loadStatistics(token);
+                } else {
+                    alert('Failed to delete activity');
+                }
+            } catch (error) {
+                console.error('Error deleting activity:', error);
+                alert('Error deleting activity');
+            }
+        }
+
+        function filterClients() {
+            const searchTerm = document.getElementById('clientSearch').value.toLowerCase();
+            
+            if (!searchTerm) {
+                renderClientActivity(allClients);
+                return;
+            }
+
+            const filtered = allClients.filter(client => {
+                return (
+                    client.client_name.toLowerCase().includes(searchTerm) ||
+                    (client.protocol_name && client.protocol_name.toLowerCase().includes(searchTerm)) ||
+                    (client.email && client.email.toLowerCase().includes(searchTerm))
+                );
+            });
+
+            renderClientActivity(filtered);
+        }
+
+        function clearSearch() {
+            document.getElementById('clientSearch').value = '';
+            renderClientActivity(allClients);
+        }
+
+        // Load dashboard on page load
+        document.addEventListener('DOMContentLoaded', loadDashboard);
+    </script>
+</body>
+</html>
