@@ -1061,7 +1061,7 @@
     backdrop-filter: blur(10px);
     z-index: 10000;
     display: flex !important;
-    align-items: center !important;
+    align-items: flex-start !important;  /* ← CHANGE FROM center TO flex-start */
     justify-content: center !important;
     padding: 20px;
     padding-top: 120px;
@@ -1075,16 +1075,6 @@
     max-width: 500px;
     width: 90%;
     margin: 0 auto;
-    text-align: center;
-    box-shadow: 0 20px 60px rgba(212, 165, 116, 0.3);
-}
-
-.welcome-box {
-    background: linear-gradient(135deg, rgba(212, 165, 116, 0.1), rgba(184, 134, 11, 0.1));
-    border: 3px solid var(--bronze-deep);
-    border-radius: 20px;
-    padding: 3rem;
-    max-width: 500px;
     text-align: center;
     box-shadow: 0 20px 60px rgba(212, 165, 116, 0.3);
 }
