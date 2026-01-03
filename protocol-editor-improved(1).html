@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocol Editor - Tree of Life AI</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --amber-light: #D4A574;
+            --amber-medium: #C19A6B;
+            --bronze-deep: #B8860B;
+            --bronze-light: #A0826D;
+            --peach-gold: #EEC591;
+            --pure-black: #000;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: url('Images/Background.png') center center fixed;
+            background-size: cover;
+            color: var(--amber-light);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--peach-gold);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(184, 134, 11, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--bronze-deep);
+            color: var(--amber-light);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(184, 134, 11, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(184, 134, 11, 0.4);
+        }
+
+        .card {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            color: var(--peach-gold);
+            margin-bottom: 1.5rem;
+        }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            border-bottom: 2px solid var(--bronze-deep);
+            padding-bottom: 1rem;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            background: transparent;
+            border: 2px solid var(--bronze-deep);
+            color: var(--amber-light);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .tab-btn:hover {
+            background: rgba(184, 134, 11, 0.2);
+        }
+
+        .tab-btn.active {
+            background: var(--bronze-deep);
+            color: var(--peach-gold);
+            box-shadow: 0 0 20px rgba(238, 197, 145, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            color: var(--amber-medium);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        input, textarea, select {
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 8px;
+            color: var(--amber-light);
+            font-size: 1rem;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--amber-light);
+            box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* ITEM LIST */
+        .item-list {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .item-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 10px;
+            padding: 1.5rem;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .item-title {
+            font-size: 1.2rem;
+            color: var(--peach-gold);
+            font-weight: 700;
+        }
+
+        .item-meta {
+            color: var(--amber-medium);
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .item-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--bronze-deep);
+        }
+
+        .detail-row {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            color: var(--bronze-light);
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            color: var(--amber-light);
+            font-weight: 600;
+        }
+
+        .delete-btn {
+            background: rgba(255, 50, 50, 0.3);
+            border: 2px solid #ff6666;
+            color: #ff6666;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .delete-btn:hover {
+            background: rgba(255, 50, 50, 0.5);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .phase-timeline {
+            display: grid;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .phase-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 4px solid var(--bronze-deep);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .phase-week {
+            display: inline-block;
+            background: var(--bronze-deep);
+            color: var(--pure-black);
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .message.active {
+            display: block;
+        }
+
+        .message.success {
+            background: rgba(74, 222, 128, 0.2);
+            border: 2px solid #4ade80;
+            color: #4ade80;
+        }
+
+        .message.error {
+            background: rgba(255, 102, 102, 0.2);
+            border: 2px solid #ff6666;
+            color: #ff6666;
+        }
+
+        .time-selector {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .time-chip {
+            background: rgba(212, 165, 116, 0.2);
+            border: 2px solid var(--bronze-deep);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .time-chip.selected {
+            background: var(--bronze-deep);
+            color: var(--pure-black);
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 id="page-title">Create Protocol</h1>
+            <div class="btn-group">
+                <button class="btn" onclick="saveProtocol()">💾 Save Protocol</button>
+                <button class="btn-secondary" onclick="window.location.href='pro-dashboard.html'">← Back to Dashboard</button>
+            </div>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <!-- BASIC INFO CARD -->
+        <div class="card">
+            <h2 class="card-title">Protocol Information</h2>
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label>Protocol Name *</label>
+                    <input type="text" id="protocolName" placeholder="e.g., Sleep Optimization Protocol">
+                </div>
+
+                <div class="form-group">
+                    <label>Duration (weeks) *</label>
+                    <input type="number" id="duration" min="1" max="52" value="4">
+                </div>
+
+                <div class="form-group">
+                    <label>Primary Modality</label>
+                    <select id="primaryModality">
+                        <option value="">Select...</option>
+                        <option value="Functional Medicine">Functional Medicine</option>
+                        <option value="Clinical Nutrition">Clinical Nutrition</option>
+                        <option value="Naturopathy">Naturopathy</option>
+                        <option value="Physical Therapy">Physical Therapy</option>
+                        <option value="Chiropractic">Chiropractic</option>
+                        <option value="Fitness & Exercise">Fitness & Exercise</option>
+                        <option value="Herbal Medicine">Herbal Medicine</option>
+                        <option value="Ayurveda">Ayurveda</option>
+                        <option value="TCM">TCM</option>
+                    </select>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Description</label>
+                    <textarea id="description" placeholder="Brief overview of this protocol..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('supplements')">💊 Supplements</button>
+            <button class="tab-btn" onclick="switchTab('nutrition')">🥗 Nutrition</button>
+            <button class="tab-btn" onclick="switchTab('exercise')">💪 Exercise</button>
+            <button class="tab-btn" onclick="switchTab('lifestyle')">🧘 Lifestyle</button>
+            <button class="tab-btn" onclick="switchTab('timeline')">📅 Timeline</button>
+        </div>
+
+        <!-- SUPPLEMENTS TAB -->
+        <div id="supplementsTab" class="tab-content active">
+            <div class="card">
+                <h2 class="card-title">Add Supplement or Herb</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Name *</label>
+                        <input type="text" id="suppName" placeholder="e.g., Vitamin D3">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Dosage *</label>
+                        <input type="text" id="suppDosage" placeholder="e.g., 5000 IU">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Frequency *</label>
+                        <select id="suppFrequency">
+                            <option value="">Select...</option>
+                            <option value="Once daily">Once daily</option>
+                            <option value="Twice daily">Twice daily</option>
+                            <option value="Three times daily">Three times daily</option>
+                            <option value="Every other day">Every other day</option>
+                            <option value="As needed">As needed</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Timing</label>
+                        <select id="suppTiming">
+                            <option value="At your discretion">At your discretion</option>
+                            <option value="Morning">Morning</option>
+                            <option value="Afternoon">Afternoon</option>
+                            <option value="Evening">Evening</option>
+                            <option value="Bedtime">Bedtime</option>
+                            <option value="With meals">With meals</option>
+                            <option value="Between meals">Between meals</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Type</label>
+                        <select id="suppType">
+                            <option value="Supplement">Supplement</option>
+                            <option value="Herbal">Herbal</option>
+                            <option value="Probiotic">Probiotic</option>
+                            <option value="Vitamin">Vitamin</option>
+                            <option value="Mineral">Mineral</option>
+                            <option value="Adaptogen">Adaptogen</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>With Food?</label>
+                        <select id="suppWithFood">
+                            <option value="With food">With food</option>
+                            <option value="Without food">Without food</option>
+                            <option value="Either">Either</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Purpose / Notes</label>
+                        <textarea id="suppNotes" placeholder="Why this supplement? Any special instructions?"></textarea>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="addSupplement()">+ Add Supplement</button>
+                <div id="supplementsList" class="item-list"></div>
+            </div>
+        </div>
+
+        <!-- NUTRITION TAB -->
+        <div id="nutritionTab" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">Nutrition Recommendations</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Dietary Approach</label>
+                        <select id="dietType">
+                            <option value="">Select...</option>
+                            <option value="Mediterranean">Mediterranean</option>
+                            <option value="Anti-inflammatory">Anti-inflammatory</option>
+                            <option value="Low FODMAP">Low FODMAP</option>
+                            <option value="Ketogenic">Ketogenic</option>
+                            <option value="Paleo">Paleo</option>
+                            <option value="Whole30">Whole30</option>
+                            <option value="Plant-based">Plant-based</option>
+                            <option value="Elimination">Elimination</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Daily Calories (if applicable)</label>
+                        <input type="number" id="calories" placeholder="e.g., 2000">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Foods to Include</label>
+                        <textarea id="foodsInclude" placeholder="List foods to emphasize..."></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Foods to Avoid</label>
+                        <textarea id="foodsAvoid" placeholder="List foods to eliminate or reduce..."></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Meal Timing / Structure</label>
+                        <textarea id="mealTiming" placeholder="e.g., Intermittent fasting 16:8, 3 meals + 2 snacks, etc."></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Hydration Goals</label>
+                        <textarea id="hydration" placeholder="e.g., 8-10 glasses water daily, herbal teas, etc."></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXERCISE TAB -->
+        <div id="exerciseTab" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">Add Exercise or Movement</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Exercise Name *</label>
+                        <input type="text" id="exerciseName" placeholder="e.g., Walking, Squats, Yoga">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Type</label>
+                        <select id="exerciseType">
+                            <option value="Cardio">Cardio</option>
+                            <option value="Strength">Strength Training</option>
+                            <option value="Flexibility">Flexibility/Stretching</option>
+                            <option value="Balance">Balance</option>
+                            <option value="HIIT">HIIT</option>
+                            <option value="Yoga">Yoga</option>
+                            <option value="Pilates">Pilates</option>
+                            <option value="Sports">Sports/Recreation</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Frequency (per week)</label>
+                        <input type="number" id="exerciseFreq" min="1" max="7" placeholder="e.g., 3">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Duration (minutes)</label>
+                        <input type="number" id="exerciseDuration" placeholder="e.g., 30">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Intensity</label>
+                        <select id="exerciseIntensity">
+                            <option value="Light">Light</option>
+                            <option value="Moderate">Moderate</option>
+                            <option value="Vigorous">Vigorous</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Instructions / Details</label>
+                        <textarea id="exerciseInstructions" placeholder="Specific instructions, sets/reps, form cues..."></textarea>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="addExercise()">+ Add Exercise</button>
+                <div id="exerciseList" class="item-list"></div>
+            </div>
+        </div>
+
+        <!-- LIFESTYLE TAB -->
+        <div id="lifestyleTab" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">Add Lifestyle Change</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="lifestyleCategory">
+                            <option value="Sleep">Sleep</option>
+                            <option value="Stress Management">Stress Management</option>
+                            <option value="Mindfulness">Mindfulness</option>
+                            <option value="Social">Social Connection</option>
+                            <option value="Environment">Environment</option>
+                            <option value="Habit">Daily Habit</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Change Title *</label>
+                        <input type="text" id="lifestyleTitle" placeholder="e.g., Establish consistent sleep schedule">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Description / Instructions</label>
+                        <textarea id="lifestyleDescription" placeholder="Detailed guidance for implementing this change..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Target Frequency</label>
+                        <select id="lifestyleFrequency">
+                            <option value="Daily">Daily</option>
+                            <option value="5-6 times per week">5-6 times per week</option>
+                            <option value="3-4 times per week">3-4 times per week</option>
+                            <option value="Weekly">Weekly</option>
+                            <option value="As needed">As needed</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="addLifestyle()">+ Add Lifestyle Change</button>
+                <div id="lifestyleList" class="item-list"></div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">Sleep Recommendations</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Target Sleep Hours</label>
+                        <input type="number" id="sleepHours" step="0.5" placeholder="e.g., 8">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Bedtime Target</label>
+                        <input type="time" id="bedtime">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Sleep Hygiene Notes</label>
+                        <textarea id="sleepNotes" placeholder="Evening routine, environment, etc."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">Stress Management</h2>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Recommended Practices</label>
+                        <textarea id="stressPractices" placeholder="Meditation, breathing exercises, journaling, etc."></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TIMELINE TAB -->
+        <div id="timelineTab" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">Protocol Timeline</h2>
+                <p style="color: var(--bronze-light); margin-bottom: 1.5rem;">
+                    This will auto-generate based on your protocol duration. You can add notes for each week.
+                </p>
+
+                <div id="phaseTimeline" class="phase-timeline"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://treeoflife-vn25.onrender.com';
+        let protocolId = null;
+
+        const protocolData = {
+            supplements: [],
+            exercises: [],
+            lifestyle: [],
+            nutrition: {},
+            sleep: {},
+            stress: {}
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            protocolId = urlParams.get('id');
+
+            if (protocolId) {
+                document.getElementById('page-title').textContent = 'Edit Protocol';
+                loadProtocol();
+            }
+
+            // Update timeline when duration changes
+            document.getElementById('duration').addEventListener('change', generateTimeline);
+            generateTimeline();
+        });
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        // ==================== SUPPLEMENTS ====================
+
+        function addSupplement() {
+            const name = document.getElementById('suppName').value.trim();
+            const dosage = document.getElementById('suppDosage').value.trim();
+            const frequency = document.getElementById('suppFrequency').value;
+
+            if (!name || !dosage || !frequency) {
+                alert('Please fill in name, dosage, and frequency');
+                return;
+            }
+
+            const supplement = {
+                name,
+                dosage,
+                frequency,
+                timing: document.getElementById('suppTiming').value,
+                type: document.getElementById('suppType').value,
+                with_food: document.getElementById('suppWithFood').value,
+                notes: document.getElementById('suppNotes').value
+            };
+
+            protocolData.supplements.push(supplement);
+            renderSupplements();
+
+            // Clear form
+            document.getElementById('suppName').value = '';
+            document.getElementById('suppDosage').value = '';
+            document.getElementById('suppNotes').value = '';
+        }
+
+        function renderSupplements() {
+            const container = document.getElementById('supplementsList');
+            container.innerHTML = protocolData.supplements.map((s, i) => `
+                <div class="item-card">
+                    <div class="item-header">
+                        <div style="flex: 1;">
+                            <div class="item-title">${s.name}</div>
+                            <div class="item-meta">${s.dosage} • ${s.frequency}</div>
+                        </div>
+                        <button class="delete-btn" onclick="removeSupplement(${i})">Delete</button>
+                    </div>
+                    <div class="item-details">
+                        <div class="detail-row">
+                            <div class="detail-label">Type</div>
+                            <div class="detail-value">${s.type}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Timing</div>
+                            <div class="detail-value">${s.timing}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">With Food</div>
+                            <div class="detail-value">${s.with_food}</div>
+                        </div>
+                        ${s.notes ? `
+                        <div class="detail-row" style="grid-column: 1 / -1;">
+                            <div class="detail-label">Notes</div>
+                            <div class="detail-value">${s.notes}</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function removeSupplement(index) {
+            protocolData.supplements.splice(index, 1);
+            renderSupplements();
+        }
+
+        // ==================== EXERCISES ====================
+
+        function addExercise() {
+            const name = document.getElementById('exerciseName').value.trim();
+            if (!name) {
+                alert('Please enter exercise name');
+                return;
+            }
+
+            const exercise = {
+                name,
+                type: document.getElementById('exerciseType').value,
+                frequency: document.getElementById('exerciseFreq').value,
+                duration: document.getElementById('exerciseDuration').value,
+                intensity: document.getElementById('exerciseIntensity').value,
+                instructions: document.getElementById('exerciseInstructions').value
+            };
+
+            protocolData.exercises.push(exercise);
+            renderExercises();
+
+            // Clear form
+            document.getElementById('exerciseName').value = '';
+            document.getElementById('exerciseFreq').value = '';
+            document.getElementById('exerciseDuration').value = '';
+            document.getElementById('exerciseInstructions').value = '';
+        }
+
+        function renderExercises() {
+            const container = document.getElementById('exerciseList');
+            container.innerHTML = protocolData.exercises.map((e, i) => `
+                <div class="item-card">
+                    <div class="item-header">
+                        <div style="flex: 1;">
+                            <div class="item-title">${e.name}</div>
+                            <div class="item-meta">${e.type} • ${e.intensity} Intensity</div>
+                        </div>
+                        <button class="delete-btn" onclick="removeExercise(${i})">Delete</button>
+                    </div>
+                    <div class="item-details">
+                        <div class="detail-row">
+                            <div class="detail-label">Frequency</div>
+                            <div class="detail-value">${e.frequency} times/week</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Duration</div>
+                            <div class="detail-value">${e.duration} minutes</div>
+                        </div>
+                        ${e.instructions ? `
+                        <div class="detail-row" style="grid-column: 1 / -1;">
+                            <div class="detail-label">Instructions</div>
+                            <div class="detail-value">${e.instructions}</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function removeExercise(index) {
+            protocolData.exercises.splice(index, 1);
+            renderExercises();
+        }
+
+        // ==================== LIFESTYLE ====================
+
+        function addLifestyle() {
+            const title = document.getElementById('lifestyleTitle').value.trim();
+            if (!title) {
+                alert('Please enter a title');
+                return;
+            }
+
+            const change = {
+                category: document.getElementById('lifestyleCategory').value,
+                title,
+                description: document.getElementById('lifestyleDescription').value,
+                frequency: document.getElementById('lifestyleFrequency').value
+            };
+
+            protocolData.lifestyle.push(change);
+            renderLifestyle();
+
+            // Clear form
+            document.getElementById('lifestyleTitle').value = '';
+            document.getElementById('lifestyleDescription').value = '';
+        }
+
+        function renderLifestyle() {
+            const container = document.getElementById('lifestyleList');
+            container.innerHTML = protocolData.lifestyle.map((l, i) => `
+                <div class="item-card">
+                    <div class="item-header">
+                        <div style="flex: 1;">
+                            <div class="item-title">${l.title}</div>
+                            <div class="item-meta">${l.category} • ${l.frequency}</div>
+                        </div>
+                        <button class="delete-btn" onclick="removeLifestyle(${i})">Delete</button>
+                    </div>
+                    ${l.description ? `
+                    <div class="item-details">
+                        <div class="detail-row" style="grid-column: 1 / -1;">
+                            <div class="detail-label">Instructions</div>
+                            <div class="detail-value">${l.description}</div>
+                        </div>
+                    </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function removeLifestyle(index) {
+            protocolData.lifestyle.splice(index, 1);
+            renderLifestyle();
+        }
+
+        // ==================== TIMELINE ====================
+
+        function generateTimeline() {
+            const duration = parseInt(document.getElementById('duration').value) || 4;
+            const container = document.getElementById('phaseTimeline');
+            
+            let html = '';
+            for (let week = 1; week <= duration; week++) {
+                html += `
+                    <div class="phase-card">
+                        <div class="phase-week">Week ${week}</div>
+                        <div class="form-group" style="margin-top: 1rem;">
+                            <label>Week ${week} Focus / Notes</label>
+                            <textarea id="week${week}Notes" placeholder="What's the focus for this week? Any special instructions?"></textarea>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+        }
+
+        // ==================== SAVE ====================
+
+        async function saveProtocol() {
+            const name = document.getElementById('protocolName').value.trim();
+            const duration = parseInt(document.getElementById('duration').value);
+
+            if (!name || !duration) {
+                showMessage('Please enter protocol name and duration', 'error');
+                return;
+            }
+
+            try {
+                // Gather all data
+                const protocolPayload = {
+                    name,
+                    traditions: document.getElementById('primaryModality').value,
+                    description: document.getElementById('description').value,
+                    duration_weeks: duration,
+                    supplements: protocolData.supplements,
+                    exercises: protocolData.exercises,
+                    lifestyle_changes: protocolData.lifestyle,
+                    nutrition: {
+                        diet_type: document.getElementById('dietType').value,
+                        calories: document.getElementById('calories').value,
+                        foods_include: document.getElementById('foodsInclude').value,
+                        foods_avoid: document.getElementById('foodsAvoid').value,
+                        meal_timing: document.getElementById('mealTiming').value,
+                        hydration: document.getElementById('hydration').value
+                    },
+                    sleep: {
+                        target_hours: document.getElementById('sleepHours').value,
+                        bedtime: document.getElementById('bedtime').value,
+                        notes: document.getElementById('sleepNotes').value
+                    },
+                    stress_management: document.getElementById('stressPractices').value,
+                    weekly_notes: {}
+                };
+
+                // Gather weekly notes
+                for (let week = 1; week <= duration; week++) {
+                    const notes = document.getElementById(`week${week}Notes`)?.value;
+                    if (notes) {
+                        protocolPayload.weekly_notes[`week_${week}`] = notes;
+                    }
+                }
+
+                const token = localStorage.getItem('token');
+                const url = protocolId 
+                    ? `${API_URL}/api/protocols/${protocolId}`
+                    : `${API_URL}/api/protocols`;
+                
+                const method = protocolId ? 'PUT' : 'POST';
+
+                const response = await fetch(url, {
+                    method,
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(protocolPayload)
+                });
+
+                if (response.ok) {
+                    showMessage('Protocol saved successfully!', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'pro-dashboard.html';
+                    }, 1500);
+                } else {
+                    throw new Error('Failed to save');
+                }
+
+            } catch (error) {
+                console.error('Save error:', error);
+                showMessage('Error saving protocol: ' + error.message, 'error');
+            }
+        }
+
+        async function loadProtocol() {
+            // Load existing protocol for editing
+            // Implementation similar to above
+        }
+
+        function showMessage(message, type) {
+            const msgDiv = document.getElementById('message');
+            msgDiv.textContent = message;
+            msgDiv.className = `message ${type} active`;
+            setTimeout(() => msgDiv.classList.remove('active'), 5000);
+        }
+    </script>
+</body>
+</html>
