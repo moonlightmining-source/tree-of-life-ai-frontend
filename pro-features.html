@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Dashboard Features - Tree of Life AI</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --amber-light: #D4A574;
+            --amber-medium: #C19A6B;
+            --bronze-deep: #B8860B;
+            --bronze-light: #A0826D;
+            --peach-gold: #EEC591;
+            --pure-black: #000;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: url('Images/Background.png') center center fixed;
+            background-size: cover;
+            color: var(--amber-light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+
+        /* HEADER */
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--bronze-deep);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-frame {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--bronze-deep);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 20px rgba(184, 134, 11, 0.3);
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+        }
+
+        .site-title {
+            font-size: 1.8rem;
+            color: var(--peach-gold);
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(184, 134, 11, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--bronze-deep);
+            color: var(--amber-light);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(184, 134, 11, 0.2);
+        }
+
+        /* HERO SECTION */
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            color: var(--peach-gold);
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--amber-light);
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+
+        /* FEATURE SECTIONS */
+        .feature-section {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            transition: all 0.3s;
+        }
+
+        .feature-section:hover {
+            border-color: var(--peach-gold);
+            box-shadow: 0 10px 40px rgba(238, 197, 145, 0.3);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--bronze-deep);
+        }
+
+        .section-icon {
+            font-size: 3rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--peach-gold);
+            font-weight: 700;
+        }
+
+        .section-description {
+            font-size: 1.2rem;
+            color: var(--amber-light);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        /* FEATURE GRID */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: var(--amber-light);
+            transform: translateY(-5px);
+        }
+
+        .feature-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card-title {
+            font-size: 1.5rem;
+            color: var(--peach-gold);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .feature-card-text {
+            color: var(--bronze-light);
+            line-height: 1.6;
+        }
+
+        /* STEP-BY-STEP GUIDE */
+        .steps-container {
+            margin-top: 2rem;
+        }
+
+        .step {
+            background: rgba(0, 0, 0, 0.4);
+            border-left: 4px solid var(--bronze-deep);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 10px;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: 700;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .step-title {
+            font-size: 1.3rem;
+            color: var(--peach-gold);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .step-description {
+            color: var(--amber-light);
+            margin-left: 56px;
+        }
+
+        /* TIER COMPARISON */
+        .tier-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .tier-table th {
+            background: rgba(184, 134, 11, 0.3);
+            color: var(--peach-gold);
+            padding: 1.5rem;
+            text-align: left;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .tier-table td {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(184, 134, 11, 0.2);
+            color: var(--amber-light);
+        }
+
+        .tier-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .check {
+            color: #4ade80;
+            font-size: 1.5rem;
+        }
+
+        .cross {
+            color: #ff6666;
+            font-size: 1.5rem;
+        }
+
+        /* CTA SECTION */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(212, 165, 116, 0.2), rgba(184, 134, 11, 0.2));
+            border: 3px solid var(--bronze-deep);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            color: var(--peach-gold);
+            margin-bottom: 1rem;
+        }
+
+        .cta-text {
+            font-size: 1.3rem;
+            color: var(--amber-light);
+            margin-bottom: 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: rgba(0, 0, 0, 0.5);
+            border-top: 2px solid var(--bronze-deep);
+            padding: 2rem;
+            text-align: center;
+            color: var(--bronze-light);
+            margin-top: 4rem;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tier-table {
+                font-size: 0.9rem;
+            }
+
+            .tier-table th,
+            .tier-table td {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-frame">
+                    <img src="Images/Logo.png" alt="Tree of Life AI" class="logo">
+                </div>
+                <div class="site-title">Tree of Life AI</div>
+            </div>
+            <div class="nav-buttons">
+                <a href="index.html" class="btn btn-secondary">Home</a>
+                <a href="pro-dashboard.html" class="btn">Go to Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- HERO -->
+    <div class="hero">
+        <h1>🌳 Pro Dashboard Features</h1>
+        <p class="hero-subtitle">
+            Transform your practice with comprehensive client management, protocol creation, 
+            and AI-powered health analysis tools
+        </p>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        
+        <!-- CLIENT MANAGEMENT -->
+        <div class="feature-section">
+            <div class="section-header">
+                <div class="section-icon">👥</div>
+                <h2 class="section-title">Client Management</h2>
+            </div>
+            <p class="section-description">
+                Organize and track all your clients in one centralized hub. Add family members, 
+                manage health profiles, and monitor progress with powerful AI-driven insights.
+            </p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-card-icon">📋</div>
+                    <h3 class="feature-card-title">Client Profiles</h3>
+                    <p class="feature-card-text">
+                        Store detailed information including demographics, health conditions, medications, 
+                        allergies, and treatment history. Quick access to everything you need.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-card-icon">🏥</div>
+                    <h3 class="feature-card-title">Health Profile Builder</h3>
+                    <p class="feature-card-text">
+                        Comprehensive 8-tab health profile system covering personal info, medical history, 
+                        alternative medicine patterns, lifestyle, metrics tracking, and lab results.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-card-icon">🤖</div>
+                    <h3 class="feature-card-title">AI Health Analysis</h3>
+                    <p class="feature-card-text">
+                        Generate comprehensive AI-powered health assessments that analyze lab results, 
+                        metrics, medications, and provide personalized recommendations across 10 healing traditions.
+                    </p>
+                </div>
+            </div>
+
+            <div class="steps-container">
+                <h3 style="color: var(--peach-gold); font-size: 1.8rem; margin-bottom: 1.5rem;">How to Use:</h3>
+                
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <div style="display: inline-block; vertical-align: top; width: calc(100% - 60px);">
+                        <div class="step-title">Add a New Client</div>
+                        <p class="step-description">
+                            Click "Add Client" on the Client List page. Enter basic information like name, 
+                            relationship, age, and notes. Save to create the client profile.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <div style="display: inline-block; vertical-align: top; width: calc(100% - 60px);">
+                        <div class="step-title">Build Health Profile</div>
+                        <p class="step-description">
+                            Click "Health Profile" to access the 8-tab system. Fill out personal information, 
+                            medical history, lifestyle factors, upload lab results, and track health metrics over time.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <div style="display: inline-block; vertical-align: top; width: calc(100% - 60px);">
+                        <div class="step-title">Generate AI Analysis</div>
+                        <p class="step-description">
+                            Click "AI Health Analysis" to generate a comprehensive assessment. The AI analyzes 
+                            all health data and provides insights from Western Medicine, Ayurveda, TCM, Clinical 
+                            Nutrition, Herbal Medicine, and more. View past analyses in the Analysis History tab.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROTOCOL LIBRARY -->
+        <div class="feature-section">
+            <div class="section-header">
+                <div class="section-icon">📚</div>
+                <h2 class="section-title">Protocol Library</h2>
+            </div>
+            <p class="section-description">
+                Create, manage, and assign comprehensive wellness protocols. Design custom treatment plans 
+                with supplements, exercises, nutrition guidelines, and lifestyle modifications.
+            </p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-card-icon">✏️</div>
+                    <h3 class="feature-card-title">Protocol Editor</h3>
+                    <p class="feature-card-text">
+                        5-tab editor for creating detailed protocols: Supplements (dosage, timing, frequency), 
+                        Nutrition (diet guidelines, foods to include/avoid), Exercise (type, intensity, duration), 
+                        Lifestyle (sleep, stress management), and Weekly Timeline (phase-based progression).
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-card-icon">📊</div>
+                    <h3 class="feature-card-title">Protocol Management</h3>
+                    <p class="feature-card-text">
+                        View all protocols in your library. See which clients are assigned, track active 
+                        assignments, and monitor completion rates. Edit or duplicate existing protocols.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-card-icon">🖨️</div>
+                    <h3 class="feature-card-title">Print & Share</h3>
+                    <p class="feature-card-text">
+                        Print professional protocol summaries to hand to clients. Clean, formatted output 
+                        ready for physical distribution or digital sharing.
+                    </p>
+                </div>
+            </div>
+
+            <div class="steps-container">
+                <h3 style="color: var(--peach-gold); font-size: 1.8rem; margin-bottom: 1.5rem;">How to Use:</h3>
+                
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <div style="display: inline-block; vertical-align: top; width: calc(100% - 60px);">
+                        <div class="step-title">Create Protocol</div>
+                        <p class="step-description">
+                            Go to Protocol Library → Create New Protocol. Fill in basic info (name, traditions, 
+                            description, duration). Then use the 5-tab editor to add supplements, nutrition 
+                            guidelines, exercises, lifestyle changes, and weekly progression notes.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <div style="display: inline-block; vertical-align: top; width: calc(100% - 60px);">
+                        <div class="step-title">Assign to Clients</div>
+                        <p class="step-description">
+                            From Protocol Library, click "Assign" on any protocol. Select the client and 
+                            start date. The protocol becomes active in their client portal immediately.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <div style="display: inline-block; vertical-align: top; width: calc(100% - 60px);">
+                        <div class="step-title">Track Progress</div>
+                        <p class="step-description">
+                            Monitor client compliance through the dashboard. View completion percentages, 
+                            current week, and overall status for each assigned protocol.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CLIENT PORTAL -->
+        <div class="feature-section">
+            <div class="section-header">
+                <div class="section-icon">🔗</div>
+                <h2 class="section-title">Client Portal</h2>
+            </div>
+            <p class="section-description">
+                Generate secure, shareable links for clients to access their protocol details, track 
+                progress, and communicate with you directly.
+            </p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-card-icon">🔐</div>
+                    <h3 class="feature-card-title">Secure Links</h3>
+                    <p class="feature-card-text">
+                        Generate unique, token-based links for each client. No login required - clients 
+                        simply click the link to access their personalized portal.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-card-icon">💬</div>
+                    <h3 class="feature-card-title">Two-Way Messaging</h3>
+                    <p class="feature-card-text">
+                        Clients can send messages and photos directly through their portal. You receive 
+                        notifications and can reply directly from the dashboard.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-card-icon">✅</div>
+                    <h3 class="feature-card-title">Progress Tracking</h3>
+                    <p class="feature-card-text">
+                        Clients can mark protocol items as complete. Track compliance in real-time and 
+                        see which recommendations they're following.
+                    </p>
+                </div>
+            </div>
+
+            <div class="steps-container">
+                <h3 style="color: var(--peach-gold); font-size: 1.8rem; margin-bottom: 1.5rem;">How to Use:</h3>
+                
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <div style="display: inline-block; vertical-align: top; width: calc(100% - 60px);">
+                        <div class="step-title">Generate Client Link</div>
+                        <p class="step-description">
+                            From Client List, click on a client → "Generate Portal Link". Copy the unique 
+                            URL and send it to your client via email, text, or any messaging platform.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <div style="display: inline-block; vertical-align: top; width: calc(100% - 60px);">
+                        <div class="step-title">Client Accesses Portal</div>
+                        <p class="step-description">
+                            Client clicks the link and sees their assigned protocol details, current week, 
+                            supplements, exercises, nutrition guidelines, and progress tracking.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <div style="display: inline-block; vertical-align: top; width: calc(100% - 60px);">
+                        <div class="step-title">Manage Messages</div>
+                        <p class="step-description">
+                            View all client messages from the Messages tab on your dashboard. Reply directly, 
+                            mark as read, and maintain ongoing communication throughout their treatment.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DASHBOARD ANALYTICS -->
+        <div class="feature-section">
+            <div class="section-header">
+                <div class="section-icon">📈</div>
+                <h2 class="section-title">Dashboard Analytics</h2>
+            </div>
+            <p class="section-description">
+                Real-time insights into your practice. Track active clients, protocol assignments, 
+                consultations, and success rates all in one place.
+            </p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-card-icon">👥</div>
+                    <h3 class="feature-card-title">Active Clients</h3>
+                    <p class="feature-card-text">
+                        See how many clients have active portal links this month, with period-over-period 
+                        change tracking to monitor practice growth.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-card-icon">📋</div>
+                    <h3 class="feature-card-title">Protocol Metrics</h3>
+                    <p class="feature-card-text">
+                        Track total protocols in your library and how many are currently assigned to active 
+                        clients. See which protocols are most used.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-card-icon">💼</div>
+                    <h3 class="feature-card-title">Consultation Tracking</h3>
+                    <p class="feature-card-text">
+                        Monitor weekly consultation volume through client messages. Track engagement and 
+                        identify clients who may need follow-up.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-card-icon">⭐</div>
+                    <h3 class="feature-card-title">Success Rate</h3>
+                    <p class="feature-card-text">
+                        Calculated from client compliance scores. See overall adherence to protocols and 
+                        identify areas for improvement.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TIER COMPARISON -->
+        <div class="feature-section">
+            <div class="section-header">
+                <div class="section-icon">💎</div>
+                <h2 class="section-title">Choose Your Plan</h2>
+            </div>
+            <p class="section-description">
+                Unlock the full power of the Pro Dashboard with our flexible subscription tiers.
+            </p>
+
+            <table class="tier-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th style="text-align: center;">Free</th>
+                        <th style="text-align: center;">Basic ($9/mo)</th>
+                        <th style="text-align: center;">Premium ($29/mo)</th>
+                        <th style="text-align: center;">Pro ($79/mo)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Family Members/Clients</strong></td>
+                        <td style="text-align: center;">0</td>
+                        <td style="text-align: center;">1</td>
+                        <td style="text-align: center;">5</td>
+                        <td style="text-align: center;">Unlimited</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AI Messages per Month</strong></td>
+                        <td style="text-align: center;">10</td>
+                        <td style="text-align: center;">50</td>
+                        <td style="text-align: center;">200</td>
+                        <td style="text-align: center;">500</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Health Profiles</strong></td>
+                        <td style="text-align: center;"><span class="cross">✗</span></td>
+                        <td style="text-align: center;"><span class="check">✓</span></td>
+                        <td style="text-align: center;"><span class="check">✓</span></td>
+                        <td style="text-align: center;"><span class="check">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>AI Health Analysis</strong></td>
+                        <td style="text-align: center;"><span class="cross">✗</span></td>
+                        <td style="text-align: center;"><span class="check">✓</span></td>
+                        <td style="text-align: center;"><span class="check">✓</span></td>
+                        <td style="text-align: center;"><span class="check">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Protocol Library</strong></td>
+                        <td style="text-align: center;"><span class="cross">✗</span></td>
+                        <td style="text-align: center;"><span class="cross">✗</span></td>
+                        <td style="text-align: center;"><span class="check">✓</span></td>
+                        <td style="text-align: center;"><span class="check">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Client Portal Links</strong></td>
+                        <td style="text-align: center;"><span class="cross">✗</span></td>
+                        <td style="text-align: center;"><span class="cross">✗</span></td>
+                        <td style="text-align: center;"><span class="check">✓</span></td>
+                        <td style="text-align: center;"><span class="check">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Two-Way Messaging</strong></td>
+                        <td style="text-align: center;"><span class="cross">✗</span></td>
+                        <td style="text-align: center;"><span class="cross">✗</span></td>
+                        <td style="text-align: center;"><span class="check">✓</span></td>
+                        <td style="text-align: center;"><span class="check">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dashboard Analytics</strong></td>
+                        <td style="text-align: center;"><span class="cross">✗</span></td>
+                        <td style="text-align: center;"><span class="cross">✗</span></td>
+                        <td style="text-align: center;"><span class="check">✓</span></td>
+                        <td style="text-align: center;"><span class="check">✓</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- CTA -->
+        <div class="cta-section">
+            <h2 class="cta-title">Ready to Transform Your Practice?</h2>
+            <p class="cta-text">
+                Join thousands of practitioners using Tree of Life AI to deliver personalized, 
+                integrative health solutions.
+            </p>
+            <div class="cta-buttons">
+                <a href="subscriptions.html" class="btn" style="font-size: 1.2rem; padding: 1rem 2rem;">
+                    Upgrade Now
+                </a>
+                <a href="pro-dashboard.html" class="btn btn-secondary" style="font-size: 1.2rem; padding: 1rem 2rem;">
+                    Try Free Features
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <p>&copy; 2026 Tree of Life AI. Merging ancient wisdom with modern intelligence.</p>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        const token = localStorage.getItem('token');
+        if (!token) {
+            // Update nav to show login/signup
+            document.querySelector('.nav-buttons').innerHTML = `
+                <a href="auth.html" class="btn btn-secondary">Login</a>
+                <a href="auth.html" class="btn">Get Started</a>
+            `;
+        }
+    </script>
+</body>
+</html>
