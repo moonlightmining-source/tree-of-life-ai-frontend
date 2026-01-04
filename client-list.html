@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client List - Tree of Life AI</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --amber-light: #D4A574;
+            --amber-medium: #C19A6B;
+            --bronze-deep: #B8860B;
+            --bronze-light: #A0826D;
+            --peach-gold: #EEC591;
+            --pure-black: #000;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: url('Images/Background.png') center center fixed;
+            background-size: cover;
+            color: var(--amber-light);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--peach-gold);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(184, 134, 11, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--bronze-deep);
+            color: var(--amber-light);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(184, 134, 11, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(184, 134, 11, 0.4);
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            background: transparent;
+            border: 2px solid var(--bronze-deep);
+            color: var(--amber-light);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .tab-btn:hover {
+            background: rgba(184, 134, 11, 0.2);
+        }
+
+        button[onclick*="deleteClient"].tab-btn:hover {
+            background: rgba(255, 50, 50, 0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--peach-gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--bronze-light);
+        }
+
+        .search-bar {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 8px;
+            color: var(--amber-light);
+            font-size: 1rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--amber-light);
+            box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.2);
+        }
+
+        .client-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .client-card {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .client-card:hover {
+            border-color: var(--peach-gold);
+            box-shadow: 0 8px 30px rgba(238, 197, 145, 0.3);
+        }
+
+        .client-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .client-title {
+            font-size: 1.8rem;
+            color: var(--peach-gold);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .client-meta {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            color: var(--bronze-light);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .client-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .client-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 0.85rem;
+            color: var(--bronze-light);
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            font-size: 1.1rem;
+            color: var(--peach-gold);
+            font-weight: 600;
+        }
+
+        .protocol-badge {
+            background: rgba(212, 165, 116, 0.2);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            display: inline-block;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--bronze-light);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .client-header {
+                flex-direction: column;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👥 Client List</h1>
+            <div class="btn-group">
+                <button class="btn" onclick="window.location.href='client-editor.html'">
+                    ➕ Add New Client
+                </button>
+                <button class="btn-secondary" onclick="window.location.href='pro-dashboard.html'">
+                    ← Back to Dashboard
+                </button>
+            </div>
+        </div>
+
+        <!-- STATISTICS -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalClients">0</div>
+                <div class="stat-label">Total Clients</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="activeProtocols">0</div>
+                <div class="stat-label">Active Protocols</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="withHealthProfile">0</div>
+                <div class="stat-label">With Health Profile</div>
+            </div>
+        </div>
+
+        <!-- SEARCH BAR -->
+        <div class="search-bar">
+            <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search clients by name, relationship, or notes..." onkeyup="filterClients()">
+        </div>
+
+        <!-- CLIENTS LIST -->
+        <div id="clientsList" class="client-grid"></div>
+
+        <!-- EMPTY STATE -->
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <div class="empty-state-icon">👥</div>
+            <h2 style="color: var(--peach-gold); margin-bottom: 1rem;">No Clients Yet</h2>
+            <p style="margin-bottom: 1.5rem;">Add your first client to get started!</p>
+            <button class="btn" onclick="window.location.href='client-editor.html'">
+                ➕ Add Client
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://treeoflife-vn25.onrender.com';
+        let clients = [];
+        let protocols = [];
+        let filteredClients = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            await loadClients();
+            await loadProtocols();
+            renderClients();
+            updateStats();
+        });
+
+        async function loadClients() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_URL}/api/family/members`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    clients = data.members || [];
+                    filteredClients = [...clients];
+                }
+            } catch (error) {
+                console.error('Error loading clients:', error);
+            }
+        }
+
+        async function loadProtocols() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_URL}/api/client-protocols`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    protocols = data.assignments || [];
+                }
+            } catch (error) {
+                console.error('Error loading protocols:', error);
+            }
+        }
+
+        function filterClients() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (!searchTerm) {
+                filteredClients = [...clients];
+            } else {
+                filteredClients = clients.filter(client => 
+                    client.name.toLowerCase().includes(searchTerm) ||
+                    (client.relationship && client.relationship.toLowerCase().includes(searchTerm)) ||
+                    (client.notes && client.notes.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            renderClients();
+        }
+
+        function renderClients() {
+            const container = document.getElementById('clientsList');
+            const emptyState = document.getElementById('emptyState');
+
+            if (clients.length === 0) {
+                container.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            if (filteredClients.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🔍</div>
+                        <h2 style="color: var(--peach-gold); margin-bottom: 1rem;">No clients found</h2>
+                        <p>Try a different search term</p>
+                    </div>
+                `;
+                emptyState.style.display = 'none';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+
+            container.innerHTML = filteredClients.map(client => {
+                const clientProtocols = protocols.filter(p => p.client_id == client.id);
+                const activeProtocols = clientProtocols.filter(p => p.status === 'active');
+
+                const age = client.age ? `${client.age} years` : 'Age not set';
+                const addedDate = new Date(client.created_at).toLocaleDateString();
+
+                return `
+                    <div class="client-card">
+                        <div class="client-header">
+                            <div style="flex: 1;">
+                                <div class="client-title">${client.name}</div>
+                                <div class="client-meta">
+                                    ${client.relationship ? `<span>👤 ${client.relationship}</span>` : ''}
+                                    <span>📅 ${age}</span>
+                                    ${client.gender ? `<span>⚧ ${client.gender}</span>` : ''}
+                                    <span>📆 Added ${addedDate}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        ${client.notes ? `
+                            <div style="color: var(--amber-light); margin-bottom: 1.5rem; padding: 1rem; background: rgba(0, 0, 0, 0.3); border-radius: 8px;">
+                                ${client.notes}
+                            </div>
+                        ` : ''}
+
+                        <div class="client-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Health Profile</div>
+                                <div class="detail-value">${client.has_health_profile ? '✅ Complete' : '⚠️ Incomplete'}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Active Protocols</div>
+                                <div class="detail-value">${activeProtocols.length}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Total Conversations</div>
+                                <div class="detail-value">${client.conversation_count || 0}</div>
+                            </div>
+                            ${client.date_of_birth ? `
+                            <div class="detail-item">
+                                <div class="detail-label">Date of Birth</div>
+                                <div class="detail-value">${new Date(client.date_of_birth).toLocaleDateString()}</div>
+                            </div>
+                            ` : ''}
+                        </div>
+
+                        ${clientProtocols.length > 0 ? `
+                            <div style="margin-bottom: 1.5rem;">
+                                <div style="color: var(--bronze-light); font-size: 0.9rem; margin-bottom: 0.5rem;">Protocols:</div>
+                                ${clientProtocols.map(p => `
+                                    <span class="protocol-badge">
+                                        ${p.protocol_name} ${p.status === 'active' ? '✅' : '⏸️'}
+                                    </span>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+
+                        <div class="action-buttons">
+                            <button class="tab-btn" onclick="window.location.href='client-editor.html?id=${client.id}'">
+                                View / Edit
+                            </button>
+                            <button class="tab-btn" onclick="deleteClient(${client.id}, '${client.name.replace(/'/g, "\\'")}')" style="border-color: #ff6666; color: #ff6666;">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateStats() {
+            document.getElementById('totalClients').textContent = clients.length;
+            
+            const activeCount = protocols.filter(p => p.status === 'active').length;
+            document.getElementById('activeProtocols').textContent = activeCount;
+
+            const withProfile = clients.filter(c => c.has_health_profile).length;
+            document.getElementById('withHealthProfile').textContent = withProfile;
+        }
+
+        async function deleteClient(clientId, clientName) {
+            const clientProtocols = protocols.filter(p => p.client_id == clientId && p.status === 'active');
+
+            let confirmMessage = `Delete ${clientName}?\n\nThis will permanently delete:\n- Client profile\n- Health records\n- All conversation history`;
+            
+            if (clientProtocols.length > 0) {
+                confirmMessage += `\n- ${clientProtocols.length} active protocol assignment(s)`;
+            }
+            
+            confirmMessage += '\n\nThis cannot be undone.';
+
+            if (!confirm(confirmMessage)) {
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_URL}/api/family/members/${clientId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    alert(`${clientName} deleted successfully`);
+                    await loadClients();
+                    await loadProtocols();
+                    renderClients();
+                    updateStats();
+                } else {
+                    alert('Failed to delete client');
+                }
+            } catch (error) {
+                console.error('Delete error:', error);
+                alert('Error deleting client');
+            }
+        }
+    </script>
+</body>
+</html>
