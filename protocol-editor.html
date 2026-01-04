@@ -1013,9 +1013,105 @@
         }
 
         async function loadProtocol() {
-            // Load existing protocol for editing
-            // Implementation similar to above
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_URL}/api/protocols/${protocolId}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) {
+            showMessage('Failed to load protocol', 'error');
+            return;
         }
+
+        const data = await response.json();
+        const protocol = data.protocol || data;
+
+        // Load basic info
+        document.getElementById('protocolName').value = protocol.name || '';
+        document.getElementById('duration').value = protocol.duration_weeks || 4;
+        document.getElementById('primaryModality').value = protocol.traditions || '';
+        document.getElementById('description').value = protocol.description || '';
+
+        // Load supplements
+        if (protocol.supplements) {
+            protocolData.supplements = typeof protocol.supplements === 'string' 
+                ? JSON.parse(protocol.supplements) 
+                : protocol.supplements;
+            renderSupplements();
+        }
+
+        // Load exercises
+        if (protocol.exercises) {
+            protocolData.exercises = typeof protocol.exercises === 'string'
+                ? JSON.parse(protocol.exercises)
+                : protocol.exercises;
+            renderExercises();
+        }
+
+        // Load lifestyle changes
+        if (protocol.lifestyle_changes) {
+            protocolData.lifestyle = typeof protocol.lifestyle_changes === 'string'
+                ? JSON.parse(protocol.lifestyle_changes)
+                : protocol.lifestyle_changes;
+            renderLifestyle();
+        }
+
+        // Load nutrition
+        if (protocol.nutrition) {
+            const nutrition = typeof protocol.nutrition === 'string'
+                ? JSON.parse(protocol.nutrition)
+                : protocol.nutrition;
+            
+            document.getElementById('dietType').value = nutrition.diet_type || '';
+            document.getElementById('calories').value = nutrition.calories || '';
+            document.getElementById('foodsInclude').value = nutrition.foods_include || '';
+            document.getElementById('foodsAvoid').value = nutrition.foods_avoid || '';
+            document.getElementById('mealTiming').value = nutrition.meal_timing || '';
+            document.getElementById('hydration').value = nutrition.hydration || '';
+        }
+
+        // Load sleep
+        if (protocol.sleep) {
+            const sleep = typeof protocol.sleep === 'string'
+                ? JSON.parse(protocol.sleep)
+                : protocol.sleep;
+            
+            document.getElementById('sleepHours').value = sleep.target_hours || '';
+            document.getElementById('bedtime').value = sleep.bedtime || '';
+            document.getElementById('sleepNotes').value = sleep.notes || '';
+        }
+
+        // Load stress management
+        if (protocol.stress_management) {
+            document.getElementById('stressPractices').value = protocol.stress_management;
+        }
+
+        // Load weekly notes
+        if (protocol.weekly_notes) {
+            const weeklyNotes = typeof protocol.weekly_notes === 'string'
+                ? JSON.parse(protocol.weekly_notes)
+                : protocol.weekly_notes;
+            
+            generateTimeline(); // Generate timeline first
+            
+            // Then populate notes
+            for (const [key, value] of Object.entries(weeklyNotes)) {
+                const weekNum = key.replace('week_', '');
+                const textarea = document.getElementById(`week${weekNum}Notes`);
+                if (textarea) {
+                    textarea.value = value;
+                }
+            }
+        } else {
+            generateTimeline();
+        }
+
+    } catch (error) {
+        console.error('Error loading protocol:', error);
+        showMessage('Error loading protocol: ' + error.message, 'error');
+    }
+}
 
         function showMessage(message, type) {
             const msgDiv = document.getElementById('message');
