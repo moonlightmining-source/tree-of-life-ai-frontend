@@ -846,6 +846,16 @@
             }
 
             .traditions-grid {
+                gap: 1rem;
+            }
+
+            .all-modalities-row {
+                display: flex;
+                justify-content: center;
+            }
+
+            .modalities-main-grid {
+                display: grid;
                 grid-template-columns: repeat(3, 90px);
                 gap: 0.5rem;
                 justify-content: center;
@@ -925,130 +935,139 @@
             }
         }
 
-       /* 📱 TABLET / IPAD (768px - 1399px) - PERFECT CENTERING! */
-@media (min-width: 768px) and (max-width: 1399px) {
-    /* ✅ HEADER: CENTERED with balanced layout */
-    .top-header {
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 15px 2rem;
-        justify-content: center;  /* ← CENTERED! */
-        gap: 1.5rem;
-    }
+      /* 📱 TABLET / IPAD (768px - 1399px) - PERFECT CENTERING! */
+        @media (min-width: 768px) and (max-width: 1399px) {
+            /* ✅ HEADER: CENTERED with balanced layout */
+            .top-header {
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 15px 2rem;
+                justify-content: center;
+                gap: 1.5rem;
+            }
 
-    .header-left, .header-right {
-        gap: 0.75rem;
-    }
+            .header-left, .header-right {
+                gap: 0.75rem;
+            }
 
-    /* ✅ LOGO: Smaller */
-    .logo-container {
-        width: 400px;
-        height: 400px;
-    }
+            /* ✅ LOGO: Smaller */
+            .logo-container {
+                width: 400px;
+                height: 400px;
+            }
 
-    .logo-img {
-        height: 220px !important;
-    }
+            .logo-img {
+                height: 220px !important;
+            }
 
-    /* ✅ HEADER BUTTONS: Medium (120px) */
-    .header-btn {
-        width: 120px;
-        height: 120px;
-        font-size: 0.75rem;
-        padding: 0.5rem;
-    }
+            /* ✅ HEADER BUTTONS: Medium (120px) */
+            .header-btn {
+                width: 120px;
+                height: 120px;
+                font-size: 0.75rem;
+                padding: 0.5rem;
+            }
 
-    /* ✅ CONTENT: Match header */
-    .content-wrapper {
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 2rem 2rem;
-    }
+            /* ✅ CONTENT: Match header */
+            .content-wrapper {
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem 2rem;
+            }
 
-    /* ✅ PRIMARY BUTTONS */
-    .primary-buttons {
-        gap: 1.5rem;
-    }
+            /* ✅ PRIMARY BUTTONS */
+            .primary-buttons {
+                gap: 1.5rem;
+            }
 
-    .new-chat-btn, .logout-btn {
-        width: 140px;
-        height: 140px;
-        font-size: 0.9rem;
-    }
+            .new-chat-btn, .logout-btn {
+                width: 140px;
+                height: 140px;
+                font-size: 0.9rem;
+            }
 
-    /* ✅ QUICK ACCESS: 3 across */
-    .quick-access-buttons {
-        gap: 1rem;
-        display: grid;
-        grid-template-columns: repeat(3, 140px);
-        justify-content: center;
-    }
+            /* ✅ QUICK ACCESS: 3 across */
+            .quick-access-buttons {
+                gap: 1rem;
+                display: grid;
+                grid-template-columns: repeat(3, 140px);
+                justify-content: center;
+            }
 
-    .quick-btn, .print-btn {
-        width: 140px;
-        height: 140px;
-        font-size: 0.85rem;
-    }
+            .quick-btn, .print-btn {
+                width: 140px;
+                height: 140px;
+                font-size: 0.85rem;
+            }
 
-    /* ✅ TRADITIONS: 3 across */
-    .traditions-grid {
-        grid-template-columns: repeat(3, 140px);
-        gap: 1rem;
-        justify-content: center;
-    }
+            /* ✅ TRADITIONS: 3 across */
+            .traditions-grid {
+                gap: 1.5rem;
+            }
 
-    .tradition-btn {
-        width: 140px;
-        height: 140px;
-        font-size: 0.75rem;
-        padding: 0.75rem;
-    }
+            .all-modalities-row {
+                display: flex;
+                justify-content: center;
+            }
 
-    .chat-section {
-        margin: 0 auto;
-        padding: 1.5rem;
-    }
+            .modalities-main-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 140px);
+                gap: 1rem;
+                justify-content: center;
+            }
 
-    .welcome-section h2 {
-        font-size: 1.75rem;
-    }
+            .tradition-btn {
+                width: 140px;
+                height: 140px;
+                font-size: 0.75rem;
+                padding: 0.75rem;
+            }
 
-    .welcome-section p {
-        font-size: 1.05rem;
-    }
+            .chat-section {
+                margin: 0 auto;
+                padding: 1.5rem;
+            }
 
-    .input-container {
-        display: flex;
-        flex-direction: row;
-        align-items: stretch;
-    }
+            .welcome-section h2 {
+                font-size: 1.75rem;
+            }
 
-    .buttons-row {
-        display: flex;
-        gap: 0.75rem;
-    }
+            .welcome-section p {
+                font-size: 1.05rem;
+            }
 
-    #userInput {
-        font-size: 1.1rem;
-        min-height: 75px;
-    }
+            .input-container {
+                display: flex;
+                flex-direction: row;
+                align-items: stretch;
+            }
 
-    #sendBtn, .image-upload-label {
-        width: 90px;
-        height: 90px;
-    }
+            .buttons-row {
+                display: flex;
+                gap: 0.75rem;
+            }
 
-    .image-upload-label {
-        font-size: 0.65rem;
-    }
+            #userInput {
+                font-size: 1.1rem;
+                min-height: 75px;
+            }
 
-    }
-    .print-chat-btn {
-        width: 140px;
-        height: 140px;
-        font-size: 0.85rem;
-    }
-}
+            #sendBtn, .image-upload-label {
+                width: 90px;
+                height: 90px;
+            }
+
+            .image-upload-label {
+                font-size: 0.65rem;
+            }
+
+            .print-chat-btn {
+                width: 140px;
+                height: 140px;
+                font-size: 0.85rem;
+            }
+        }
 
 /* Welcome Overlay for Non-Logged-In Users */
 .welcome-overlay {
