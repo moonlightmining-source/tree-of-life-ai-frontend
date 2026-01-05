@@ -1359,36 +1359,7 @@
     <script src="app.js"></script>
 
     <script>
-        // Check if user is logged in when page loads
-document.addEventListener('DOMContentLoaded', () => {
-    const token = localStorage.getItem('token');
-    
-    if (!token) {
-        // Show welcome screen instead of error
-        document.getElementById('welcome-overlay').style.display = 'flex';
-        
-        // Optionally disable chat input
-        const messageInput = document.getElementById('message-input');
-        const sendBtn = document.getElementById('send-btn');
-        
-        if (messageInput) {
-            messageInput.disabled = true;
-            messageInput.placeholder = 'Sign up free to start chatting...';
-        }
-        
-        if (sendBtn) {
-            sendBtn.disabled = true;
-        }
-    }
-});
-
-function goToSignup() {
-    window.location.href = 'auth.html';
-}
-
-function goToLogin() {
-    window.location.href = 'auth.html?mode=login';
-}
+       
         // Show Pro Dashboard button only for Pro users
         async function checkProStatus() {
             const API_URL = window.location.hostname === 'localhost' 
