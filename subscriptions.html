@@ -188,6 +188,49 @@
             margin-bottom: 3rem;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
         }
+        /* BILLING TOGGLE */
+        .billing-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .toggle-btn {
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 10px;
+            color: var(--amber-light);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .toggle-btn:hover {
+            border-color: var(--amber-light);
+            background: rgba(212, 165, 116, 0.1);
+        }
+
+        .toggle-btn.active {
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+            border-color: var(--peach-gold);
+        }
+
+        .save-badge {
+            display: inline-block;
+            background: #22c55e;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-left: 0.5rem;
+        }
 
         /* MESSAGE */
         .message {
@@ -291,6 +334,12 @@
             font-size: 1.2rem;
             color: var(--bronze-light);
             font-weight: 400;
+        }
+        .annual-note {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--bronze-light);
+            margin-top: 0.25rem;
         }
 
         .plan-description {
