@@ -2487,7 +2487,12 @@ function isPaidUser() {
 
         async function loadProfile() {
             try {
-                const response = await fetch(`${API_URL}/api/health/profile`, {
+                // ✅ Use member_id if viewing family member profile
+                const endpoint = window.currentMemberId 
+                    ? `${API_URL}/api/health/profile?member_id=${window.currentMemberId}`
+                    : `${API_URL}/api/health/profile`;
+                
+                const response = await fetch(endpoint, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     }
