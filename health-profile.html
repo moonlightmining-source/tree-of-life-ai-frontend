@@ -2492,6 +2492,8 @@ function isPaidUser() {
                     ? `${API_URL}/api/health/profile?member_id=${window.currentMemberId}`
                     : `${API_URL}/api/health/profile`;
                 
+                console.log('🔍 Loading profile from:', endpoint);
+                
                 const response = await fetch(endpoint, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
