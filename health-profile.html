@@ -2039,6 +2039,18 @@ function isPaidUser() {
         // ==================== INITIALIZATION ====================
 
         document.addEventListener('DOMContentLoaded', function() {
+             // ✅ CHECK FOR MEMBER_ID IN URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const memberId = urlParams.get('member_id');
+            
+            if (memberId) {
+                console.log('📋 Loading profile for member:', memberId);
+                document.querySelector('.profile-title').textContent = '👤 Family Member Health Profile';
+                window.currentMemberId = memberId;
+            } else {
+                console.log('📋 Loading profile for account owner');
+                window.currentMemberId = null;
+            }
             document.getElementById('testDateInput').valueAsDate = new Date();
             
             loadUserData();
