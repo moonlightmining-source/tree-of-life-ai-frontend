@@ -540,15 +540,16 @@
             return date.toLocaleDateString();
         }
 
-        function viewClient(activityId) {
+       function viewClient(activityId) {
             const client = allClients.find(c => c.id === activityId);
             if (client) {
-                window.location.href = `client-editor.html?client=${activityId}`;
+                // Use client_id instead of id (which is the same now, but being explicit)
+                window.location.href = `client-editor.html?client=${client.client_id}`;
             }
         }
 
         async function deleteActivity(activityId, clientName) {
-            if (!confirm(`Remove ${clientName} from recent activity list?\n\nNote: This only removes them from this view, not from your client list.`)) {
+            if (!confirm(`⚠️ DELETE CLIENT: ${clientName}?\n\nThis will permanently delete:\n• Client profile\n• All assigned protocols\n• All messages\n• All compliance logs\n\nThis action CANNOT be undone!`)) {
                 return;
             }
 
@@ -564,14 +565,14 @@
                     allClients = allClients.filter(c => c.id !== activityId);
                     renderClientActivity(allClients);
                     await loadStatistics(token);
-                    alert('Client removed from activity list');
+                    alert('Client permanently deleted');
                 } else {
                     const error = await response.json();
                     alert('Failed to delete: ' + (error.detail || 'Unknown error'));
                 }
             } catch (error) {
                 console.error('Error deleting activity:', error);
-                alert('Error deleting activity: ' + error.message);
+                alert('Error deleting client: ' + error.message);
             }
         }
 
