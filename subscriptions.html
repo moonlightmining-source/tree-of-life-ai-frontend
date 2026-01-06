@@ -515,80 +515,113 @@
 
         <h1>Choose Your Plan</h1>
         <p class="subtitle">Integrative health intelligence for everyone</p>
-
-        <div class="pricing-grid">
+         <!-- BILLING TOGGLE -->
+        <div class="billing-toggle">
+            <button class="toggle-btn active" id="monthly-btn" onclick="switchBilling('monthly')">
+                Monthly
+            </button>
+            <button class="toggle-btn" id="annual-btn" onclick="switchBilling('annual')">
+                Annual
+                <span class="save-badge">Save 20%</span>
+            </button>
+        </div>
+       
+       <div class="pricing-grid">
             <!-- FREE PLAN -->
             <div class="pricing-card" id="plan-free">
                 <div class="plan-name">Free</div>
-                <div class="plan-price">$0<small>/month</small></div>
-                <p class="plan-description">Explore integrative health</p>
+                <div class="plan-price">
+                    <span class="monthly-price">$0<small>/month</small></span>
+                    <span class="annual-price" style="display: none;">$0<small>/year</small></span>
+                </div>
+                <p class="plan-description">Try integrative health AI</p>
                 <ul class="plan-features">
-                    <li>10 conversations/month</li>
-                    <li>All 10 medical modalities</li>
+                    <li>10 AI conversations/month</li>
                     <li>Basic health profile</li>
+                    <li>Health tracking basics</li>
+                    <li>Educational resources</li>
+                    <li>Community support</li>
                 </ul>
                 <button class="plan-cta" id="btn-free" onclick="handleFreePlan()">Get Started</button>
             </div>
 
-            <!-- BASIC $9.99 -->
+            <!-- BASIC $19 -->
             <div class="pricing-card featured" id="plan-basic">
                 <span class="featured-badge">Best Value</span>
                 <div class="plan-name">Basic</div>
-                <div class="plan-price">$9.99<small>/month</small></div>
-                <p class="plan-description">Essential health management</p>
+                <div class="plan-price">
+                    <span class="monthly-price">$19<small>/month</small></span>
+                    <span class="annual-price" style="display: none;">$182<small>/year</small>
+                        <span class="annual-note">($15.20/mo)</span>
+                    </span>
+                </div>
+                <p class="plan-description">Personal health management</p>
                 <ul class="plan-features">
-                    <li>100 conversations/month</li>
-                    <li>All 10 medical modalities</li>
+                    <li>100 AI conversations/month</li>
                     <li>1 family member profile</li>
+                    <li>Advanced health profile</li>
+                    <li>Medical history tracking</li>
+                    <li>Medication management</li>
+                    <li>Upload & analyze lab results</li>
+                    <li>Health metrics tracking</li>
+                    <li>Image analysis (symptoms, herbs, documents)</li>
                     <li>30-day chat history</li>
-                    <li>Document export</li>
-                    <li>Advanced Health Profile (Medical History, Medication history, Uplaod test results,Track health metrics)</li>
-                    <li>Image analysis</li>
+                    <li>Export to PDF/print</li>
                 </ul>
                 <button class="plan-cta" id="btn-basic" onclick="upgradeToBasic()">Start Basic</button>
             </div>
 
-            <!-- PREMIUM $19.99 -->
+            <!-- PREMIUM $29 -->
             <div class="pricing-card" id="plan-premium">
                 <div class="plan-name">Premium</div>
-                <div class="plan-price">$19.99<small>/month</small></div>
+                <div class="plan-price">
+                    <span class="monthly-price">$29<small>/month</small></span>
+                    <span class="annual-price" style="display: none;">$278<small>/year</small>
+                        <span class="annual-note">($23.20/mo)</span>
+                    </span>
+                </div>
                 <p class="plan-description">Complete family solution</p>
                 <ul class="plan-features">
-                    <li>Unlimited conversations</li>
-                    <li>All 10 medical modalities</li>
+                    <li>Unlimited AI conversations</li>
                     <li>5 family member profiles</li>
+                    <li>Everything in Basic</li>
                     <li>1-year chat history</li>
-                    <li>Document export</li>
-                    <li>Advanced Health Profile (Medical History, Medication history, Uplaod test results,Track health metrics)</li>
-                    <li>Image analysis</li>
+                    <li>Priority AI response</li>
+                    <li>Advanced health analytics</li>
+                    <li>Trend analysis & insights</li>
+                    <li>Wellness recommendations</li>
+                    <li>Family health dashboard</li>
                 </ul>
                 <button class="plan-cta" id="btn-premium" onclick="upgradeToPremium()">Start Premium</button>
             </div>
 
-            <!-- PRO $29.99 -->
+            <!-- PRO $129 -->
             <div class="pricing-card" id="plan-pro">
                 <div class="plan-name">Pro</div>
-                <div class="plan-price">$29.99<small>/month</small></div>
-                <p class="plan-description">For practitioners & professionals</p>
+                <div class="plan-price">
+                    <span class="monthly-price">$129<small>/month</small></span>
+                    <span class="annual-price" style="display: none;">$1,238<small>/year</small>
+                        <span class="annual-note">($103.20/mo)</span>
+                    </span>
+                </div>
+                <p class="plan-description">For health practitioners</p>
                 <ul class="plan-features">
                     <li>Everything in Premium</li>
-                    <li>Unlimited family/client profiles</li>
-                    <li>Client management</li>
-                    <li>Pro dashboard with -Custom protocols-Advanced analytics-Detailed client monitoring-Practitioner resources page</li>
-                    <li>Advanced Health Profile (Medical History, Medication history, Uplaod test results,Track health metrics)</li>
-                    <li>Iamge analysis</li>
+                    <li>Unlimited client profiles</li>
+                    <li>Client management system</li>
+                    <li>Protocol editor & library</li>
+                    <li>Assign protocols to clients</li>
+                    <li>Client portal (secure links)</li>
+                    <li>Two-way messaging with images</li>
+                    <li>Compliance tracking</li>
+                    <li>Pro dashboard with analytics</li>
+                    <li>Practice management tools</li>
+                    <li>Client progress monitoring</li>
+                    <li>Professional resources</li>
                 </ul>
                 <button class="plan-cta" id="btn-pro" onclick="upgradeToPro()">Go Pro</button>
             </div>
         </div>
-    </div>
-
-    <!-- FOOTER -->
-    <div class="footer">
-        <div class="footer-info">
-            © 2024 Tree of Life AI • Educational information only • Not medical advice • Always consult qualified healthcare professionals
-        </div>
-    </div>
 
     <script>
         const API_URL = window.location.hostname === 'localhost' 
@@ -713,6 +746,54 @@
         }
 
         console.log('💳 Subscriptions page - Beautiful octagonal design!');
+        let billingMode = 'monthly';
+
+        function switchBilling(mode) {
+            billingMode = mode;
+            
+            // Update toggle buttons
+            document.getElementById('monthly-btn').classList.toggle('active', mode === 'monthly');
+            document.getElementById('annual-btn').classList.toggle('active', mode === 'annual');
+            
+            // Show/hide prices
+            document.querySelectorAll('.monthly-price').forEach(el => {
+                el.style.display = mode === 'monthly' ? 'inline' : 'none';
+            });
+            document.querySelectorAll('.annual-price').forEach(el => {
+                el.style.display = mode === 'annual' ? 'inline' : 'none';
+            });
+        }
+
+        // Update checkout functions to use billingMode
+        async function upgradeToBasic() {
+            if (!isLoggedIn) { window.location.href = 'auth.html'; return; }
+            await createCheckout('basic', billingMode);
+        }
+        async function upgradeToPremium() {
+            if (!isLoggedIn) { window.location.href = 'auth.html'; return; }
+            await createCheckout('premium', billingMode);
+        }
+        async function upgradeToPro() {
+            if (!isLoggedIn) { window.location.href = 'auth.html'; return; }
+            await createCheckout('pro', billingMode);
+        }
+
+        async function createCheckout(tier, billing = 'monthly') {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_URL}/api/subscription/create-checkout`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tier: tier, billing: billing })
+                });
+                if (!response.ok) throw new Error('Failed to create checkout');
+                const data = await response.json();
+                if (data.checkout_url) window.location.href = data.checkout_url;
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Error: ' + error.message, 'error');
+            }
+        }
     </script>
 </body>
 </html>
