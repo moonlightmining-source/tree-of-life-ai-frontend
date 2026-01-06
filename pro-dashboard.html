@@ -513,10 +513,10 @@
                     <td>${activity.progress || 0}%</td>
                     <td>
                         <div class="action-buttons">
-                            <button class="btn-view btn" onclick="viewClient('${activity.id}')">
+                            <button class="btn-view btn" onclick="viewClient(${activity.id})">
                                 View
                             </button>
-                            <button class="btn-danger btn" onclick="deleteActivity('${activity.id}', '${activity.client_name}')">
+                            <button class="btn-danger btn" onclick="deleteActivity(${activity.id}, '${activity.client_name}')">
                                 Delete
                             </button>
                         </div>
