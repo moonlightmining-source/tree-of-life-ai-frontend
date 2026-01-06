@@ -1324,6 +1324,32 @@
     </div>
 
     <script src="app.js"></script>
+    <script>
+        // ✅ CHECK FOR FAMILY MEMBER CONTEXT
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectedMemberId = localStorage.getItem('selectedMemberId');
+            const selectedMemberName = localStorage.getItem('selectedMemberName');
+            
+            if (selectedMemberId && selectedMemberName) {
+                console.log('👤 Chatting as:', selectedMemberName, '(ID:', selectedMemberId, ')');
+                
+                // Update welcome message
+                const welcomeSection = document.querySelector('.welcome-section');
+                if (welcomeSection) {
+                    welcomeSection.innerHTML = `
+                        <h2>Welcome! Chatting as ${selectedMemberName}</h2>
+                        <p>All health guidance will be personalized for ${selectedMemberName}</p>
+                    `;
+                }
+                
+                // Store for app.js to use
+                window.currentFamilyMember = {
+                    id: selectedMemberId,
+                    name: selectedMemberName
+                };
+            }
+        });
+    </script>
 
     <script>
        
