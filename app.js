@@ -352,14 +352,27 @@ async function sendMessage() {
         // ✅ Clear the pending image after successful send
         removeImage();
         
-    } catch (error) {
-        console.error('Error sending message:', error);
+   } catch (error) {
+        console.error('❌ Full error object:', error);
+        
+        // Extract readable error message
+        let errorMessage = 'Sorry, I encountered an error. Please try again.';
+        
+        if (error.message && error.message !== '[object Object]') {
+            errorMessage = error.message;
+        } else if (error.detail) {
+            errorMessage = error.detail;
+        } else if (typeof error === 'string') {
+            errorMessage = error;
+        }
+        
+        console.error('📋 Error message:', errorMessage);
         
         // Don't show error if it's auth error (already handled)
-        if (error.message !== 'Authentication required') {
+        if (errorMessage !== 'Authentication required') {
             displayMessage({
                 role: 'assistant',
-                content: `❌ ${error.message || 'Sorry, I encountered an error. Please try again.'}`,
+                content: `❌ ${errorMessage}`,
                 timestamp: new Date().toISOString()
             });
         }
