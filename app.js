@@ -440,10 +440,14 @@ async function sendMessageToConversation(message, imageData = null) {
     
     // Build request body with optional image and system prompt
     const requestBody = {
-        message: systemPrompt 
+        content: systemPrompt 
             ? `${systemPrompt}\n\nUser question: ${message}`
-            : message
+            : message,
+        member_id: window.currentFamilyMember?.id || null,
+        member_name: window.currentFamilyMember?.name || null
     };
+    
+    console.log('👤 Sending message with member context:', window.currentFamilyMember);
     
     // Add image if present
     if (imageData) {
