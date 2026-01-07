@@ -457,7 +457,7 @@ async function sendMessageToConversation(message, imageData = null) {
         content: systemPrompt 
             ? `${systemPrompt}\n\nUser question: ${message}`
             : message,
-        member_id: window.currentFamilyMember?.id || null,
+        member_id: window.currentFamilyMember?.id ? parseInt(window.currentFamilyMember.id) : null,
         member_name: window.currentFamilyMember?.name || null
     };
     
