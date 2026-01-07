@@ -391,9 +391,10 @@ async function createConversation(initialMessage, imageData = null) {
         initial_message: systemPrompt 
             ? `${systemPrompt}\n\nUser question: ${initialMessage}`
             : initialMessage,
-        member_id: window.currentFamilyMember?.id || null,
+        member_id: window.currentFamilyMember?.id ? parseInt(window.currentFamilyMember.id) : null,
         member_name: window.currentFamilyMember?.name || null
     };
+
     
     console.log('👤 Creating conversation with member context:', window.currentFamilyMember);
     
