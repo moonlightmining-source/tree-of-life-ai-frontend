@@ -377,8 +377,12 @@ async function createConversation(initialMessage, imageData = null) {
     const requestBody = {
         initial_message: systemPrompt 
             ? `${systemPrompt}\n\nUser question: ${initialMessage}`
-            : initialMessage
+            : initialMessage,
+        member_id: window.currentFamilyMember?.id || null,
+        member_name: window.currentFamilyMember?.name || null
     };
+    
+    console.log('👤 Creating conversation with member context:', window.currentFamilyMember);
     
     // Add image if present
     if (imageData) {
