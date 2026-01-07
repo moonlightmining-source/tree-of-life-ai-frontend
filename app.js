@@ -424,23 +424,7 @@ async function createConversation(initialMessage, imageData = null) {
     
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        console.error('❌ Backend error response:', errorData);
-        
-        // Extract error message from validation errors
-        let errorMsg = 'Failed to create conversation';
-        if (errorData.detail) {
-            if (Array.isArray(errorData.detail)) {
-                // Pydantic validation errors are arrays
-                errorMsg = errorData.detail.map(e => {
-                    if (e.msg) return `${e.loc?.join('.') || 'field'}: ${e.msg}`;
-                    return JSON.stringify(e);
-                }).join(', ');
-            } else {
-                errorMsg = errorData.detail;
-            }
-        }
-        
-        throw new Error(errorMsg);
+        throw new Error(errorData.detail || 'Failed to create conversation');
     }
     
     const data = await response.json();
