@@ -486,9 +486,21 @@ async function sendMessageToConversation(message, imageData = null) {
         throw new Error('Authentication required');
     }
     
-    if (!response.ok) {
+   if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.detail || 'Failed to send message');
+        console.error('❌ Backend error response:', errorData);
+        
+        // Extract error message
+        let errorMsg = 'Failed to send message';
+        if (errorData.detail) {
+            if (Array.isArray(errorData.detail)) {
+                errorMsg = errorData.detail.map(e => e.msg || JSON.stringify(e)).join(', ');
+            } else {
+                errorMsg = errorData.detail;
+            }
+        }
+        
+        throw new Error(errorMsg);
     }
     
     const data = await response.json();
