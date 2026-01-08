@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Check-In - Tree of Life AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --amber-light: #D4A574;
+            --amber-medium: #C19A6B;
+            --bronze-deep: #B8860B;
+            --bronze-light: #A0826D;
+            --peach-gold: #EEC591;
+            --pure-black: #000;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: url('Images/Background.png') center center fixed;
+            background-size: cover;
+            color: var(--amber-light);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--amber-light);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--amber-medium);
+            font-size: 1.1rem;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 8px;
+            color: var(--amber-light);
+            text-decoration: none;
+            margin-bottom: 2rem;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(0, 0, 0, 0.7);
+            border-color: var(--amber-light);
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* CLIENT LIST */
+        .client-list-section {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 1.5rem;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .client-list-section h2 {
+            color: var(--peach-gold);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .client-item {
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .client-item:hover {
+            border-color: var(--amber-light);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .client-item.active {
+            border-color: var(--peach-gold);
+            background: rgba(212, 165, 116, 0.1);
+        }
+
+        .client-name {
+            font-weight: bold;
+            color: var(--amber-light);
+            margin-bottom: 0.25rem;
+        }
+
+        .client-protocol {
+            font-size: 0.9rem;
+            color: var(--amber-medium);
+        }
+
+        .client-week {
+            font-size: 0.85rem;
+            color: var(--bronze-light);
+            margin-top: 0.25rem;
+        }
+
+        .unread-badge {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: #dc2626;
+            color: white;
+            border-radius: 12px;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        /* TAB SYSTEM */
+        .tab-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--bronze-deep);
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--amber-medium);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .tab-btn:hover {
+            color: var(--amber-light);
+        }
+
+        .tab-btn.active {
+            color: var(--peach-gold);
+            border-bottom-color: var(--peach-gold);
+        }
+
+        .tab-badge {
+            position: absolute;
+            top: 0.25rem;
+            right: 0.25rem;
+            background: #dc2626;
+            color: white;
+            border-radius: 10px;
+            padding: 0.15rem 0.4rem;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* CHECK-IN FORM */
+        .checkin-section {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .checkin-section h2 {
+            color: var(--peach-gold);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--amber-medium);
+        }
+
+        .form-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            color: var(--amber-light);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 8px;
+            color: var(--amber-light);
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--amber-light);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* COMPLIANCE SLIDER */
+        .slider-container {
+            padding: 1rem 0;
+        }
+
+        .slider-value {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--peach-gold);
+            margin-bottom: 1rem;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(to right, #dc2626, #f59e0b, #22c55e);
+            border-radius: 5px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background: var(--amber-light);
+            border: 3px solid var(--bronze-deep);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            background: var(--amber-light);
+            border: 3px solid var(--bronze-deep);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--bronze-light);
+        }
+
+        /* CLIENT SUBMISSIONS */
+        .submissions-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .submission-item {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .submission-item.unread {
+            border-color: #dc2626;
+            background: rgba(220, 38, 38, 0.1);
+        }
+
+        .submission-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(184, 134, 11, 0.3);
+        }
+
+        .submission-date {
+            color: var(--amber-medium);
+            font-size: 0.9rem;
+        }
+
+        .submission-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .submission-badge.unread {
+            background: #dc2626;
+            color: white;
+        }
+
+        .submission-badge.read {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            border: 1px solid #22c55e;
+        }
+
+        .submission-content {
+            margin-bottom: 1rem;
+        }
+
+        .submission-message {
+            color: var(--amber-light);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .submission-image {
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 8px;
+            border: 2px solid var(--bronze-deep);
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submission-image:hover {
+            border-color: var(--amber-light);
+            transform: scale(1.02);
+        }
+
+        .compliance-checks {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--amber-medium);
+            font-size: 0.9rem;
+        }
+
+        .check-item.checked {
+            color: #22c55e;
+        }
+
+        .check-item .icon {
+            font-size: 1.2rem;
+        }
+
+        .submission-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn-secondary {
+            padding: 0.5rem 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 8px;
+            color: var(--amber-light);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--amber-light);
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        /* BUTTONS */
+        .btn-primary {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 165, 116, 0.5);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* HISTORY SECTION */
+        .history-section {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .history-section h2 {
+            color: var(--peach-gold);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .history-item {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(184, 134, 11, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-week {
+            font-weight: bold;
+            color: var(--amber-light);
+        }
+
+        .history-score {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--peach-gold);
+        }
+
+        .history-notes {
+            color: var(--amber-medium);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .history-date {
+            font-size: 0.8rem;
+            color: var(--bronze-light);
+            margin-top: 0.25rem;
+        }
+
+        .no-history {
+            text-align: center;
+            padding: 2rem;
+            color: var(--amber-medium);
+        }
+
+        /* SUCCESS MESSAGE */
+        .success-message {
+            display: none;
+            padding: 1rem;
+            background: rgba(34, 197, 94, 0.2);
+            border: 2px solid #22c55e;
+            border-radius: 10px;
+            color: #22c55e;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .success-message.active {
+            display: block;
+        }
+
+        /* IMAGE MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            color: var(--amber-light);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .client-list-section {
+                max-height: 300px;
+            }
+        }
+
+        @media (max-width: 767px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .tab-container {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .tab-btn {
+                border-bottom: 1px solid var(--bronze-deep);
+                border-left: 3px solid transparent;
+            }
+
+            .tab-btn.active {
+                border-left-color: var(--peach-gold);
+                border-bottom-color: var(--bronze-deep);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="pro-dashboard.html" class="back-btn">← Back to Dashboard</a>
+
+        <div class="header">
+            <h1>Client Management</h1>
+            <p>Check-ins, submissions, and progress tracking</p>
+        </div>
+
+        <div class="main-grid">
+            <!-- CLIENT LIST -->
+            <div class="client-list-section">
+                <h2>Active Clients</h2>
+                <div id="clientList">
+                    <div style="text-align: center; padding: 2rem; color: var(--amber-medium);">
+                        Loading clients...
+                    </div>
+                </div>
+            </div>
+
+            <!-- MAIN CONTENT AREA -->
+            <div class="checkin-section">
+                <h2 id="checkinTitle">Select a Client</h2>
+                
+                <div id="successMessage" class="success-message">
+                    ✓ Check-in logged successfully!
+                </div>
+
+                <div id="emptyState" class="empty-state">
+                    <p>👈 Select a client from the list to begin</p>
+                </div>
+
+                <!-- TAB SYSTEM -->
+                <div id="tabSystem" style="display: none;">
+                    <div class="tab-container">
+                        <button class="tab-btn active" onclick="switchTab('compliance')">
+                            Log Compliance
+                        </button>
+                        <button class="tab-btn" onclick="switchTab('submissions')" id="submissionsTab">
+                            Client Submissions
+                            <span class="tab-badge" id="submissionsBadge" style="display: none;">0</span>
+                        </button>
+                    </div>
+
+                    <!-- TAB 1: COMPLIANCE LOGGING -->
+                    <div id="complianceTab" class="tab-content active">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Current Protocol</label>
+                                <input type="text" id="currentProtocol" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Protocol Week</label>
+                                <input type="number" id="weekNumber" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Compliance Score (0-100)</label>
+                                <div class="slider-container">
+                                    <div class="slider-value" id="sliderValue">50</div>
+                                    <input type="range" id="complianceSlider" min="0" max="100" value="50">
+                                    <div class="slider-labels">
+                                        <span>0 - Not Following</span>
+                                        <span>50 - Partial</span>
+                                        <span>100 - Excellent</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Notes (Optional)</label>
+                                <textarea id="checkInNotes" placeholder="Progress notes, challenges, observations..."></textarea>
+                            </div>
+
+                            <button class="btn-primary" onclick="submitCheckIn()">Save Check-In</button>
+                        </div>
+                    </div>
+
+                    <!-- TAB 2: CLIENT SUBMISSIONS -->
+                    <div id="submissionsTab" class="tab-content">
+                        <div id="submissionsContainer" class="submissions-container">
+                            <div style="text-align: center; padding: 2rem; color: var(--amber-medium);">
+                                Loading submissions...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COMPLIANCE HISTORY -->
+        <div class="history-section">
+            <h2>Recent Compliance History</h2>
+            <div id="complianceHistory">
+                <div class="no-history">Select a client to view history</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- IMAGE MODAL -->
+    <div id="imageModal" class="modal" onclick="closeImageModal()">
+        <span class="modal-close">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <script>
+        const API_BASE = 'https://treeoflife-vn25.onrender.com';
+        let currentClient = null;
+        let currentAssignment = null;
+        let clients = [];
+        let assignments = [];
+        let currentTab = 'compliance';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+            
+            if (!token) {
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            await loadData();
+            setupSlider();
+        });
+
+        function setupSlider() {
+            const slider = document.getElementById('complianceSlider');
+            const sliderValue = document.getElementById('sliderValue');
+            
+            if (slider && sliderValue) {
+                slider.addEventListener('input', function() {
+                    sliderValue.textContent = this.value;
+                });
+            }
+        }
+
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            if (tabName === 'compliance') {
+                document.getElementById('complianceTab').classList.add('active');
+            } else {
+                document.getElementById('submissionsTab').classList.add('active');
+                loadClientSubmissions();
+            }
+        }
+
+        async function loadData() {
+            try {
+                const token = localStorage.getItem('token');
+                
+                // Load clients
+                const clientsResponse = await fetch(`${API_BASE}/api/family/members`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (clientsResponse.ok) {
+                    const clientsData = await clientsResponse.json();
+                    clients = clientsData.members || [];
+                }
+
+                // Load assignments
+                const assignmentsResponse = await fetch(`${API_BASE}/api/client-protocols`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (assignmentsResponse.ok) {
+                    const assignmentsData = await assignmentsResponse.json();
+                    assignments = assignmentsData.assignments || [];
+                }
+
+                displayClients();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('clientList').innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: #dc2626;">
+                        <p>Failed to load clients</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function displayClients() {
+            const listContainer = document.getElementById('clientList');
+            
+            if (clients.length === 0) {
+                listContainer.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--amber-medium);">
+                        <p>No clients found</p>
+                    </div>
+                `;
+                return;
+            }
+
+            if (assignments.length === 0) {
+                listContainer.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--amber-medium);">
+                        <p>No protocol assignments found</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const clientsHTML = [];
+            
+            for (const client of clients) {
+                const assignment = assignments.find(a => 
+                    String(a.client_id) === String(client.id)
+                );
+                
+                if (assignment) {
+                    // Check for unread messages
+                    const unreadCount = await getUnreadCount(client.id);
+                    const unreadBadge = unreadCount > 0 ? `<span class="unread-badge">${unreadCount}</span>` : '';
+                    
+                    const protocolName = assignment.protocol_name || 'Unknown Protocol';
+                    const currentWeek = assignment.current_week || 1;
+                    const durationWeeks = assignment.duration_weeks || '?';
+                    
+                    clientsHTML.push(`
+                        <div class="client-item" onclick="selectClient(${client.id})">
+                            ${unreadBadge}
+                            <div class="client-name">${client.name || 'Unknown Client'}</div>
+                            <div class="client-protocol">${protocolName}</div>
+                            <div class="client-week">Week ${currentWeek} of ${durationWeeks}</div>
+                        </div>
+                    `);
+                }
+            }
+
+            if (clientsHTML.length === 0) {
+                listContainer.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--amber-medium);">
+                        <p>No clients with active protocols</p>
+                    </div>
+                `;
+            } else {
+                listContainer.innerHTML = clientsHTML.join('');
+            }
+        }
+
+        async function getUnreadCount(clientId) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/client-messages/${clientId}/count`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.unread_count || 0;
+                }
+            } catch (error) {
+                console.error('Error getting unread count:', error);
+            }
+            return 0;
+        }
+
+        async function selectClient(clientId) {
+            // Update UI
+            document.querySelectorAll('.client-item').forEach(item => item.classList.remove('active'));
+            event.target.closest('.client-item').classList.add('active');
+
+            // Get client and assignment
+            currentClient = clients.find(c => String(c.id) === String(clientId));
+            currentAssignment = assignments.find(a => String(a.client_id) === String(clientId));
+
+            if (!currentClient || !currentAssignment) {
+                alert('Error: Client or assignment not found');
+                return;
+            }
+
+            // Update form
+            document.getElementById('checkinTitle').textContent = `${currentClient.name}`;
+            document.getElementById('currentProtocol').value = currentAssignment.protocol_name || 'Unknown';
+            document.getElementById('weekNumber').value = currentAssignment.current_week || 1;
+            document.getElementById('complianceSlider').value = 50;
+            document.getElementById('sliderValue').textContent = '50';
+            document.getElementById('checkInNotes').value = '';
+
+            // Show tabs, hide empty state
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('tabSystem').style.display = 'block';
+            document.getElementById('successMessage').classList.remove('active');
+
+            // Load data based on current tab
+            if (currentTab === 'compliance') {
+                await loadComplianceHistory();
+            } else {
+                await loadClientSubmissions();
+            }
+
+            // Update submissions badge
+            const unreadCount = await getUnreadCount(clientId);
+            const badge = document.getElementById('submissionsBadge');
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount;
+                badge.style.display = 'block';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        async function loadClientSubmissions() {
+            const container = document.getElementById('submissionsContainer');
+            
+            if (!currentClient) {
+                container.innerHTML = '<div class="no-history">No client selected</div>';
+                return;
+            }
+
+            container.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--amber-medium);">Loading...</div>';
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/client-messages/${currentClient.id}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const messages = data.messages || [];
+
+                    if (messages.length === 0) {
+                        container.innerHTML = `
+                            <div class="no-history">
+                                <p>No submissions yet</p>
+                                <p style="margin-top: 0.5rem; font-size: 0.9rem;">Client can submit messages and images via their portal link</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    container.innerHTML = messages.map(msg => {
+                        const isUnread = !msg.read_at;
+                        const imageHTML = msg.image_url ? `
+                            <img src="${msg.image_url}" 
+                                 class="submission-image" 
+                                 onclick="openImageModal('${msg.image_url}')"
+                                 alt="Client submission">
+                        ` : '';
+
+                        const complianceHTML = msg.compliance_data ? formatCompliance(msg.compliance_data) : '';
+
+                        return `
+                            <div class="submission-item ${isUnread ? 'unread' : ''}">
+                                <div class="submission-header">
+                                    <span class="submission-date">${new Date(msg.submitted_at).toLocaleString()}</span>
+                                    <span class="submission-badge ${isUnread ? 'unread' : 'read'}">
+                                        ${isUnread ? 'NEW' : 'READ'}
+                                    </span>
+                                </div>
+                                <div class="submission-content">
+                                    ${msg.message_text ? `<div class="submission-message">${msg.message_text}</div>` : ''}
+                                    ${imageHTML}
+                                    ${complianceHTML}
+                                </div>
+                                ${isUnread ? `
+                                    <div class="submission-actions">
+                                        <button class="btn-secondary" onclick="markAsRead(${msg.id})">Mark as Read</button>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    container.innerHTML = '<div class="no-history">Failed to load submissions</div>';
+                }
+            } catch (error) {
+                console.error('Error loading submissions:', error);
+                container.innerHTML = '<div class="no-history">Error loading submissions</div>';
+            }
+        }
+
+        function formatCompliance(complianceData) {
+            if (!complianceData || typeof complianceData !== 'object') return '';
+
+            const checks = Object.entries(complianceData).map(([key, value]) => `
+                <div class="check-item ${value ? 'checked' : ''}">
+                    <span class="icon">${value ? '✓' : '○'}</span>
+                    <span>${formatCheckLabel(key)}</span>
+                </div>
+            `).join('');
+
+            return `
+                <div class="compliance-checks">
+                    ${checks}
+                </div>
+            `;
+        }
+
+        function formatCheckLabel(key) {
+            return key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        async function markAsRead(messageId) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/client-messages/${messageId}/read`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    await loadClientSubmissions();
+                    await displayClients(); // Refresh unread badges
+                }
+            } catch (error) {
+                console.error('Error marking as read:', error);
+            }
+        }
+
+        function openImageModal(imageUrl) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.classList.add('active');
+            modalImg.src = imageUrl;
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+
+        async function loadComplianceHistory() {
+            const historyContainer = document.getElementById('complianceHistory');
+            
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/client-protocols/${currentAssignment.id}/compliance`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const logs = data.logs || [];
+
+                    if (logs.length === 0) {
+                        historyContainer.innerHTML = '<div class="no-history">No compliance history yet</div>';
+                        return;
+                    }
+
+                    historyContainer.innerHTML = logs.map(log => `
+                        <div class="history-item">
+                            <div>
+                                <div class="history-week">Week ${log.week_number}</div>
+                                <div class="history-date">${new Date(log.logged_at).toLocaleDateString()}</div>
+                                ${log.notes ? `<div class="history-notes">${log.notes}</div>` : ''}
+                            </div>
+                            <div class="history-score">${log.compliance_score}</div>
+                        </div>
+                    `).join('');
+                } else {
+                    historyContainer.innerHTML = '<div class="no-history">Failed to load history</div>';
+                }
+            } catch (error) {
+                console.error('Error loading compliance history:', error);
+                historyContainer.innerHTML = '<div class="no-history">Error loading history</div>';
+            }
+        }
+
+        async function submitCheckIn() {
+            if (!currentClient || !currentAssignment) {
+                alert('Please select a client first');
+                return;
+            }
+
+            const complianceScore = parseInt(document.getElementById('complianceSlider').value);
+            const notes = document.getElementById('checkInNotes').value.trim();
+            const weekNumber = parseInt(document.getElementById('weekNumber').value);
+
+            const data = {
+                client_protocol_id: currentAssignment.id,
+                week_number: weekNumber,
+                compliance_score: complianceScore,
+                notes: notes || null
+            };
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/compliance-logs`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    document.getElementById('successMessage').classList.add('active');
+                    document.getElementById('complianceSlider').value = 50;
+                    document.getElementById('sliderValue').textContent = '50';
+                    document.getElementById('checkInNotes').value = '';
+                    await loadComplianceHistory();
+                    setTimeout(() => {
+                        document.getElementById('successMessage').classList.remove('active');
+                    }, 3000);
+                } else {
+                    const error = await response.json();
+                    alert(`Failed to save check-in: ${error.detail || 'Unknown error'}`);
+                }
+            } catch (error) {
+                console.error('Error submitting check-in:', error);
+                alert('Failed to save check-in. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>
