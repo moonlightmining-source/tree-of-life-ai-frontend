@@ -989,9 +989,34 @@
             // Update form
             document.getElementById('checkinTitle').textContent = `${currentClient.name}`;
             document.getElementById('currentProtocol').value = currentAssignment.protocol_name || 'Unknown';
-            document.getElementById('weekNumber').value = currentAssignment.current_week || 1;
-            document.getElementById('complianceSlider').value = 50;
-            document.getElementById('sliderValue').textContent = '50';
+            document.getElementById('weekNumber').value = currentAssignment.current_week || 1;            
+            // ✅ Load most recent compliance score and set slider
+            try {
+                const token = localStorage.getItem('token');
+                const complianceResponse = await fetch(`${API_BASE}/api/compliance/${currentAssignment.id}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (complianceResponse.ok) {
+                    const complianceData = await complianceResponse.json();
+                    const logs = complianceData.logs || [];
+                    
+                    if (logs.length > 0) {
+                        const latestScore = logs[0].compliance_score;
+                        document.getElementById('complianceSlider').value = latestScore;
+                        document.getElementById('sliderValue').textContent = latestScore;
+                        console.log('✅ Loaded latest compliance:', latestScore);
+                    } else {
+                        document.getElementById('complianceSlider').value = 50;
+                        document.getElementById('sliderValue').textContent = '50';
+                        console.log('ℹ️ No compliance history, using default: 50');
+                    }
+                }
+            } catch (error) {
+                console.error('❌ Error loading latest compliance:', error);
+                document.getElementById('complianceSlider').value = 50;
+                document.getElementById('sliderValue').textContent = '50';
+            }
             document.getElementById('checkInNotes').value = '';
 
             // Show tabs, hide empty state
