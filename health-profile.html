@@ -3402,8 +3402,10 @@ function isPaidUser() {
         // ==================== AI HEALTH ANALYSIS ====================
 
         function openAIAnalysis() {
-    // Check if user has Basic tier or higher
-    const userTier = localStorage.getItem('subscription_tier') || 'free';
+    // ✅ Use global variable OR localStorage as fallback
+    const userTier = userSubscriptionTier || localStorage.getItem('subscription_tier') || 'free';
+    
+    console.log('🔍 AI Analysis check - User tier:', userTier);
     
     if (userTier === 'free') {
         // Show upgrade message
