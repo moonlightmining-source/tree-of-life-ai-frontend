@@ -2085,19 +2085,25 @@ function isPaidUser() {
 
         // ==================== LOAD USER SUBSCRIPTION TIER ====================
 
-        async function loadUserData() {
-            try {
-                const response = await fetch(`${API_URL}/api/auth/me`, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
-                });
+       async function loadUserData() {
+    try {
+        const response = await fetch(`${API_URL}/api/auth/me`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    userSubscriptionTier = data.subscription_tier || 'free';
-                    updateUIForSubscription();
-                }
+        if (response.ok) {
+            const data = await response.json();
+            userSubscriptionTier = data.subscription_tier || 'free';
+            
+            // ✅ SAVE TO LOCALSTORAGE
+            localStorage.setItem('subscription_tier', userSubscriptionTier);
+            
+            console.log('✅ User tier loaded:', userSubscriptionTier);
+            
+            updateUIForSubscription();
+        }
             } catch (error) {
                 console.log('Could not load user data:', error);
                 userSubscriptionTier = 'free';
