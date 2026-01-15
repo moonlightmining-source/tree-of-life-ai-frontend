@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Gallery - Tree of Life AI</title>
+    <style>
+        :root {
+            --amber-light: #D4A574;
+            --amber-medium: #C19A6B;
+            --bronze-deep: #B8860B;
+            --bronze-light: #A0826D;
+            --peach-gold: #EEC591;
+            --pure-black: #000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: url('Images/Background.png') center center fixed;
+            background-size: cover;
+            color: var(--amber-light);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: -1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            color: var(--peach-gold);
+            text-shadow: 0 0 20px rgba(238, 197, 145, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--amber-medium);
+        }
+
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            width: 160px;
+            height: 160px;
+            background: url('Images/Button.png') center center;
+            background-size: cover;
+            color: var(--amber-light);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.4);
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 25px rgba(212, 165, 116, 0.7);
+            color: var(--peach-gold);
+            filter: brightness(1.2);
+        }
+
+        .tab-btn.active {
+            filter: brightness(1.3);
+            box-shadow: 0 0 30px rgba(238, 197, 145, 0.6);
+            transform: scale(1.1);
+        }
+
+        .gallery-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 20px;
+        }
+
+        .gallery-item {
+            background: rgba(0, 0, 0, 0.6);
+            border: 3px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: none;
+        }
+
+        .gallery-item.active {
+            display: block;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(212, 165, 116, 0.5);
+            border-color: var(--peach-gold);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .gallery-item h3 {
+            color: var(--peach-gold);
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .gallery-item p {
+            color: var(--amber-medium);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Lightbox Modal */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            background: rgba(0, 0, 0, 0.9);
+            border: 3px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 20px;
+            overflow: auto;
+        }
+
+        .lightbox-content img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .lightbox-info {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+        }
+
+        .lightbox-info h2 {
+            color: var(--peach-gold);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .lightbox-info p {
+            color: var(--amber-light);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--bronze-deep);
+            color: var(--amber-light);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 10001;
+        }
+
+        .lightbox-close:hover {
+            background: var(--peach-gold);
+            color: var(--pure-black);
+            transform: rotate(90deg);
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--bronze-deep);
+            color: var(--amber-light);
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .lightbox-nav:hover {
+            background: var(--peach-gold);
+            color: var(--pure-black);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .lightbox-nav.prev {
+            left: 20px;
+        }
+
+        .lightbox-nav.next {
+            right: 20px;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 150px;
+            height: 150px;
+            background: url('Images/Button.png') center center;
+            background-size: cover;
+            color: var(--amber-light);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.4);
+            z-index: 100;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 25px rgba(212, 165, 116, 0.7);
+            color: var(--peach-gold);
+            filter: brightness(1.2);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tab-btn {
+                width: 120px;
+                height: 120px;
+                font-size: 0.8rem;
+            }
+
+            .back-btn {
+                width: 100px;
+                height: 100px;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="window.location.href='index.html'">← Back to Dashboard</button>
+
+    <div class="header">
+        <h1>🌳 Training Gallery</h1>
+        <p>Browse Tree of Life AI features at your own pace</p>
+    </div>
+
+    <div class="category-tabs">
+        <button class="tab-btn active" onclick="filterCategory('all')">All Features</button>
+        <button class="tab-btn" onclick="filterCategory('public')">Public Pages</button>
+        <button class="tab-btn" onclick="filterCategory('profile')">Health Profile</button>
+        <button class="tab-btn" onclick="filterCategory('pro')">Pro Features</button>
+        <button class="tab-btn" onclick="filterCategory('client')">Client Portal</button>
+    </div>
+
+    <div class="gallery-container">
+        <div class="gallery-grid" id="galleryGrid">
+            <!-- Public Pages -->
+            <div class="gallery-item active" data-category="public" data-index="0">
+                <img src="training/training screenshots/Screenshot_2026-01-14_at_11-10-05_Tree_of_Life_AI_-_Integrative_Health_Intelligence.png" alt="Homepage">
+                <h3>🏠 Homepage</h3>
+                <p>Welcome screen showcasing 10 integrated medical traditions and the AI chat interface</p>
+            </div>
+
+            <div class="gallery-item active" data-category="public" data-index="1">
+                <img src="training/training screenshots/Screenshot_2026-01-14_at_11-11-21_About_-_Tree_of_Life_AI.png" alt="About Page">
+                <h3>ℹ️ About Page</h3>
+                <p>Learn about Tree of Life AI's mission and integrative approach to health</p>
+            </div>
+
+            <div class="gallery-item active" data-category="public" data-index="2">
+                <img src="training/training screenshots/Screenshot_2026-01-14_at_11-12-00_Subscribe_-_Tree_of_Life_AI.png" alt="Subscription Plans">
+                <h3>💳 Subscription Plans</h3>
+                <p>Compare Free, Basic, Premium, and Pro tiers with detailed feature lists</p>
+            </div>
+
+            <div class="gallery-item active" data-category="public" data-index="3">
+                <img src="training/training screenshots/Screenshot_2026-01-14_at_11-12-16_Resources_-_Tree_of_Life_AI.png" alt="Resources">
+                <h3>📚 Resources Center</h3>
+                <p>Access health resources, emergency contacts, and educational materials for all 10 traditions</p>
+            </div>
+
+            <div class="gallery-item active" data-category="public" data-index="4">
+                <img src="training/training screenshots/Screenshot_2026-01-14_at_11-12-30_Privacy_Policy_-_Tree_of_Life_AI.png" alt="Privacy Policy">
+                <h3>🔒 Privacy Policy</h3>
+                <p>Understand how your health data is protected and used</p>
+            </div>
+
+            <div class="gallery-item active" data-category="public" data-index="5">
+                <img src="training/training screenshots/Screenshot_2026-01-14_at_11-12-45_Terms_of_Service_-_Tree_of_Life_AI.png" alt="Terms of Service">
+                <h3>📄 Terms of Service</h3>
+                <p>Legal terms and conditions for using Tree of Life AI</p>
+            </div>
+
+            <div class="gallery-item active" data-category="public" data-index="6">
+                <img src="training/training screenshots/Screenshot_2026-01-14_at_11-13-05_Login_-_Tree_of_Life_AI.png" alt="Login">
+                <h3>🔑 Login Page</h3>
+                <p>Secure authentication to access your personalized health dashboard</p>
+            </div>
+
+            <div class="gallery-item active" data-category="public" data-index="7">
+                <img src="training/training screenshots/Screenshot_2026-01-14_at_11-13-52_Chat_History_-_Tree_of_Life_AI.png" alt="Chat History">
+                <h3>💬 Chat History</h3>
+                <p>View and search through all your past AI health consultations</p>
+            </div>
+
+            <!-- Health Profile -->
+            <div class="gallery-item active" data-category="profile" data-index="8">
+                <img src="training/training screenshots/Screenshot_2026-01-14_at_11-14-10_Health_Profile_-_Tree_of_Life_AI.png" alt="Personal Info">
+                <h3>📋 Personal Information</h3>
+                <p>Enter basic health info, Ayurvedic dosha, TCM pattern, lifestyle preferences</p>
+            </div>
+
+            <div class="gallery-item active" data-category="profile" data-index="9">
+                <img src="training/training screenshots/Screenshot_2026-01-14_at_11-14-24_Health_Profile_-_Tree_of_Life_AI.png" alt="Medical History">
+                <h3>🏥 Medical History</h3>
+                <p>Track current conditions, allergies, and past diagnoses/surgeries</p>
+            </div>
+
+            <div class="gallery-item active" data-category="profile" data-index="10">
+                <img src="training/training screenshots/Screenshot_2026-01-14_at_11-14-33_Health_Profile_-_Tree_of_Life_AI.png" alt="Medications">
+                <h3>💊 Medications & Supplements</h3>
+                <p>Manage prescriptions, supplements, and herbal remedies with dosages</p>
+            </div>
+
+            <div class="gallery-item active" data-category="profile" data-index="11">
+                <img src="training/training screenshots/Screenshot_2026-01-14_at_11-14-48_Health_Profile_-_Tree_of_Life_AI.png" alt="Health Metrics">
+                <h3>📊 Health Metrics Tracking</h3>
+                <p>Monitor weight, blood pressure, blood sugar with charts and trends</p>
+            </div>
+
+            <div class="gallery-item active" data-category="profile" data-index="12">
+                <img src="training/training screenshots/Screenshot_2026-01-14_at_11-14-59_Health_Profile_-_Tree_of_Life_AI.png" alt="Lab Results">
+                <h3>🔬 Lab Results (Premium)</h3>
+                <p>Upload test results - AI extracts values automatically. Track trends over time</p>
+            </div>
+
+            <!-- Pro Features -->
+            <div class="gallery-item active" data-category="pro" data-index="13">
+                <img src="training/training screenshots/Screenshot_2026-01-14_at_12-13-25_Pro_Dashboard_-_Tree_of_Life_AI.png" alt="Pro Dashboard">
+                <h3>👥 Pro Dashboard</h3>
+                <p>Overview of active clients, protocols, and success metrics</p>
+            </div>
+
+            <div class="gallery-item active" data-category="pro" data-index="14">
+                <img src="training/training screenshots/Screenshot_2026-01-14_at_12-13-44_Pro_Dashboard_-_Tree_of_Life_AI.png" alt="Compliance Tracking">
+                <h3>📈 Compliance Tracking</h3>
+                <p>See what clients completed vs missed. "Ask Why?" feature generates personalized messages</p>
+            </div>
+
+            <div class="gallery-item active" data-category="pro" data-index="15">
+                <img src="training/training screenshots/Screenshot_2026-01-14_at_12-12-54_Settings_-_Tree_of_Life_AI.png" alt="Settings">
+                <h3>⚙️ Account Settings</h3>
+                <p>Manage subscription, family accounts, notifications, and privacy preferences</p>
+            </div>
+
+            <!-- Client Portal -->
+            <div class="gallery-item active" data-category="client" data-index="16">
+                <img src="training/training screenshots/Screenshot_2026-01-14_at_12-26-17_Your_Health_Protocol.png" alt="Protocol View">
+                <h3>✅ Client Protocol View</h3>
+                <p>Weekly health protocol with checkboxes for supplements, nutrition, exercise, lifestyle, and timeline items</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" onclick="closeLightbox()">×</button>
+        <button class="lightbox-nav prev" onclick="navigateImage(-1)">‹</button>
+        <button class="lightbox-nav next" onclick="navigateImage(1)">›</button>
+        <div class="lightbox-content" id="lightboxContent">
+            <!-- Content populated by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        let currentImageIndex = 0;
+        const images = [
+            {
+                src: "training/training screenshots/Screenshot_2026-01-14_at_11-10-05_Tree_of_Life_AI_-_Integrative_Health_Intelligence.png",
+                title: "🏠 Homepage",
+                description: "The main landing page showcases Tree of Life AI's unique integration of 10 medical traditions (Western Medicine, Ayurveda, Traditional Chinese Medicine, Naturopathy, Functional Medicine, Clinical Nutrition, Herbal Medicine, Chiropractic, Physical Therapy, and Fitness & Exercise Science). The AI chat interface lets you ask health questions from multiple perspectives simultaneously."
+            },
+            {
+                src: "training/training screenshots/Screenshot_2026-01-14_at_11-11-21_About_-_Tree_of_Life_AI.png",
+                title: "ℹ️ About Page",
+                description: "Learn about the philosophy behind Tree of Life AI - treating Western medicine as one valuable branch among many, not the default. Understand how AI integrates ancient wisdom with modern science for truly personalized health guidance."
+            },
+            {
+                src: "training/training screenshots/Screenshot_2026-01-14_at_11-12-00_Subscribe_-_Tree_of_Life_AI.png",
+                title: "💳 Subscription Plans",
+                description: "Choose from Free (basic AI chat + health tracking), Basic ($19/month - adds advanced profile + lab results), Premium ($29/month - adds family members + 1-year history), or Pro ($129/month - for practitioners with client management tools)."
+            },
+            {
+                src: "training/training screenshots/Screenshot_2026-01-14_at_11-12-16_Resources_-_Tree_of_Life_AI.png",
+                title: "📚 Resources Center",
+                description: "Access curated health resources for all 10 medical traditions, including emergency contacts, organizations, educational materials, practitioner directories, and evidence-based research. Resources are organized by tradition for easy navigation."
+            },
+            {
+                src: "training/training screenshots/Screenshot_2026-01-14_at_11-12-30_Privacy_Policy_-_Tree_of_Life_AI.png",
+                title: "🔒 Privacy Policy",
+                description: "Comprehensive privacy policy explaining how Tree of Life AI collects, uses, protects, and shares your health information. Includes HIPAA compliance details, encryption standards, and your data rights."
+            },
+            {
+                src: "training/training screenshots/Screenshot_2026-01-14_at_11-12-45_Terms_of_Service_-_Tree_of_Life_AI.png",
+                title: "📄 Terms of Service",
+                description: "Legal terms governing use of Tree of Life AI, including medical disclaimers, user responsibilities, subscription terms, intellectual property rights, and limitation of liability."
+            },
+            {
+                src: "training/training screenshots/Screenshot_2026-01-14_at_11-13-05_Login_-_Tree_of_Life_AI.png",
+                title: "🔑 Login Page",
+                description: "Secure login portal with email and password authentication. New users can register from this page. All health data is encrypted and protected with industry-standard security."
+            },
+            {
+                src: "training/training screenshots/Screenshot_2026-01-14_at_11-13-52_Chat_History_-_Tree_of_Life_AI.png",
+                title: "💬 Chat History",
+                description: "View, search, and manage all your past AI health consultations. Basic users get 30-day history, Premium users get 1-year history. Search by keyword, date, or medical tradition discussed."
+            },
+            {
+                src: "training/training screenshots/Screenshot_2026-01-14_at_11-14-10_Health_Profile_-_Tree_of_Life_AI.png",
+                title: "📋 Personal Information",
+                description: "Create your comprehensive health profile including basic demographics, Ayurvedic dosha, TCM pattern, diet type, sleep hours, stress level, and preferred health modalities. This information helps the AI provide personalized recommendations across all traditions."
+            },
+            {
+                src: "training/training screenshots/Screenshot_2026-01-14_at_11-14-24_Health_Profile_-_Tree_of_Life_AI.png",
+                title: "🏥 Medical History",
+                description: "Track current health conditions, allergies, and past diagnoses/surgeries with dates and notes. This information is crucial for safe AI recommendations that avoid contraindications and drug interactions."
+            },
+            {
+                src: "training/training screenshots/Screenshot_2026-01-14_at_11-14-33_Health_Profile_-_Tree_of_Life_AI.png",
+                title: "💊 Medications & Supplements",
+                description: "Maintain a complete list of prescription medications, over-the-counter drugs, supplements, and herbal remedies. Include dosage, frequency, type, and purpose. The AI checks for interactions when making recommendations."
+            },
+            {
+                src: "training/training screenshots/Screenshot_2026-01-14_at_11-14-48_Health_Profile_-_Tree_of_Life_AI.png",
+                title: "📊 Health Metrics Tracking",
+                description: "Monitor weight, blood pressure, and blood sugar over time with interactive charts. Add entries manually with timestamps. Visualize trends and identify patterns to discuss with your healthcare provider."
+            },
+            {
+                src: "training/training screenshots/Screenshot_2026-01-14_at_11-14-59_Health_Profile_-_Tree_of_Life_AI.png",
+                title: "🔬 Lab Results (Premium Feature)",
+                description: "Upload lab test PDFs or images - AI automatically extracts blood work values, categorizes them, and flags abnormal results. Compare results over time with trend analysis. Export reports as PDF or CSV to share with doctors."
+            },
+            {
+                src: "training/training screenshots/Screenshot_2026-01-14_at_12-13-25_Pro_Dashboard_-_Tree_of_Life_AI.png",
+                title: "👥 Pro Dashboard",
+                description: "For health practitioners - see all your clients at a glance with active protocols, progress percentages, and last activity dates. Search, filter, and manage your entire client base from one dashboard."
+            },
+            {
+                src: "training/training screenshots/Screenshot_2026-01-14_at_12-13-44_Pro_Dashboard_-_Tree_of_Life_AI.png",
+                title: "📈 Compliance Tracking",
+                description: "Pro feature showing client compliance broken down by category (Supplements 67%, Nutrition 50%, Exercise 0%, Lifestyle 25%). See exactly what clients completed vs missed. Click 'Ask Why?' on incomplete items to generate personalized follow-up messages."
+            },
+            {
+                src: "training/training screenshots/Screenshot_2026-01-14_at_12-12-54_Settings_-_Tree_of_Life_AI.png",
+                title: "⚙️ Account Settings",
+                description: "Manage your subscription tier, add/remove family member accounts, change email/password, configure notification preferences, adjust privacy settings, and export or delete your account data."
+            },
+            {
+                src: "training/training screenshots/Screenshot_2026-01-14_at_12-26-17_Your_Health_Protocol.png",
+                title: "✅ Client Protocol View",
+                description: "The client-facing protocol interface shows weekly health recommendations organized by category: Supplements, Nutrition, Exercise, Lifestyle, and Timeline items. Check off completed items, save progress, and mark the full week as complete. Practitioners see this compliance data in real-time."
+            }
+        ];
+
+        function filterCategory(category) {
+            // Update active tab
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Show/hide items
+            const items = document.querySelectorAll('.gallery-item');
+            items.forEach(item => {
+                if (category === 'all' || item.dataset.category === category) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+
+        // Open lightbox when clicking gallery item
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.addEventListener('click', function() {
+                currentImageIndex = parseInt(this.dataset.index);
+                openLightbox();
+            });
+        });
+
+        function openLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            const content = document.getElementById('lightboxContent');
+            const image = images[currentImageIndex];
+
+            content.innerHTML = `
+                <img src="${image.src}" alt="${image.title}">
+                <div class="lightbox-info">
+                    <h2>${image.title}</h2>
+                    <p>${image.description}</p>
+                </div>
+            `;
+
+            lightbox.classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+
+        function navigateImage(direction) {
+            currentImageIndex += direction;
+            
+            // Loop around
+            if (currentImageIndex < 0) currentImageIndex = images.length - 1;
+            if (currentImageIndex >= images.length) currentImageIndex = 0;
+
+            openLightbox();
+        }
+
+        // Close lightbox on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') navigateImage(-1);
+            if (e.key === 'ArrowRight') navigateImage(1);
+        });
+
+        // Close lightbox when clicking outside content
+        document.getElementById('lightbox').addEventListener('click', function(e) {
+            if (e.target === this) closeLightbox();
+        });
+    </script>
+</body>
+</html>
