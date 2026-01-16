@@ -2064,23 +2064,37 @@ function isPaidUser() {
             uploadArea.addEventListener('click', () => fileInput.click());
             fileInput.addEventListener('change', handleFileSelect);
 
-            uploadArea.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                uploadArea.classList.add('drag-over');
+            // Prevent defaults on drag events
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }, false);
             });
 
-            uploadArea.addEventListener('dragleave', () => {
-                uploadArea.classList.remove('drag-over');
+            // Add visual feedback on drag
+            ['dragenter', 'dragover'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, () => {
+                    uploadArea.classList.add('drag-over');
+                }, false);
             });
 
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, () => {
+                    uploadArea.classList.remove('drag-over');
+                }, false);
+            });
+
+            // Handle dropped files
             uploadArea.addEventListener('drop', (e) => {
-                e.preventDefault();
-                uploadArea.classList.remove('drag-over');
-                if (e.dataTransfer.files.length) {
-                    fileInput.files = e.dataTransfer.files;
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    const dt = new DataTransfer();
+                    dt.items.add(files[0]);
+                    fileInput.files = dt.files;
                     handleFileSelect();
                 }
-            });
+            }, false);
         });
 
         // ==================== LOAD USER SUBSCRIPTION TIER ====================
