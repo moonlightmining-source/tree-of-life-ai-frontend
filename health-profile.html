@@ -3541,8 +3541,9 @@ function isPaidUser() {
                         <li>📈 Health metrics history</li>
                         <li>🌿 Multi-tradition insights</li>
                     </ul>
-                    <p style="color: var(--warning-yellow); font-size: 0.95rem; margin-bottom: 2rem; padding: 1rem; background: rgba(251, 191, 36, 0.1); border-radius: 10px;">
-                        ⚠️ This analysis may take 30-60 seconds to complete and will use your AI credits.
+                    <p style="color: var(--amber-light); font-size: 0.95rem; margin-bottom: 2rem; padding: 1rem; background: rgba(212, 165, 116, 0.1); border: 2px solid var(--bronze-deep); border-radius: 10px; line-height: 1.6;">
+                        ⏱️ Analysis takes 30-60 seconds<br>
+                        💡 First analysis is comprehensive. Future analyses only update what's changed.
                     </p>
                     <div style="display: flex; gap: 1rem; justify-content: center;">
                         <button onclick="this.parentElement.parentElement.parentElement.remove(); document.getElementById('aiModal').classList.add('active'); performAIAnalysis();" style="
