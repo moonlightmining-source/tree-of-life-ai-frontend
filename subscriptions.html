@@ -835,9 +835,12 @@
         async function createCheckout(tier, billing = 'monthly') {
             try {
                 const token = localStorage.getItem('token');
+                const headers = { 'Content-Type': 'application/json' };
+                if (token) headers['Authorization'] = `Bearer ${token}`;
+                
                 const response = await fetch(`${API_URL}/api/subscription/create-checkout`, {
                     method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                    headers: headers,
                     body: JSON.stringify({ tier: tier, billing: billing })
                 });
                 if (!response.ok) throw new Error('Failed to create checkout');
