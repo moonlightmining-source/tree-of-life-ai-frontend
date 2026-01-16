@@ -3499,13 +3499,88 @@ function isPaidUser() {
         return;
     }
     
-    // User has Basic or higher - proceed with analysis
-    const modal = document.getElementById('aiModal');
-    modal.classList.add('active');
-    
-    // Start analysis
-    performAIAnalysis();
+    // User has Basic or higher - show confirmation first
+    showAnalysisConfirmation();
 }
+
+        function showAnalysisConfirmation() {
+            const confirmModal = document.createElement('div');
+            confirmModal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+                animation: fadeIn 0.3s;
+            `;
+
+            confirmModal.innerHTML = `
+                <div style="
+                    background: rgba(0, 0, 0, 0.95);
+                    border: 3px solid var(--bronze-deep);
+                    border-radius: 20px;
+                    padding: 3rem;
+                    max-width: 600px;
+                    text-align: center;
+                    box-shadow: 0 10px 50px rgba(212, 165, 116, 0.8);
+                ">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🤖</div>
+                    <h2 style="color: var(--peach-gold); font-size: 2rem; margin-bottom: 1rem;">AI Health Analysis</h2>
+                    <p style="color: var(--amber-light); font-size: 1.1rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                        This will generate a comprehensive analysis of your:
+                    </p>
+                    <ul style="color: var(--amber-light); font-size: 1rem; text-align: left; margin: 0 auto 2rem auto; max-width: 400px; line-height: 2;">
+                        <li>📋 Complete health profile</li>
+                        <li>🔬 Lab results & trends</li>
+                        <li>💊 Medications & supplements</li>
+                        <li>📈 Health metrics history</li>
+                        <li>🌿 Multi-tradition insights</li>
+                    </ul>
+                    <p style="color: var(--warning-yellow); font-size: 0.95rem; margin-bottom: 2rem; padding: 1rem; background: rgba(251, 191, 36, 0.1); border-radius: 10px;">
+                        ⚠️ This analysis may take 30-60 seconds to complete and will use your AI credits.
+                    </p>
+                    <div style="display: flex; gap: 1rem; justify-content: center;">
+                        <button onclick="this.parentElement.parentElement.parentElement.remove(); document.getElementById('aiModal').classList.add('active'); performAIAnalysis();" style="
+                            background: linear-gradient(135deg, var(--bronze-deep), var(--peach-gold));
+                            color: var(--pure-black);
+                            border: none;
+                            padding: 1rem 2rem;
+                            font-size: 1.1rem;
+                            font-weight: 700;
+                            border-radius: 10px;
+                            cursor: pointer;
+                            box-shadow: 0 4px 15px rgba(238, 197, 145, 0.5);
+                            transition: all 0.3s;
+                        " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                            ✓ Yes, Analyze My Health
+                        </button>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" style="
+                            background: rgba(255, 255, 255, 0.1);
+                            color: var(--amber-light);
+                            border: 2px solid var(--bronze-deep);
+                            padding: 1rem 2rem;
+                            font-size: 1rem;
+                            font-weight: 600;
+                            border-radius: 10px;
+                            cursor: pointer;
+                            transition: all 0.3s;
+                        " onmouseover="this.style.background='rgba(255, 255, 255, 0.2)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.1)'">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(confirmModal);
+            confirmModal.addEventListener('click', (e) => {
+                if (e.target === confirmModal) confirmModal.remove();
+            });
+        }
         function closeAIModal() {
             const modal = document.getElementById('aiModal');
             modal.classList.remove('active');
