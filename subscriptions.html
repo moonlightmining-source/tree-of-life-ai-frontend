@@ -822,16 +822,13 @@
         }
 
         // Update checkout functions to use billingMode
-        async function upgradeToBasic() {
-            if (!isLoggedIn) { window.location.href = 'auth.html'; return; }
+       async function upgradeToBasic() {
             await createCheckout('basic', billingMode);
         }
         async function upgradeToPremium() {
-            if (!isLoggedIn) { window.location.href = 'auth.html'; return; }
             await createCheckout('premium', billingMode);
         }
         async function upgradeToPro() {
-            if (!isLoggedIn) { window.location.href = 'auth.html'; return; }
             await createCheckout('pro', billingMode);
         }
 
