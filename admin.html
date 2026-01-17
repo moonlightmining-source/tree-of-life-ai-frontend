@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Tree of Life AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --amber-light: #D4A574;
+            --amber-medium: #C19A6B;
+            --bronze-deep: #B8860B;
+            --bronze-light: #A0826D;
+            --peach-gold: #EEC591;
+            --pure-black: #000;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: url('Images/Background.png') center center fixed;
+            background-size: cover;
+            color: var(--amber-light);
+            min-height: 100vh;
+            padding: 2rem;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--amber-light);
+            margin-bottom: 0.5rem;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--amber-medium);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card h2 {
+            color: var(--amber-light);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--bronze-deep);
+            padding-bottom: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            color: var(--amber-medium);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 8px;
+            color: var(--amber-light);
+            font-size: 1rem;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--amber-light);
+        }
+
+        .btn {
+            padding: 0.75rem 2rem;
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 165, 116, 0.5);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--bronze-deep);
+            color: var(--amber-light);
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .message.success {
+            background: rgba(34, 197, 94, 0.2);
+            border: 2px solid rgba(34, 197, 94, 0.5);
+            color: #22c55e;
+        }
+
+        .message.error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid rgba(239, 68, 68, 0.5);
+            color: #ef4444;
+        }
+
+        .user-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .user-item {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--bronze-deep);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .user-email {
+            color: var(--amber-light);
+            font-weight: 600;
+        }
+
+        .user-tier {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .tier-free { background: rgba(156, 163, 175, 0.3); color: #9ca3af; }
+        .tier-basic { background: rgba(34, 197, 94, 0.3); color: #22c55e; }
+        .tier-premium { background: rgba(59, 130, 246, 0.3); color: #3b82f6; }
+        .tier-pro { background: rgba(168, 85, 247, 0.3); color: #a855f7; }
+
+        .user-status {
+            font-size: 0.85rem;
+            color: var(--amber-medium);
+        }
+
+        .user-family {
+            font-size: 0.85rem;
+            color: var(--bronze-light);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .user-item {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Admin Panel</h1>
+        <p class="subtitle">Tree of Life AI - Subscription Management</p>
+
+        <div id="message-container"></div>
+
+        <!-- ADMIN PASSWORD -->
+        <div class="card">
+            <h2>🔑 Admin Authentication</h2>
+            <div class="form-group">
+                <label for="admin-password">Admin Password</label>
+                <input type="password" id="admin-password" placeholder="Enter admin password">
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <!-- ACTIVATE SUBSCRIPTION -->
+            <div class="card">
+                <h2>✅ Activate Subscription</h2>
+                <div class="form-group">
+                    <label for="activate-email">User Email</label>
+                    <input type="email" id="activate-email" placeholder="user@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="activate-tier">Subscription Tier</label>
+                    <select id="activate-tier">
+                        <option value="basic">Basic (1 family member)</option>
+                        <option value="premium">Premium (5 family members)</option>
+                        <option value="pro">Pro (Unlimited)</option>
+                    </select>
+                </div>
+                <button class="btn" onclick="activateSubscription()">Activate</button>
+            </div>
+
+            <!-- DEACTIVATE SUBSCRIPTION -->
+            <div class="card">
+                <h2>❌ Deactivate Subscription</h2>
+                <div class="form-group">
+                    <label for="deactivate-email">User Email</label>
+                    <input type="email" id="deactivate-email" placeholder="user@example.com">
+                </div>
+                <p style="color: var(--bronze-light); font-size: 0.9rem; margin-bottom: 1rem;">
+                    This will revert the user to FREE tier
+                </p>
+                <button class="btn btn-danger" onclick="deactivateSubscription()">Deactivate</button>
+            </div>
+        </div>
+
+        <!-- LIST USERS -->
+        <div class="card">
+            <h2>👥 All Users</h2>
+            <button class="btn btn-secondary" onclick="listUsers()" style="margin-bottom: 1rem;">Refresh User List</button>
+            <div id="user-list" class="user-list"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:10000' 
+            : 'https://treeoflife-vn25.onrender.com';
+
+        function getAdminPassword() {
+            const password = document.getElementById('admin-password').value;
+            if (!password) {
+                showMessage('Please enter admin password', 'error');
+                return null;
+            }
+            return password;
+        }
+
+        async function activateSubscription() {
+            const adminPassword = getAdminPassword();
+            if (!adminPassword) return;
+
+            const email = document.getElementById('activate-email').value;
+            const tier = document.getElementById('activate-tier').value;
+
+            if (!email) {
+                showMessage('Please enter user email', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/api/admin/activate-subscription`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        admin_password: adminPassword,
+                        email: email,
+                        tier: tier
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage(data.message, 'success');
+                    document.getElementById('activate-email').value = '';
+                    listUsers(); // Refresh list
+                } else {
+                    showMessage(data.detail || 'Activation failed', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function deactivateSubscription() {
+            const adminPassword = getAdminPassword();
+            if (!adminPassword) return;
+
+            const email = document.getElementById('deactivate-email').value;
+
+            if (!email) {
+                showMessage('Please enter user email', 'error');
+                return;
+            }
+
+            if (!confirm(`Deactivate subscription for ${email}?`)) return;
+
+            try {
+                const response = await fetch(`${API_URL}/api/admin/deactivate-subscription`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        admin_password: adminPassword,
+                        email: email
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage(data.message, 'success');
+                    document.getElementById('deactivate-email').value = '';
+                    listUsers(); // Refresh list
+                } else {
+                    showMessage(data.detail || 'Deactivation failed', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function listUsers() {
+            const adminPassword = getAdminPassword();
+            if (!adminPassword) return;
+
+            try {
+                const response = await fetch(`${API_URL}/api/admin/list-users?admin_password=${encodeURIComponent(adminPassword)}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    displayUsers(data.users);
+                } else {
+                    showMessage(data.detail || 'Failed to load users', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Error: ' + error.message, 'error');
+            }
+        }
+
+        function displayUsers(users) {
+            const container = document.getElementById('user-list');
+            
+            if (users.length === 0) {
+                container.innerHTML = '<p style="color: var(--amber-medium);">No users found</p>';
+                return;
+            }
+
+            container.innerHTML = users.map(user => `
+                <div class="user-item">
+                    <div class="user-email">${user.email}</div>
+                    <div class="user-tier tier-${user.tier}">${user.tier.toUpperCase()}</div>
+                    <div class="user-status">${user.status || 'inactive'}</div>
+                    <div class="user-family">${user.family_limit} family</div>
+                </div>
+            `).join('');
+        }
+
+        function showMessage(text, type) {
+            const container = document.getElementById('message-container');
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+            message.textContent = text;
+            container.appendChild(message);
+            setTimeout(() => message.remove(), 5000);
+        }
+
+        console.log('🔐 Admin panel loaded');
+    </script>
+</body>
+</html>
