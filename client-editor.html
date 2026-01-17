@@ -622,7 +622,7 @@
             <h1 id="page-title">Client Management</h1>
             <div class="btn-group">
                 <button class="ai-analysis-btn" onclick="openAIAnalysis()" id="aiAnalysisBtn" disabled>
-                    🤖 AI Health Analysis
+                     AI Health Analysis
                 </button>
                 <button class="btn" onclick="saveAllData()">Save All Changes</button>
                 <button class="btn btn-danger" id="delete-btn" onclick="deleteClient()" style="display: none;">Delete Client</button>
@@ -1035,7 +1035,7 @@
                 <h2 class="card-title">📊 AI Health Analysis History</h2>
                 
                 <div id="noHistoryMessage" style="text-align: center; padding: 3rem; color: var(--bronze-light); display: none;">
-                    <div style="font-size: 3rem; margin-bottom: 1rem;">🤖</div>
+                    <div style="font-size: 3rem; margin-bottom: 1rem;"></div>
                     <p style="font-size: 1.2rem; margin-bottom: 0.5rem;">No analyses yet</p>
                     <p>Run an AI Health Analysis to see it saved here</p>
                 </div>
@@ -1048,7 +1048,7 @@
         <div id="aiModal" class="ai-modal">
             <div class="ai-modal-content">
                 <div class="ai-modal-header">
-                    <div class="ai-modal-title">🤖 AI Health Analysis</div>
+                    <div class="ai-modal-title"> AI Health Analysis</div>
                     <button class="ai-close-btn" onclick="closeAIModal()">×</button>
                 </div>
                 
@@ -1578,6 +1578,27 @@ async function removeProtocol() {
         function openAIAnalysis() {
             if (!clientId) {
                 alert('Please save client first before running AI analysis');
+                return;
+            }
+
+            // Show confirmation dialog first
+            const confirmed = confirm(
+                ' AI HEALTH ANALYSIS\n\n' +
+                'This will:\n' +
+                '• Analyze all client health data\n' +
+                '• Generate comprehensive health insights\n' +
+                '• Take 30-60 seconds to complete\n' +
+                '• Save results to Analysis History\n\n' +
+                'The analysis uses:\n' +
+                '✓ Personal health profile\n' +
+                '✓ Medical history & conditions\n' +
+                '✓ Current medications\n' +
+                '✓ Health metrics & trends\n' +
+                '✓ Lab results (if available)\n\n' +
+                'Continue with AI analysis?'
+            );
+
+            if (!confirmed) {
                 return;
             }
 
