@@ -1537,7 +1537,35 @@
                 showMessage('protocolMessage', 'Error: ' + error.message, 'error');
             }
         }
-
+async function removeProtocol() {
+            if (!confirm('⚠️ Remove this protocol from the client?\n\nThis will:\n• Clear the current protocol assignment\n• Stop compliance tracking\n• Keep protocol in library\n\nContinue?')) {
+                return;
+            }
+            
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_URL}/api/client-protocols/remove/${clientId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    showMessage('protocolMessage', '✓ Protocol removed successfully', 'success');
+                    document.getElementById('currentProtocolCard').style.display = 'none';
+                    document.getElementById('currentProtocolName').textContent = '-';
+                    document.getElementById('currentStartDate').textContent = '-';
+                    document.getElementById('currentWeek').textContent = '-';
+                    document.getElementById('currentProgress').textContent = '0';
+                    document.getElementById('progressFill').style.width = '0%';
+                } else {
+                    const error = await response.json();
+                    showMessage('protocolMessage', 'Failed: ' + (error.detail || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('protocolMessage', 'Error removing protocol', 'error');
+            }
+        }
         function showMessage(containerId, message, type) {
             const container = document.getElementById(containerId);
             container.textContent = message;
