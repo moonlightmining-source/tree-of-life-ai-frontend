@@ -855,10 +855,10 @@ I'm here to help and can make adjustments if needed!`;
             return date.toLocaleDateString();
         }
 
-        function viewClient(activityId) {
+         function viewClient(activityId) {
             const client = allClients.find(c => c.id === activityId);
             if (client) {
-                window.location.href = `client-editor.html?client=${client.client_id}`;
+                window.location.href = `client-editor.html?id=${client.client_id}`;
             }
         }
 
