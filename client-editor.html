@@ -988,7 +988,12 @@
             <div id="protocolMessage" class="message"></div>
 
             <div class="card" id="currentProtocolCard" style="display: none;">
-                <h2 class="card-title">Current Protocol</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h2 class="card-title" style="margin-bottom: 0;">Current Protocol</h2>
+                    <button class="btn-danger btn" onclick="removeProtocol()" style="font-size: 0.9rem; padding: 10px 20px;">
+                        🗑️ Remove Protocol
+                    </button>
+                </div>
                 <div style="background: rgba(212, 165, 116, 0.1); padding: 1.5rem; border-radius: 10px;">
                     <h3 style="color: var(--peach-gold); margin-bottom: 1rem;" id="currentProtocolName">-</h3>
                     <div style="color: var(--amber-medium); margin-bottom: 0.5rem;">
