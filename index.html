@@ -1386,15 +1386,24 @@
         
         // Create PDF content
         const pdfDiv = document.createElement('div');
-        pdfDiv.style.padding = '20px';
-        pdfDiv.style.fontFamily = 'Arial, sans-serif';
-        pdfDiv.style.backgroundColor = 'white';
+        pdfDiv.style.cssText = `
+            position: absolute;
+            left: -9999px;
+            top: 0;
+            width: 800px;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: white;
+            color: black;
+        `;
         
         // Add header
-        pdfDiv.innerHTML = `
-            <h1 style="color: #B8860B; margin-bottom: 10px;">Tree of Life AI Chat</h1>
+        const header = `
+            <h1 style="color: #B8860B; margin-bottom: 10px; font-size: 24px;">Tree of Life AI Chat</h1>
             <p style="color: #666; margin-bottom: 30px;">Date: ${new Date().toLocaleDateString()}</p>
         `;
+        
+        let content = header;
         
         // Get all messages
         const messages = chatMessages.querySelectorAll('.message');
@@ -1404,40 +1413,45 @@
             const textEl = msg.querySelector('.message-text');
             const timeEl = msg.querySelector('.message-time');
             
-            // Get text content
-            const text = textEl ? textEl.textContent : '';
+            const text = textEl ? textEl.textContent.replace(/</g, '&lt;').replace(/>/g, '&gt;') : '';
             const time = timeEl ? timeEl.textContent : '';
             
-            console.log('Message text:', text); // Debug
-            
             if (text.trim()) {
-                const messageDiv = document.createElement('div');
-                messageDiv.style.cssText = `
-                    padding: 15px;
-                    margin-bottom: 15px;
-                    border-left: 4px solid ${isUser ? '#4A90E2' : '#B8860B'};
-                    background: ${isUser ? '#f0f7ff' : '#fef9f0'};
-                    page-break-inside: avoid;
+                content += `
+                    <div style="
+                        padding: 15px;
+                        margin-bottom: 15px;
+                        border-left: 4px solid ${isUser ? '#4A90E2' : '#B8860B'};
+                        background: ${isUser ? '#f0f7ff' : '#fef9f0'};
+                        border-radius: 5px;
+                    ">
+                        <div style="color: black; font-size: 12pt; margin-bottom: 8px; line-height: 1.5; white-space: pre-wrap;">${text}</div>
+                        <div style="color: #666; font-size: 10pt;">${time}</div>
+                    </div>
                 `;
-                
-                messageDiv.innerHTML = `
-                    <div style="color: black; font-size: 12pt; margin-bottom: 8px; line-height: 1.5;">${text}</div>
-                    <div style="color: #666; font-size: 10pt;">${time}</div>
-                `;
-                
-                pdfDiv.appendChild(messageDiv);
             }
         });
+        
+        pdfDiv.innerHTML = content;
+        
+        // Add to DOM temporarily
+        document.body.appendChild(pdfDiv);
         
         const opt = {
             margin: 10,
             filename: `tree-of-life-chat-${new Date().toISOString().split('T')[0]}.pdf`,
             image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, logging: false },
+            html2canvas: { scale: 2 },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
         
-        html2pdf().set(opt).from(pdfDiv).save();
+        html2pdf().set(opt).from(pdfDiv).save().then(() => {
+            // Remove from DOM after PDF is generated
+            document.body.removeChild(pdfDiv);
+        }).catch(err => {
+            console.error('PDF generation error:', err);
+            document.body.removeChild(pdfDiv);
+        });
     }
 </script>
 </body>
