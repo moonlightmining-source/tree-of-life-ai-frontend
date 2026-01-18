@@ -1374,15 +1374,9 @@
         console.log('✅ Tree of Life AI - Floating modality panels enabled!');
     </script>
     
-   <script>
+  <script>
     // Export chat as PDF function
     function exportChatAsPDF() {
-        // Check if library is loaded
-        if (typeof html2pdf === 'undefined') {
-            alert('PDF library not loaded. Please refresh the page and try again.');
-            return;
-        }
-        
         const chatMessages = document.getElementById('chatMessages');
         
         if (!chatMessages || chatMessages.children.length === 0) {
@@ -1390,55 +1384,60 @@
             return;
         }
         
-        // Get all message elements
-        const messages = Array.from(chatMessages.querySelectorAll('.message'));
+        // Create PDF content
+        const pdfDiv = document.createElement('div');
+        pdfDiv.style.padding = '20px';
+        pdfDiv.style.fontFamily = 'Arial, sans-serif';
+        pdfDiv.style.backgroundColor = 'white';
         
-        if (messages.length === 0) {
-            alert('No messages found to export');
-            return;
-        }
-        
-        // Create simple HTML string
-        let htmlContent = `
-            <div style="padding: 20px; font-family: Arial, sans-serif;">
-                <h1 style="color: #B8860B; margin-bottom: 10px;">Tree of Life AI Chat</h1>
-                <p style="color: #666; margin-bottom: 30px;">Date: ${new Date().toLocaleDateString()}</p>
+        // Add header
+        pdfDiv.innerHTML = `
+            <h1 style="color: #B8860B; margin-bottom: 10px;">Tree of Life AI Chat</h1>
+            <p style="color: #666; margin-bottom: 30px;">Date: ${new Date().toLocaleDateString()}</p>
         `;
+        
+        // Get all messages
+        const messages = chatMessages.querySelectorAll('.message');
         
         messages.forEach(msg => {
             const isUser = msg.classList.contains('user');
-            const text = msg.querySelector('.message-text')?.innerText || '';
-            const time = msg.querySelector('.message-time')?.innerText || '';
+            const textEl = msg.querySelector('.message-text');
+            const timeEl = msg.querySelector('.message-time');
             
-            htmlContent += `
-                <div style="
+            // Get text content
+            const text = textEl ? textEl.textContent : '';
+            const time = timeEl ? timeEl.textContent : '';
+            
+            console.log('Message text:', text); // Debug
+            
+            if (text.trim()) {
+                const messageDiv = document.createElement('div');
+                messageDiv.style.cssText = `
                     padding: 15px;
                     margin-bottom: 15px;
                     border-left: 4px solid ${isUser ? '#4A90E2' : '#B8860B'};
                     background: ${isUser ? '#f0f7ff' : '#fef9f0'};
                     page-break-inside: avoid;
-                ">
-                    <div style="color: black; font-size: 12pt; margin-bottom: 8px; white-space: pre-wrap;">${text}</div>
+                `;
+                
+                messageDiv.innerHTML = `
+                    <div style="color: black; font-size: 12pt; margin-bottom: 8px; line-height: 1.5;">${text}</div>
                     <div style="color: #666; font-size: 10pt;">${time}</div>
-                </div>
-            `;
+                `;
+                
+                pdfDiv.appendChild(messageDiv);
+            }
         });
-        
-        htmlContent += '</div>';
-        
-        // Create element
-        const element = document.createElement('div');
-        element.innerHTML = htmlContent;
         
         const opt = {
             margin: 10,
-            filename: `chat-${Date.now()}.pdf`,
+            filename: `tree-of-life-chat-${new Date().toISOString().split('T')[0]}.pdf`,
             image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2 },
+            html2canvas: { scale: 2, logging: false },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
         
-        html2pdf().from(element).set(opt).save();
+        html2pdf().set(opt).from(pdfDiv).save();
     }
 </script>
 </body>
