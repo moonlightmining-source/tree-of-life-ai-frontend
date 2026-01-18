@@ -964,7 +964,76 @@
                 font-size: 0.65rem;
             }
         }
+/* 🖨️ PRINT STYLES - CHAT ONLY */
+@media print {
+    /* Hide everything except chat messages */
+    .top-header,
+    .top-chat-buttons,
+    .bottom-chat-buttons,
+    .modality-panels-container,
+    .traditions-section,
+    .input-area,
+    .footer,
+    .welcome-section,
+    .loading,
+    .image-preview-container,
+    body::before {
+        display: none !important;
+    }
 
+    /* Show only chat section */
+    body {
+        background: white;
+        color: black;
+    }
+
+    .chat-section {
+        background: white;
+        border: none;
+        padding: 0;
+        margin: 0;
+        box-shadow: none;
+    }
+
+    .chat-messages {
+        max-width: 100%;
+    }
+
+    /* Format messages for print */
+    .message {
+        page-break-inside: avoid;
+        border: 1px solid #ddd;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: white;
+    }
+
+    .message.user {
+        border-left: 4px solid #4A90E2;
+        background: #f0f7ff;
+    }
+
+    .message.assistant {
+        border-left: 4px solid #B8860B;
+        background: #fef9f0;
+    }
+
+    .message-text {
+        color: black;
+        font-size: 11pt;
+        line-height: 1.5;
+    }
+
+    .message-time {
+        color: #666;
+        font-size: 9pt;
+    }
+
+    .message-image {
+        max-width: 100%;
+        page-break-inside: avoid;
+    }
+}
     </style>
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
