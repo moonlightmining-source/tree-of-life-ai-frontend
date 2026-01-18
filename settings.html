@@ -995,143 +995,155 @@
                 alert('✅ Data exported successfully!\n\nYour data has been downloaded as a JSON file.\n\nIncludes:\n• Account information\n• Subscription details\n• All conversations\n• Health profile\n• Settings');
 
             } catch (error) {
-                console.error('Error exporting data:', error);
-                alert('❌ Error exporting data. Please try again or contact support.');
-                
-                const exportBtn = document.querySelector('[onclick="exportData()"]');
-                exportBtn.disabled = false;
-                exportBtn.textContent = 'Download';
-            }
+            console.error('Error exporting data:', error);
+            alert('❌ Error exporting data. Please try again or contact support.');
+            
+            const exportBtn = document.querySelector('[onclick="exportData()"]');
+            exportBtn.disabled = false;
+            exportBtn.textContent = 'Download';
         }
-
-        function confirmDeleteAccount() {
-    // First confirmation modal
-    showCustomModal(
-        '⚠️ DELETE ACCOUNT WARNING',
-        'This will permanently delete your account and ALL data.<br><br><strong>You will no longer be billed for this account.</strong><br><br>This action CANNOT be undone.<br><br>Are you sure you want to continue?',
-        [
-            {
-                text: 'Cancel',
-                class: 'cancel',
-                callback: () => closeCustomModal()
-            },
-            {
-                text: 'Continue',
-                class: 'confirm',
-                callback: () => {
-                    closeCustomModal();
-                    // Second confirmation modal
-                    setTimeout(() => {
-                        showCustomModal(
-                            '⚠️ FINAL CONFIRMATION',
-                            'Please confirm one more time:<br><br>Delete your account and all data permanently?<br><br><strong>Your billing will be cancelled immediately.</strong>',
-                            [
-                                {
-                                    text: 'Cancel',
-                                    class: 'cancel',
-                                    callback: () => closeCustomModal()
-                                },
-                                {
-                                    text: 'Delete',
-                                    class: 'confirm delete',
-                                    callback: () => {
-                                        closeCustomModal();
-                                        deleteAccount();
-                                    }
-                                }
-                            ]
-                        );
-                    }, 300);
-                }
-            }
-        ]
-    );
-}
-
-function showCustomModal(title, message, buttons) {
-    const overlay = document.getElementById('customModalOverlay') || createModalOverlay();
-    const modal = overlay.querySelector('.custom-modal');
-    
-    // Set title and message
-    const titleEl = modal.querySelector('.custom-modal-title') || createModalTitle(modal);
-    titleEl.innerHTML = title;
-    
-    const contentEl = modal.querySelector('.custom-modal-content');
-    contentEl.innerHTML = message;
-    
-    // Clear and create buttons
-    const buttonsEl = modal.querySelector('.custom-modal-buttons');
-    buttonsEl.innerHTML = '';
-    
-    buttons.forEach(btn => {
-        const button = document.createElement('button');
-        button.className = `custom-modal-btn ${btn.class}`;
-        button.textContent = btn.text;
-        button.onclick = btn.callback;
-        buttonsEl.appendChild(button);
-    });
-    
-    overlay.classList.add('active');
-}
-
-function closeCustomModal() {
-    const overlay = document.getElementById('customModalOverlay');
-    if (overlay) {
-        overlay.classList.remove('active');
     }
-}
 
-function createModalOverlay() {
-    const overlay = document.createElement('div');
-    overlay.id = 'customModalOverlay';
-    overlay.className = 'custom-modal-overlay';
-    overlay.innerHTML = `
-        <div class="custom-modal">
-            <div class="custom-modal-title"></div>
-            <div class="custom-modal-content"></div>
-            <div class="custom-modal-buttons"></div>
-        </div>
-    `;
-    document.body.appendChild(overlay);
-    return overlay;
-}
-
-function createModalTitle(modal) {
-    const title = document.createElement('div');
-    title.className = 'custom-modal-title';
-    modal.insertBefore(title, modal.firstChild);
-    return title;
-}
-        async function deleteAccount() {
-            try {
-                const response = await fetch(`${API_BASE}/api/auth/account`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${authToken}` }
-                });
-                
-                if (response.ok) {
-                    alert('✅ Account deleted successfully.\n\nAll your data has been permanently removed.');
-                    localStorage.clear();
-                    window.location.href = 'auth.html';
-                } else {
-                    const error = await response.json().catch(() => ({}));
-                    alert('❌ Error deleting account: ' + (error.detail || 'Unknown error'));
+    function confirmDeleteAccount() {
+        // First confirmation modal
+        showCustomModal(
+            '⚠️ DELETE ACCOUNT WARNING',
+            'This will permanently delete your account and ALL data.<br><br><strong>You will no longer be billed for this account.</strong><br><br>This action CANNOT be undone.<br><br>Are you sure you want to continue?',
+            [
+                {
+                    text: 'Cancel',
+                    class: 'cancel',
+                    callback: () => closeCustomModal()
+                },
+                {
+                    text: 'Continue',
+                    class: 'confirm',
+                    callback: () => {
+                        closeCustomModal();
+                        // Second confirmation modal
+                        setTimeout(() => {
+                            showCustomModal(
+                                '⚠️ FINAL CONFIRMATION',
+                                'Please confirm one more time:<br><br>Delete your account and all data permanently?<br><br><strong>Your billing will be cancelled immediately.</strong>',
+                                [
+                                    {
+                                        text: 'Cancel',
+                                        class: 'cancel',
+                                        callback: () => closeCustomModal()
+                                    },
+                                    {
+                                        text: 'Delete',
+                                        class: 'confirm delete',
+                                        callback: () => {
+                                            closeCustomModal();
+                                            deleteAccount();
+                                        }
+                                    }
+                                ]
+                            );
+                        }, 300);
+                    }
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('❌ Error deleting account. Please try again or contact support.');
+            ]
+        );
+    }
+
+    function showCustomModal(title, message, buttons) {
+        const overlay = document.getElementById('customModalOverlay') || createModalOverlay();
+        const modal = overlay.querySelector('.custom-modal');
+        
+        // Set title and message
+        const titleEl = modal.querySelector('.custom-modal-title') || createModalTitle(modal);
+        titleEl.innerHTML = title;
+        
+        const contentEl = modal.querySelector('.custom-modal-content');
+        contentEl.innerHTML = message;
+        
+        // Clear and create buttons
+        const buttonsEl = modal.querySelector('.custom-modal-buttons');
+        buttonsEl.innerHTML = '';
+        
+        buttons.forEach(btn => {
+            const button = document.createElement('button');
+            button.className = `custom-modal-btn ${btn.class}`;
+            button.textContent = btn.text;
+            button.onclick = btn.callback;
+            buttonsEl.appendChild(button);
+        });
+        
+        overlay.classList.add('active');
+    }
+
+    function closeCustomModal() {
+        const overlay = document.getElementById('customModalOverlay');
+        if (overlay) {
+            overlay.classList.remove('active');
+        }
+    }
+
+    function createModalOverlay() {
+        const overlay = document.createElement('div');
+        overlay.id = 'customModalOverlay';
+        overlay.className = 'custom-modal-overlay';
+        overlay.innerHTML = `
+            <div class="custom-modal">
+                <div class="custom-modal-title"></div>
+                <div class="custom-modal-content"></div>
+                <div class="custom-modal-buttons"></div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+        return overlay;
+    }
+
+    function createModalTitle(modal) {
+        const title = document.createElement('div');
+        title.className = 'custom-modal-title';
+        modal.insertBefore(title, modal.firstChild);
+        return title;
+    }
+
+    async function deleteAccount() {
+        try {
+            const response = await fetch(`${API_BASE}/api/auth/account`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${authToken}` }
+            });
+            
+            if (response.ok) {
+                showCustomModal(
+                    '✅ ACCOUNT DELETED',
+                    'Your account has been permanently deleted.<br><br>All your data has been removed and billing has been cancelled.',
+                    [
+                        {
+                            text: 'OK',
+                            class: 'confirm',
+                            callback: () => {
+                                localStorage.clear();
+                                window.location.href = 'auth.html';
+                            }
+                        }
+                    ]
+                );
+            } else {
+                const error = await response.json().catch(() => ({}));
+                alert('❌ Error deleting account: ' + (error.detail || 'Unknown error'));
             }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('❌ Error deleting account. Please try again or contact support.');
         }
+    }
 
-        function showSuccess() {
-            const msg = document.getElementById('successMessage');
-            msg.classList.add('active');
-            setTimeout(() => {
-                msg.classList.remove('active');
-            }, 3000);
-        }
+    function showSuccess() {
+        const msg = document.getElementById('successMessage');
+        msg.classList.add('active');
+        setTimeout(() => {
+            msg.classList.remove('active');
+        }, 3000);
+    }
 
-        console.log('⚙️ Settings page loaded');
+    console.log('⚠️ Settings page loaded');
     </script>
 </body>
 </html>
