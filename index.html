@@ -1375,10 +1375,36 @@
     </script>
     
     <script>
-        // Export chat as PDF function
-        function exportChatAsPDF() {
-            window.print(); // Browser's print dialog can save as PDF
+    // Export chat as PDF function
+    function exportChatAsPDF() {
+        const chatMessages = document.getElementById('chatMessages');
+        
+        if (!chatMessages || chatMessages.children.length === 0) {
+            alert('No chat messages to export');
+            return;
         }
-    </script>
+        
+        // Clone the chat for PDF export
+        const clonedChat = chatMessages.cloneNode(true);
+        
+        // Create temporary container with print styles
+        const tempDiv = document.createElement('div');
+        tempDiv.style.cssText = 'position: absolute; left: -9999px; width: 210mm;';
+        tempDiv.appendChild(clonedChat);
+        document.body.appendChild(tempDiv);
+        
+        const opt = {
+            margin: [10, 10, 10, 10],
+            filename: `tree-of-life-chat-${new Date().toISOString().split('T')[0]}.pdf`,
+            image: { type: 'jpeg', quality: 0.95 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        
+        html2pdf().set(opt).from(clonedChat).save().then(() => {
+            document.body.removeChild(tempDiv);
+        });
+    }
+</script>
 </body>
 </html>
