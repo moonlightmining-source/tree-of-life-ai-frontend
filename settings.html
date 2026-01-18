@@ -989,13 +989,103 @@
         }
 
         function confirmDeleteAccount() {
-            if (confirm('⚠️ WARNING: This will permanently delete your account and ALL data.\n\nThis action CANNOT be undone.\n\nAre you absolutely sure?')) {
-                if (confirm('Please confirm one more time. Delete your account and all data?')) {
-                    deleteAccount();
+    // First confirmation modal
+    showCustomModal(
+        '⚠️ DELETE ACCOUNT WARNING',
+        'This will permanently delete your account and ALL data.<br><br><strong>You will no longer be billed for this account.</strong><br><br>This action CANNOT be undone.<br><br>Are you sure you want to continue?',
+        [
+            {
+                text: 'Cancel',
+                class: 'cancel',
+                callback: () => closeCustomModal()
+            },
+            {
+                text: 'Continue',
+                class: 'confirm',
+                callback: () => {
+                    closeCustomModal();
+                    // Second confirmation modal
+                    setTimeout(() => {
+                        showCustomModal(
+                            '⚠️ FINAL CONFIRMATION',
+                            'Please confirm one more time:<br><br>Delete your account and all data permanently?<br><br><strong>Your billing will be cancelled immediately.</strong>',
+                            [
+                                {
+                                    text: 'Cancel',
+                                    class: 'cancel',
+                                    callback: () => closeCustomModal()
+                                },
+                                {
+                                    text: 'Delete',
+                                    class: 'confirm delete',
+                                    callback: () => {
+                                        closeCustomModal();
+                                        deleteAccount();
+                                    }
+                                }
+                            ]
+                        );
+                    }, 300);
                 }
             }
-        }
+        ]
+    );
+}
 
+function showCustomModal(title, message, buttons) {
+    const overlay = document.getElementById('customModalOverlay') || createModalOverlay();
+    const modal = overlay.querySelector('.custom-modal');
+    
+    // Set title and message
+    const titleEl = modal.querySelector('.custom-modal-title') || createModalTitle(modal);
+    titleEl.innerHTML = title;
+    
+    const contentEl = modal.querySelector('.custom-modal-content');
+    contentEl.innerHTML = message;
+    
+    // Clear and create buttons
+    const buttonsEl = modal.querySelector('.custom-modal-buttons');
+    buttonsEl.innerHTML = '';
+    
+    buttons.forEach(btn => {
+        const button = document.createElement('button');
+        button.className = `custom-modal-btn ${btn.class}`;
+        button.textContent = btn.text;
+        button.onclick = btn.callback;
+        buttonsEl.appendChild(button);
+    });
+    
+    overlay.classList.add('active');
+}
+
+function closeCustomModal() {
+    const overlay = document.getElementById('customModalOverlay');
+    if (overlay) {
+        overlay.classList.remove('active');
+    }
+}
+
+function createModalOverlay() {
+    const overlay = document.createElement('div');
+    overlay.id = 'customModalOverlay';
+    overlay.className = 'custom-modal-overlay';
+    overlay.innerHTML = `
+        <div class="custom-modal">
+            <div class="custom-modal-title"></div>
+            <div class="custom-modal-content"></div>
+            <div class="custom-modal-buttons"></div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    return overlay;
+}
+
+function createModalTitle(modal) {
+    const title = document.createElement('div');
+    title.className = 'custom-modal-title';
+    modal.insertBefore(title, modal.firstChild);
+    return title;
+}
         async function deleteAccount() {
             try {
                 const response = await fetch(`${API_BASE}/api/auth/account`, {
