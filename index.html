@@ -1374,9 +1374,9 @@
         console.log('✅ Tree of Life AI - Floating modality panels enabled!');
     </script>
     
-    <script>
+   <script>
     // Export chat as PDF function
-    function exportChatAsPDF() {
+    async function exportChatAsPDF() {
         const chatMessages = document.getElementById('chatMessages');
         
         if (!chatMessages || chatMessages.children.length === 0) {
@@ -1384,26 +1384,67 @@
             return;
         }
         
-        // Clone the chat for PDF export
-        const clonedChat = chatMessages.cloneNode(true);
+        // Create a clean container for PDF
+        const pdfContainer = document.createElement('div');
+        pdfContainer.style.cssText = `
+            padding: 20px;
+            max-width: 800px;
+            background: white;
+            font-family: Arial, sans-serif;
+        `;
         
-        // Create temporary container with print styles
-        const tempDiv = document.createElement('div');
-        tempDiv.style.cssText = 'position: absolute; left: -9999px; width: 210mm;';
-        tempDiv.appendChild(clonedChat);
-        document.body.appendChild(tempDiv);
+        // Add title
+        const title = document.createElement('h1');
+        title.textContent = 'Tree of Life AI - Chat Export';
+        title.style.cssText = 'color: #B8860B; margin-bottom: 20px; font-size: 24px;';
+        pdfContainer.appendChild(title);
         
+        // Add date
+        const date = document.createElement('p');
+        date.textContent = `Date: ${new Date().toLocaleDateString()}`;
+        date.style.cssText = 'color: #666; margin-bottom: 30px;';
+        pdfContainer.appendChild(date);
+        
+        // Clone and clean messages
+        const messages = chatMessages.querySelectorAll('.message');
+        messages.forEach(msg => {
+            const msgClone = msg.cloneNode(true);
+            msgClone.style.cssText = `
+                padding: 15px;
+                margin-bottom: 15px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                page-break-inside: avoid;
+                background: ${msg.classList.contains('user') ? '#f0f7ff' : '#fef9f0'};
+                border-left: 4px solid ${msg.classList.contains('user') ? '#4A90E2' : '#B8860B'};
+            `;
+            
+            // Style text
+            const text = msgClone.querySelector('.message-text');
+            if (text) text.style.cssText = 'color: black; font-size: 12pt; line-height: 1.5;';
+            
+            // Style time
+            const time = msgClone.querySelector('.message-time');
+            if (time) time.style.cssText = 'color: #666; font-size: 10pt; margin-top: 8px;';
+            
+            pdfContainer.appendChild(msgClone);
+        });
+        
+        // Generate PDF
         const opt = {
-            margin: [10, 10, 10, 10],
+            margin: 15,
             filename: `tree-of-life-chat-${new Date().toISOString().split('T')[0]}.pdf`,
-            image: { type: 'jpeg', quality: 0.95 },
-            html2canvas: { scale: 2, useCORS: true },
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
         
-        html2pdf().set(opt).from(clonedChat).save().then(() => {
-            document.body.removeChild(tempDiv);
-        });
+        try {
+            await html2pdf().set(opt).from(pdfContainer).save();
+        } catch (error) {
+            console.error('PDF Export Error:', error);
+            alert('Failed to export PDF. Please try Print instead.');
+        }
     }
 </script>
 </body>
