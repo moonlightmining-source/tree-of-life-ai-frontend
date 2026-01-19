@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Tree of Life AI combines 10 medical traditions with AI for personalized health guidance. Get root-cause answers from Western Medicine, Ayurveda, TCM, Functional Medicine, and more.">
+    <meta name="keywords" content="integrative health AI, ayurveda AI, TCM chatbot, functional medicine AI, holistic health platform, AI health assistant, personalized health guidance">
+    <meta name="author" content="Robert - Founder, Tree of Life AI">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Tree of Life AI - Integrative Health Intelligence">
+    <meta property="og:description" content="Health guidance from 10 medical traditions, powered by AI. Root causes, not just symptoms.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://treeoflifeai.com">
+    
+    <title>Tree of Life AI - Integrative Health Intelligence Platform</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --amber-light: #D4A574;
+            --amber-medium: #C19A6B;
+            --bronze-deep: #B8860B;
+            --bronze-light: #A0826D;
+            --peach-gold: #EEC591;
+            --pure-black: #000;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: url('Images/Background.png') center center fixed;
+            background-size: cover;
+            color: var(--amber-light);
+            line-height: 1.6;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: -1;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .logo-container {
+            width: 300px;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: url('Images/Logoframe-removebg.png') center center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            margin-bottom: 2rem;
+        }
+
+        .logo-img {
+            height: 180px;
+            width: auto;
+            mix-blend-mode: screen;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            color: var(--peach-gold);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(238, 197, 145, 0.6);
+            line-height: 1.2;
+        }
+
+        .hero .tagline {
+            font-size: 1.5rem;
+            color: var(--amber-light);
+            margin-bottom: 2rem;
+            max-width: 700px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .hero .subtitle {
+            font-size: 1.2rem;
+            color: var(--amber-medium);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+        }
+
+        .cta-button {
+            width: 200px;
+            height: 200px;
+            background: url('Images/Button-removebg.png') center center;
+            background-size: cover;
+            color: var(--amber-light);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            text-decoration: none;
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            box-shadow: 0 8px 30px rgba(212, 165, 116, 0.6);
+            margin: 1rem;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px) scale(1.08);
+            box-shadow: 0 12px 45px rgba(238, 197, 145, 0.8);
+            color: var(--peach-gold);
+            filter: brightness(1.3);
+        }
+
+        /* SECTION STYLING */
+        section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section h2 {
+            font-size: 2.5rem;
+            color: var(--peach-gold);
+            text-align: center;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(238, 197, 145, 0.5);
+        }
+
+        section .section-subtitle {
+            text-align: center;
+            color: var(--amber-medium);
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+        }
+
+        /* 10 TRADITIONS GRID */
+        .traditions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .tradition-card {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .tradition-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--peach-gold);
+            box-shadow: 0 15px 40px rgba(238, 197, 145, 0.4);
+        }
+
+        .tradition-card .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .tradition-card h3 {
+            color: var(--peach-gold);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tradition-card p {
+            color: var(--amber-medium);
+            font-size: 0.9rem;
+        }
+
+        /* PRICING */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+            align-items: stretch;
+        }
+
+        .pricing-card {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 3px solid var(--bronze-deep);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--peach-gold);
+            transform: scale(1.05);
+            box-shadow: 0 20px 50px rgba(238, 197, 145, 0.5);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            border-color: var(--peach-gold);
+        }
+
+        .pricing-card h3 {
+            font-size: 1.8rem;
+            color: var(--peach-gold);
+            margin-bottom: 1rem;
+        }
+
+        .pricing-card .price {
+            font-size: 2.5rem;
+            color: var(--amber-light);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-card .period {
+            color: var(--bronze-light);
+            margin-bottom: 2rem;
+        }
+
+        .pricing-card ul {
+            list-style: none;
+            margin-bottom: 2rem;
+            text-align: left;
+            flex: 1;
+        }
+
+        .pricing-card li {
+            color: var(--amber-light);
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(184, 134, 11, 0.2);
+        }
+
+        .pricing-card li:before {
+            content: '✓ ';
+            color: var(--peach-gold);
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        .pricing-cta {
+            width: 120px;
+            height: 120px;
+            background: url('Images/Button-removebg.png') center center;
+            background-size: cover;
+            color: var(--amber-light);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.4);
+            margin: 0 auto;
+        }
+
+        .pricing-cta:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(238, 197, 145, 0.7);
+            color: var(--peach-gold);
+            filter: brightness(1.2);
+        }
+
+        /* ABOUT/FOUNDER */
+        .about-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-top: 3rem;
+        }
+
+        .founder-image {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 50%;
+            border: 4px solid var(--bronze-deep);
+            box-shadow: 0 10px 40px rgba(212, 165, 116, 0.4);
+        }
+
+        .about-text {
+            color: var(--amber-light);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .about-text h3 {
+            color: var(--peach-gold);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .about-text p {
+            margin-bottom: 1.5rem;
+        }
+
+        /* FOOTER */
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            border-top: 2px solid var(--bronze-deep);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        footer .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        footer a {
+            color: var(--amber-light);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: var(--peach-gold);
+        }
+
+        footer .copyright {
+            color: var(--bronze-light);
+            font-size: 0.9rem;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero .tagline {
+                font-size: 1.2rem;
+            }
+
+            .cta-button {
+                width: 150px;
+                height: 150px;
+                font-size: 1rem;
+            }
+
+            section h2 {
+                font-size: 2rem;
+            }
+
+            .traditions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .about-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .founder-image {
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="logo-container">
+            <img src="Images/Tree_of_life_logo_800x800-removebg.png" alt="Tree of Life AI" class="logo-img">
+        </div>
+        
+        <h1>Health Guidance from 10 Medical Traditions</h1>
+        <p class="tagline">Root causes, not just symptoms.</p>
+        <p class="subtitle">Ancient wisdom meets modern AI for personalized, integrative health intelligence</p>
+        
+        <div>
+            <a href="https://treeoflifeai.com" class="cta-button">Start Free</a>
+        </div>
+    </section>
+
+    <!-- THE 10 TRADITIONS -->
+    <section id="traditions">
+        <h2>🌳 10 Medical Traditions. One Platform.</h2>
+        <p class="section-subtitle">Stop choosing between approaches. Get the best of all worlds.</p>
+
+        <div class="traditions-grid">
+            <div class="tradition-card">
+                <div class="icon">🏥</div>
+                <h3>Western Medicine</h3>
+                <p>Evidence-based diagnostics and treatment</p>
+            </div>
+
+            <div class="tradition-card">
+                <div class="icon">🌿</div>
+                <h3>Ayurveda</h3>
+                <p>5,000-year-old system of natural healing</p>
+            </div>
+
+            <div class="tradition-card">
+                <div class="icon">☯️</div>
+                <h3>Traditional Chinese Medicine</h3>
+                <p>Qi, meridians, and holistic balance</p>
+            </div>
+
+            <div class="tradition-card">
+                <div class="icon">🌱</div>
+                <h3>Naturopathy</h3>
+                <p>Nature's healing power</p>
+            </div>
+
+            <div class="tradition-card">
+                <div class="icon">🧬</div>
+                <h3>Functional Medicine</h3>
+                <p>Root-cause, systems-based approach</p>
+            </div>
+
+            <div class="tradition-card">
+                <div class="icon">🥗</div>
+                <h3>Clinical Nutrition</h3>
+                <p>Food as medicine</p>
+            </div>
+
+            <div class="tradition-card">
+                <div class="icon">🌺</div>
+                <h3>Herbal Medicine</h3>
+                <p>Plant-based healing remedies</p>
+            </div>
+
+            <div class="tradition-card">
+                <div class="icon">🦴</div>
+                <h3>Chiropractic</h3>
+                <p>Spinal health and nervous system</p>
+            </div>
+
+            <div class="tradition-card">
+                <div class="icon">🏃</div>
+                <h3>Physical Therapy</h3>
+                <p>Movement and rehabilitation</p>
+            </div>
+
+            <div class="tradition-card">
+                <div class="icon">💪</div>
+                <h3>Fitness & Exercise</h3>
+                <p>Science-based training principles</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="pricing">
+        <h2>💎 Simple, Transparent Pricing</h2>
+        <p class="section-subtitle">Start free. Upgrade anytime.</p>
+
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Free</h3>
+                <div class="price">$0</div>
+                <div class="period">forever</div>
+                <ul>
+                    <li>10 AI conversations/month</li>
+                    <li>Basic health profile</li>
+                    <li>Health tracking basics</li>
+                    <li>Educational resources</li>
+                </ul>
+                <a href="https://treeoflifeai.com" class="pricing-cta">Try Free</a>
+            </div>
+
+            <div class="pricing-card">
+                <h3>Basic</h3>
+                <div class="price">$19</div>
+                <div class="period">per month</div>
+                <ul>
+                    <li>100 AI conversations/month</li>
+                    <li>1 family member profile</li>
+                    <li>Advanced health profile</li>
+                    <li>Medical history tracking</li>
+                    <li>Medication management</li>
+                    <li>Upload & analyze lab results</li>
+                    <li>Health metrics tracking</li>
+                    <li>Image analysis (symptoms, herbs, documents)</li>
+                    <li>Advanced health analytics</li>
+                    <li>Trend analysis & insights</li>
+                    <li>Wellness recommendations</li>
+                    <li>Family health dashboard</li>
+                    <li>30-day chat history</li>
+                    <li>Export to PDF/print</li>
+                </ul>
+                <a href="https://treeoflifeai.com/subscriptions.html" class="pricing-cta">Subscribe</a>
+            </div>
+
+            <div class="pricing-card featured">
+                <h3>Premium</h3>
+                <div class="price">$29</div>
+                <div class="period">per month</div>
+                <ul>
+                    <li>Unlimited AI conversations</li>
+                    <li>5 family member profiles</li>
+                    <li>Advanced health profile</li>
+                    <li>1-year chat history</li>
+                    <li>Medical history tracking</li>
+                    <li>Medication management</li>
+                    <li>Upload & analyze lab results</li>
+                    <li>Health metrics tracking</li>
+                    <li>Image analysis (symptoms, herbs, documents)</li>
+                    <li>Advanced health analytics</li>
+                    <li>Trend analysis & insights</li>
+                    <li>Wellness recommendations</li>
+                    <li>Family health dashboard</li>
+                    <li>Export to PDF/print</li>
+                </ul>
+                <a href="https://treeoflifeai.com/subscriptions.html" class="pricing-cta">Subscribe</a>
+            </div>
+
+            <div class="pricing-card">
+                <h3>Pro</h3>
+                <div class="price">$129</div>
+                <div class="period">per month</div>
+                <ul>
+                    <li>Everything in Premium</li>
+                    <li>Unlimited client profiles</li>
+                    <li>Client management system</li>
+                    <li>Protocol editor & library</li>
+                    <li>Assign protocols to clients</li>
+                    <li>Client portal (secure links)</li>
+                    <li>Two-way messaging with images</li>
+                    <li>Compliance tracking</li>
+                    <li>Pro dashboard with analytics</li>
+                    <li>Practice management tools</li>
+                    <li>Client progress monitoring</li>
+                    <li>Professional resources</li>
+                </ul>
+                <a href="https://treeoflifeai.com/subscriptions.html" class="pricing-cta">Subscribe</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT / FOUNDER -->
+    <section id="about">
+        <h2>👋 Meet the Founder</h2>
+        
+        <div class="about-container">
+            <div>
+                <!-- Placeholder - replace with actual founder photo -->
+                <div style="width: 300px; height: 300px; border-radius: 50%; background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep)); display: flex; align-items: center; justify-content: center; font-size: 6rem; color: var(--pure-black); margin: 0 auto; border: 4px solid var(--bronze-deep); box-shadow: 0 10px 40px rgba(212, 165, 116, 0.4);">
+                    R
+                </div>
+            </div>
+            
+            <div class="about-text">
+                <h3>Robert - Founder of Tree of Life AI</h3>
+                <p>I founded Tree of Life AI because I believe healthcare should treat the whole person, not just symptoms.</p>
+                
+                <p>After witnessing too many people caught in cycles of prescriptions without addressing underlying causes, I set out to create something different: a platform that honors both ancient healing wisdom and modern medical science.</p>
+                
+                <p>Tree of Life AI integrates 10 evidence-based medical traditions into a single AI-powered platform. Instead of choosing between approaches, users get personalized guidance that draws from the best of all traditions.</p>
+                
+                <p>We're not replacing doctors. We're empowering people to ask better questions, explore root causes, and make informed decisions about their health journey.</p>
+                
+                <p><strong>Because true healing happens when we see the body as an interconnected whole - not a collection of isolated symptoms.</strong></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-links">
+            <a href="https://treeoflifeai.com/about.html">About</a>
+            <a href="https://treeoflifeai.com/resources.html">Resources</a>
+            <a href="https://treeoflifeai.com/privacy.html">Privacy</a>
+            <a href="https://treeoflifeai.com/terms.html">Terms</a>
+            <a href="https://treeoflifeai.com/training-gallery.html">Training Gallery</a>
+        </div>
+        
+        <div class="copyright">
+            © 2026 Tree of Life AI • Educational information only • Not medical advice • Always consult qualified healthcare professionals
+        </div>
+    </footer>
+
+    <!-- Simple Analytics (optional - add your tracking code) -->
+</body>
+</html>
