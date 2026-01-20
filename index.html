@@ -1327,19 +1327,28 @@
             });
         }
 
-        // Function to update placeholder text
+          // Function to update placeholder text
         function updatePlaceholder() {
             const input = document.getElementById('userInput');
             if (!input) return;
 
-            if (selectedTraditions.length === 0) {
+            const validTraditions = window.selectedTraditions.filter(t => t !== 'all');
+            
+            console.log('📝 updatePlaceholder called');
+            console.log('📝 validTraditions:', validTraditions);
+            console.log('📝 validTraditions.length:', validTraditions.length);
+            
+            if (validTraditions.length === 0) {
                 input.placeholder = "Choose the medical traditions you'd like guidance from, then ask your question. Selecting specific modalities gives you more focused, relevant insights...";
-            } else if (selectedTraditions.length === 1) {
-                const btn = document.querySelector(`.tradition-btn[data-tradition="${selectedTraditions[0]}"]`);
-                const traditionName = btn ? btn.textContent.trim().replace(/\n/g, ' ') : selectedTraditions[0];
+                console.log('📝 Set placeholder: EMPTY ARRAY (default message)');
+            } else if (validTraditions.length === 1) {
+                const btn = document.querySelector(`.tradition-btn[data-tradition="${validTraditions[0]}"]`);
+                const traditionName = btn ? btn.textContent.trim().replace(/\n/g, ' ') : validTraditions[0];
                 input.placeholder = `Asking from ${traditionName} perspective...`;
+                console.log('📝 Set placeholder: SINGLE TRADITION -', traditionName);
             } else {
-                input.placeholder = `Asking from ${selectedTraditions.length} selected modalities...`;
+                input.placeholder = `Asking from ${validTraditions.length} selected modalities...`;
+                console.log('📝 Set placeholder: MULTIPLE TRADITIONS -', validTraditions.length);
             }
         }
 
@@ -1357,19 +1366,19 @@
             btn.addEventListener('click', function() {
                 const tradition = this.dataset.tradition;
                 
-                // Ignore if this is somehow 'all' (shouldn't exist but safety check)
-                if (tradition === 'all') return;
+                if (tradition === 'all' || tradition === undefined || tradition === null) {
+                    console.warn('⚠️ Invalid tradition detected:', tradition);
+                    return;
+                }
                 
-                // Check if already active
+                window.selectedTraditions = window.selectedTraditions.filter(t => t !== 'all');
+                
                 const isCurrentlyActive = this.classList.contains('active');
                 
-                // Toggle active state
                 if (isCurrentlyActive) {
-                    // Remove from array
                     window.selectedTraditions = window.selectedTraditions.filter(t => t !== tradition && t !== 'all');
                     syncTraditionButtons(tradition, false);
                 } else {
-                    // Add to array (but filter out 'all' if it exists)
                     window.selectedTraditions = window.selectedTraditions.filter(t => t !== 'all');
                     if (!window.selectedTraditions.includes(tradition)) {
                         window.selectedTraditions.push(tradition);
@@ -1377,12 +1386,21 @@
                     syncTraditionButtons(tradition, true);
                 }
                 
-                console.log('🎨 Selected traditions:', window.selectedTraditions);
+                // 🔍 DEBUG LOGGING
+                console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━');
+                console.log('🔍 CLICKED TRADITION:', tradition);
+                console.log('🔍 IS NOW ACTIVE:', !isCurrentlyActive);
+                console.log('🔍 ARRAY BEFORE PLACEHOLDER UPDATE:', [...window.selectedTraditions]);
+                console.log('🔍 ARRAY LENGTH:', window.selectedTraditions.length);
+                console.log('🔍 INCLUDES "all"?:', window.selectedTraditions.includes('all'));
                 
-                // Update placeholder
                 updatePlaceholder();
                 
-                // Scroll to chat
+                // 🔍 CHECK PLACEHOLDER AFTER UPDATE
+                const input = document.getElementById('userInput');
+                console.log('🔍 PLACEHOLDER IS NOW:', input.placeholder);
+                console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━');
+                
                 document.querySelector('.chat-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         });
