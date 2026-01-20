@@ -1313,11 +1313,8 @@
     </script>
     
     <script>
-        // Initialize selectedTraditions array (shared with app.js)
-
-        if (typeof selectedTraditions === 'undefined') {
-            window.selectedTraditions = [];
-        }
+        // Initialize selectedTraditions as EMPTY array
+        window.selectedTraditions = [];
 
         // Function to sync all tradition buttons (desktop + mobile)
         function syncTraditionButtons(tradition, isActive) {
@@ -1338,19 +1335,30 @@
             if (selectedTraditions.length === 0) {
                 input.placeholder = "Choose the medical traditions you'd like guidance from, then ask your question. Selecting specific modalities gives you more focused, relevant insights...";
             } else if (selectedTraditions.length === 1) {
-                // Find the button with this tradition to get its text
                 const btn = document.querySelector(`.tradition-btn[data-tradition="${selectedTraditions[0]}"]`);
                 const traditionName = btn ? btn.textContent.trim().replace(/\n/g, ' ') : selectedTraditions[0];
-                input.placeholder = `Ask from ${traditionName} perspective...`;
+                input.placeholder = `Asking from ${traditionName} perspective...`;
             } else {
-                input.placeholder = `Ask from ${selectedTraditions.length} selected modalities...`;
+                input.placeholder = `Asking from ${selectedTraditions.length} selected modalities...`;
             }
         }
+
+        // Validate that at least one modality is selected
+        window.validateModalitySelection = function() {
+            if (selectedTraditions.length === 0) {
+                showCustomAlert('Please select at least one medical modality before asking your question.');
+                return false;
+            }
+            return true;
+        };
 
         // Tradition button handling - MULTI-SELECT
         document.querySelectorAll('.tradition-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const tradition = this.dataset.tradition;
+                
+                // Ignore if this is somehow 'all' (shouldn't exist but safety check)
+                if (tradition === 'all') return;
                 
                 // Check if already active
                 const isCurrentlyActive = this.classList.contains('active');
@@ -1358,17 +1366,18 @@
                 // Toggle active state
                 if (isCurrentlyActive) {
                     // Remove from array
-                    selectedTraditions = selectedTraditions.filter(t => t !== tradition);
+                    window.selectedTraditions = window.selectedTraditions.filter(t => t !== tradition && t !== 'all');
                     syncTraditionButtons(tradition, false);
                 } else {
-                    // Add to array
-                    if (!selectedTraditions.includes(tradition)) {
-                        selectedTraditions.push(tradition);
+                    // Add to array (but filter out 'all' if it exists)
+                    window.selectedTraditions = window.selectedTraditions.filter(t => t !== 'all');
+                    if (!window.selectedTraditions.includes(tradition)) {
+                        window.selectedTraditions.push(tradition);
                     }
                     syncTraditionButtons(tradition, true);
                 }
                 
-                console.log('🎨 Selected traditions:', selectedTraditions);
+                console.log('🎨 Selected traditions:', window.selectedTraditions);
                 
                 // Update placeholder
                 updatePlaceholder();
@@ -1388,7 +1397,9 @@
         }
 
         console.log('✅ Tree of Life AI - Modality selection system initialized!');
+        console.log('🎨 Starting with traditions:', window.selectedTraditions);
     </script>
+
 
 </body>
 </html>
