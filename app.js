@@ -14,9 +14,11 @@ let userName = localStorage.getItem('userName') || 'friend'; // Get user's first
 let pendingImage = null;
 
 // Track selected medical traditions
-let selectedTraditions = ['all']; // Default to 'all'
+// Use window.selectedTraditions set by index.html
 // Build system prompt based on selected traditions
 function buildSystemPrompt() {
+    const selectedTraditions = window.selectedTraditions || [];
+    
     if (selectedTraditions.includes('all') || selectedTraditions.length === 0) {
         return null; // Use default Claude behavior
     }
