@@ -37,7 +37,9 @@ function buildSystemPrompt() {
         
     };
     
+    const selectedTraditions = window.selectedTraditions || [];
     const selected = selectedTraditions.map(t => traditionNames[t] || t);
+
     
     return `You are Tree of Life AI. The user has specifically selected these healing traditions: ${selected.join(', ')}. 
 
