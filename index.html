@@ -1321,40 +1321,67 @@
 
         // Call on page load
         document.addEventListener('DOMContentLoaded', checkProStatus);
-    </script>
-   
     <script>
-        // Tradition button handling - MULTI-SELECT (No "All Modalities" button)
+        // Initialize selectedTraditions array (shared with app.js)
+        if (typeof selectedTraditions === 'undefined') {
+            window.selectedTraditions = [];
+        }
+
+        // Function to sync all tradition buttons (desktop + mobile)
+        function syncTraditionButtons(tradition, isActive) {
+            document.querySelectorAll(`.tradition-btn[data-tradition="${tradition}"]`).forEach(btn => {
+                if (isActive) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        // Function to update placeholder text
+        function updatePlaceholder() {
+            const input = document.getElementById('userInput');
+            if (!input) return;
+
+            if (selectedTraditions.length === 0) {
+                input.placeholder = "Choose the medical traditions you'd like guidance from, then ask your question. Selecting specific modalities gives you more focused, relevant insights...";
+            } else if (selectedTraditions.length === 1) {
+                // Find the button with this tradition to get its text
+                const btn = document.querySelector(`.tradition-btn[data-tradition="${selectedTraditions[0]}"]`);
+                const traditionName = btn ? btn.textContent.trim().replace(/\n/g, ' ') : selectedTraditions[0];
+                input.placeholder = `Ask from ${traditionName} perspective...`;
+            } else {
+                input.placeholder = `Ask from ${selectedTraditions.length} selected modalities...`;
+            }
+        }
+
+        // Tradition button handling - MULTI-SELECT
         document.querySelectorAll('.tradition-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const tradition = this.dataset.tradition;
                 
-                // Toggle this tradition
-                this.classList.toggle('active');
+                // Check if already active
+                const isCurrentlyActive = this.classList.contains('active');
                 
-                // Update selectedTraditions array
-                if (this.classList.contains('active')) {
+                // Toggle active state
+                if (isCurrentlyActive) {
+                    // Remove from array
+                    selectedTraditions = selectedTraditions.filter(t => t !== tradition);
+                    syncTraditionButtons(tradition, false);
+                } else {
+                    // Add to array
                     if (!selectedTraditions.includes(tradition)) {
                         selectedTraditions.push(tradition);
                     }
-                } else {
-                    selectedTraditions = selectedTraditions.filter(t => t !== tradition);
+                    syncTraditionButtons(tradition, true);
                 }
                 
                 console.log('🎨 Selected traditions:', selectedTraditions);
                 
                 // Update placeholder
-                const input = document.getElementById('userInput');
-                if (input) {
-                    if (selectedTraditions.length === 0) {
-                        input.placeholder = 'Select modalities and ask your health question...';
-                    } else if (selectedTraditions.length === 1) {
-                        input.placeholder = `Ask from ${this.textContent.trim()} perspective...`;
-                    } else {
-                        input.placeholder = `Ask from ${selectedTraditions.length} selected traditions...`;
-                    }
-                }
+                updatePlaceholder();
                 
+                // Scroll to chat
                 document.querySelector('.chat-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         });
@@ -1364,11 +1391,12 @@
         if (textarea) {
             textarea.addEventListener('input', function() {
                 this.style.height = 'auto';
-                this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+                this.style.height = Math.min(this.scrollHeight, 200) + 'px';
             });
         }
 
-        console.log('✅ Tree of Life AI - Floating modality panels enabled!');
+        console.log('✅ Tree of Life AI - Modality selection system initialized!');
     </script>
+
 </body>
 </html>
