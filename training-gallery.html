@@ -622,6 +622,26 @@
         document.getElementById('lightbox').addEventListener('click', function(e) {
             if (e.target === this) closeLightbox();
         });
+        
+        // Smart Back Button - changes based on where user came from
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const backBtn = document.querySelector('.back-btn');
+            
+            if (urlParams.get('from') === 'promo') {
+                // User came from promo page
+                backBtn.textContent = '← Back to Promo';
+                backBtn.onclick = function() {
+                    window.location.href = 'https://join.treeoflifeai.com';
+                };
+            } else {
+                // Normal gallery visitor
+                backBtn.textContent = '← Back to Dashboard';
+                backBtn.onclick = function() {
+                    window.location.href = 'index.html';
+                };
+            }
+        });
     </script>
 </body>
 </html>
