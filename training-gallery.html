@@ -628,7 +628,7 @@
             if (e.target === this) closeLightbox();
         });
         
-        // Smart Back Button - changes based on where user came from
+         // Smart Back Button - changes based on where user came from
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             const backBtn = document.querySelector('.back-btn');
@@ -645,6 +645,36 @@
                 backBtn.onclick = function() {
                     window.location.href = 'index.html';
                 };
+            }
+
+            // Handle anchor scrolling - make sure anchored item is visible and scroll to it
+            if (window.location.hash) {
+                const targetId = window.location.hash.substring(1); // Remove the #
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    // Show all items first (in case it's filtered)
+                    document.querySelectorAll('.gallery-item').forEach(item => {
+                        item.classList.add('active');
+                    });
+                    
+                    // Set "All Features" tab as active
+                    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                    document.querySelector('.tab-btn').classList.add('active');
+                    
+                    // Scroll to the element after a short delay (let page render)
+                    setTimeout(function() {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        // Add highlight effect
+                        targetElement.style.transition = 'all 0.3s';
+                        targetElement.style.transform = 'scale(1.05)';
+                        targetElement.style.boxShadow = '0 15px 50px rgba(238, 197, 145, 0.8)';
+                        setTimeout(function() {
+                            targetElement.style.transform = '';
+                            targetElement.style.boxShadow = '';
+                        }, 2000);
+                    }, 300);
+                }
             }
         });
     </script>
