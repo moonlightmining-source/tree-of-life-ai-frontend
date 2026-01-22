@@ -876,38 +876,35 @@
             }
 
             .tradition-btn {
-                width: 120px;
-                height: 120px;
-                background: url('Images/Button.png') center center;
-                background-size: cover;
-                background-color: transparent !important;
-                color: var(--amber-light);
+                background: none;
                 border: none;
-                text-align: center;
+                color: var(--amber-light);
+                font-size: 0.95rem;
+                font-weight: 500;
                 cursor: pointer;
-                font-size: 0.75rem;
-                font-weight: 600;
-                line-height: 1.1;
+                padding: 0.4rem 0;
+                margin: 0.25rem 0;
+                text-decoration: underline;
+                text-decoration-color: var(--bronze-deep);
+                text-underline-offset: 3px;
                 transition: all 0.3s;
-                position: relative;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 0.75rem;
-                clip-path: polygon(
-                    25% 0%, 75% 0%, 
-                    100% 25%, 100% 75%, 
-                    75% 100%, 25% 100%, 
-                    0% 75%, 0% 25%
-                );
-                box-shadow: 0 3px 12px rgba(212, 165, 116, 0.3);
+                text-align: left;
+                display: block;
+                line-height: 1.4;
             }
 
-            .tradition-btn:hover, .tradition-btn.active {
-                transform: translateY(-3px) scale(1.03);
-                box-shadow: 0 6px 25px rgba(212, 165, 116, 0.6);
+            .tradition-btn:hover {
                 color: var(--peach-gold);
-                filter: brightness(1.2);
+                text-decoration-color: var(--peach-gold);
+                text-shadow: 0 0 10px rgba(238, 197, 145, 0.6);
+            }
+
+            .tradition-btn.active {
+                color: var(--peach-gold);
+                text-decoration-color: var(--peach-gold);
+                text-decoration-thickness: 2px;
+                font-weight: 700;
+                text-shadow: 0 0 15px rgba(238, 197, 145, 0.8);
             }
 
             .traditions-section {
