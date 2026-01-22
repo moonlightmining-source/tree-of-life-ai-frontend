@@ -647,7 +647,7 @@
                 };
             }
 
-            // Handle anchor scrolling - make sure anchored item is visible and scroll to it
+            // Handle anchor scrolling AND auto-open lightbox
             if (window.location.hash) {
                 const targetId = window.location.hash.substring(1); // Remove the #
                 const targetElement = document.getElementById(targetId);
@@ -662,18 +662,14 @@
                     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
                     document.querySelector('.tab-btn').classList.add('active');
                     
-                    // Scroll to the element after a short delay (let page render)
-                    setTimeout(function() {
-                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        // Add highlight effect
-                        targetElement.style.transition = 'all 0.3s';
-                        targetElement.style.transform = 'scale(1.05)';
-                        targetElement.style.boxShadow = '0 15px 50px rgba(238, 197, 145, 0.8)';
+                    // Get the data-index and open the lightbox
+                    const imageIndex = parseInt(targetElement.dataset.index);
+                    if (!isNaN(imageIndex)) {
                         setTimeout(function() {
-                            targetElement.style.transform = '';
-                            targetElement.style.boxShadow = '';
-                        }, 2000);
-                    }, 300);
+                            currentImageIndex = imageIndex;
+                            openLightbox();
+                        }, 500);
+                    }
                 }
             }
         });
