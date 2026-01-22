@@ -751,37 +751,32 @@
             }
 
             .tradition-btn {
-                width: 90px;
-                height: 90px;
-                background: url('Images/Button.png') center center;
-                background-size: cover;
-                background-color: transparent !important;
-                color: var(--amber-light);
+                background: none;
                 border: none;
-                text-align: center;
+                color: var(--amber-light);
+                font-size: 0.85rem;
+                font-weight: 500;
                 cursor: pointer;
-                font-size: 0.6rem;
-                font-weight: 600;
-                line-height: 1.1;
-                padding: 0.5rem;
+                padding: 0.3rem 0;
+                margin: 0.2rem 0;
+                text-decoration: underline;
+                text-decoration-color: var(--bronze-deep);
+                text-underline-offset: 2px;
                 transition: all 0.3s;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                clip-path: polygon(
-                    30% 0%, 70% 0%, 
-                    100% 30%, 100% 70%, 
-                    70% 100%, 30% 100%, 
-                    0% 70%, 0% 30%
-                );
-                box-shadow: 0 3px 12px rgba(212, 165, 116, 0.3);
+                text-align: left;
+                display: block;
+                line-height: 1.3;
             }
 
             .tradition-btn:hover, .tradition-btn.active {
-                transform: translateY(-2px) scale(1.03);
-                box-shadow: 0 6px 20px rgba(212, 165, 116, 0.6);
                 color: var(--peach-gold);
-                filter: brightness(1.2);
+                text-decoration-color: var(--peach-gold);
+            }
+
+            .tradition-btn.active {
+                text-decoration-thickness: 2px;
+                font-weight: 700;
+                text-shadow: 0 0 10px rgba(238, 197, 145, 0.6);
             }
 
             .chat-section {
