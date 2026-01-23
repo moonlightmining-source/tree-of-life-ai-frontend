@@ -892,12 +892,37 @@
                             </div>
                         </div>
 
-                        <!-- SUBMISSIONS CONTAINER -->
-                        <div id="submissionsContainer" class="submissions-container">
-                            <div style="text-align: center; padding: 2rem; color: var(--amber-medium);">
-                                Loading submissions...
+                         <!-- MESSAGING TAB -->
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: var(--peach-gold); margin-bottom: 1rem;">💬 Messages with Client</h3>
+                        
+                        <!-- Message Thread -->
+                        <div id="messageThread" class="message-thread-container">
+                            <div class="no-messages">
+                                No messages yet. Send a message to start the conversation.
                             </div>
                         </div>
+                        
+                        <!-- Message Input -->
+                        <div class="message-input-container">
+                            <textarea 
+                                id="messageInput" 
+                                class="message-input-box" 
+                                placeholder="Type your message to the client..."
+                                onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); }"
+                            ></textarea>
+                            <button class="btn-send-message" onclick="sendMessage()" id="sendMessageBtn">
+                                Send Message
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- SUBMISSIONS CONTAINER -->
+                    <div id="submissionsContainer" class="submissions-container">
+                        <div style="text-align: center; padding: 2rem; color: var(--amber-medium);">
+                            Loading submissions...
+                        </div>
+                    </div>
                     </div>
                 </div>
             </div>
