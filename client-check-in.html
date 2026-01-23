@@ -1448,6 +1448,151 @@
                 alert('Link selected - press Ctrl+C (Cmd+C on Mac) to copy');
             }
         }
+
+        // ==================== TWO-WAY MESSAGING FUNCTIONS ====================
+        
+        let messageRefreshInterval = null;
+        
+        async function loadMessageThread() {
+            if (!currentClient) {
+                document.getElementById('messageThread').innerHTML = `
+                    <div class="no-messages">Select a client to view messages</div>
+                `;
+                return;
+            }
+            
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/client-messages/thread/${currentClient.id}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    displayMessageThread(data.messages);
+                } else {
+                    console.error('Failed to load messages:', response.status);
+                }
+            } catch (error) {
+                console.error('Error loading messages:', error);
+            }
+        }
+        
+        function displayMessageThread(messages) {
+            const container = document.getElementById('messageThread');
+            
+            if (!messages || messages.length === 0) {
+                container.innerHTML = `
+                    <div class="no-messages">
+                        No messages yet. Send a message to start the conversation.
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = messages.map(msg => {
+                const senderClass = msg.sender_type;
+                const senderName = msg.sender_type === 'client' ? currentClient.name : 'You';
+                const timestamp = new Date(msg.created_at).toLocaleString();
+                
+                let imageHTML = '';
+                if (msg.image_base64) {
+                    imageHTML = `
+                        <img src="${msg.image_base64}" 
+                             style="max-width: 100%; border-radius: 8px; margin-top: 0.5rem; cursor: pointer;"
+                             onclick="openImageModal('${msg.image_base64}')"
+                             alt="Attachment">
+                    `;
+                }
+                
+                return `
+                    <div class="message-bubble ${senderClass}">
+                        <div class="message-sender">${senderName}</div>
+                        <div class="message-text">${escapeHtml(msg.message_text)}</div>
+                        ${imageHTML}
+                        <div class="message-time">${timestamp}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Scroll to bottom
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        async function sendMessage() {
+            if (!currentClient) {
+                alert('Please select a client first');
+                return;
+            }
+            
+            const messageInput = document.getElementById('messageInput');
+            const messageText = messageInput.value.trim();
+            
+            if (!messageText) {
+                alert('Please enter a message');
+                return;
+            }
+            
+            const sendBtn = document.getElementById('sendMessageBtn');
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Sending...';
+            
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/client-messages/thread/${currentClient.id}/reply`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message_text: messageText
+                    })
+                });
+                
+                if (response.ok) {
+                    messageInput.value = '';
+                    await loadMessageThread();
+                    console.log('✅ Message sent successfully');
+                } else {
+                    const error = await response.json();
+                    alert(`Failed to send message: ${error.detail || 'Unknown error'}`);
+                }
+            } catch (error) {
+                console.error('Error sending message:', error);
+                alert('Failed to send message. Please try again.');
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Send Message';
+            }
+        }
+        
+        function startMessageRefresh() {
+            // Stop any existing refresh
+            if (messageRefreshInterval) {
+                clearInterval(messageRefreshInterval);
+            }
+            
+            // Refresh messages every 10 seconds when on submissions tab
+            if (currentTab === 'submissions') {
+                messageRefreshInterval = setInterval(() => {
+                    loadMessageThread();
+                }, 10000);
+            }
+        }
+        
+        function stopMessageRefresh() {
+            if (messageRefreshInterval) {
+                clearInterval(messageRefreshInterval);
+                messageRefreshInterval = null;
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
     </script>
 </body>
 </html>
