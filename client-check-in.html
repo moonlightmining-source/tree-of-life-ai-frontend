@@ -1121,6 +1121,11 @@
                 return;
             }
 
+            // Load messages when client is selected
+            if (currentTab === 'submissions') {
+                await loadMessageThread();
+                startMessageRefresh();
+            }
             // Update form
             document.getElementById('checkinTitle').textContent = `${currentClient.name}`;
             document.getElementById('currentProtocol').value = currentAssignment.protocol_name || 'Unknown';
