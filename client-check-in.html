@@ -1497,9 +1497,18 @@ async def mark_client_messages_read(member_id: int, current_user: dict = Depends
         conn.commit()
         
         return {"success": True, "marked_read": True}
-                if (response.ok) {
+               if (response.ok) {
                     const data = await response.json();
                     displayMessageThread(data.messages);
+                    
+                    // Mark client messages as read
+                    await fetch(`${API_BASE}/api/client-messages/mark-read/${currentClient.id}`, {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    
+                    // Refresh client list to update badges
+                    await displayClients();
                 } else {
                     console.error('Failed to load messages:', response.status);
                 }
