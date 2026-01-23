@@ -987,9 +987,12 @@
             
             if (tabName === 'compliance') {
                 document.getElementById('complianceTab').classList.add('active');
+                stopMessageRefresh();
             } else {
                 document.getElementById('submissionsTab').classList.add('active');
                 loadClientSubmissions();
+                loadMessageThread();
+                startMessageRefresh();
             }
         }
 
