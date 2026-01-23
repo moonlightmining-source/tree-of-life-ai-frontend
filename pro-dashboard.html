@@ -827,7 +827,7 @@ I'm here to help and can make adjustments if needed!`;
             }
         }
 
-        function renderClientActivity(clients) {
+        async function renderClientActivity(clients) {
             const tbody = document.getElementById('activityBody');
             tbody.innerHTML = '';
 
@@ -841,12 +841,15 @@ I'm here to help and can make adjustments if needed!`;
             document.getElementById('activityTable').style.display = 'table';
             document.getElementById('emptyState').style.display = 'none';
 
-            clients.forEach(activity => {
+            for (const activity of clients) {
+                const unreadCount = await getUnreadCount(activity.client_id);
+                const unreadBadge = unreadCount > 0 ? `<span class="unread-badge">💬 ${unreadCount}</span>` : '';
+                
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>
                         <span class="client-link">
-                            ${escapeHtml(activity.client_name)}
+                            ${escapeHtml(activity.client_name)}${unreadBadge}
                         </span>
                     </td>
                     <td>${formatDate(activity.last_active)}</td>
@@ -867,7 +870,7 @@ I'm here to help and can make adjustments if needed!`;
                     </td>
                 `;
                 tbody.appendChild(row);
-            });
+            }
         }
 
         function formatDate(dateString) {
