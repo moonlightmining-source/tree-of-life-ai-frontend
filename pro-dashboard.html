@@ -1309,6 +1309,29 @@ I'm here to help and can make adjustments if needed!`;
             return div.innerHTML;
         }
 
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        async function getUnreadCount(clientId) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_URL}/api/client-messages/${clientId}/count`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.unread_count || 0;
+                }
+            } catch (error) {
+                console.error('Error getting unread count:', error);
+            }
+            return 0;
+        }
+
         document.addEventListener('DOMContentLoaded', loadDashboard);
     </script>
 </body>
