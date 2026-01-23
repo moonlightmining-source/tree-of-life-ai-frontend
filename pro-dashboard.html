@@ -1321,7 +1321,7 @@ I'm here to help and can make adjustments if needed!`;
         async function getUnreadCount(clientId) {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`${API_URL}/api/client-messages/${clientId}/count`, {
+                const response = await fetch(`${API_URL}/api/count-unread-messages/${clientId}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 
