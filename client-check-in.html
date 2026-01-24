@@ -1094,7 +1094,7 @@
         async function getUnreadCount(clientId) {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE}/api/count-unread-messages/${clientId}`, {
+                const response = await fetch(`${API_BASE}/api/client-messages/${clientId}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 
@@ -1195,7 +1195,7 @@
 
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE}/api/count-unread-messages/${currentClient.id}`, {
+                const response = await fetch(`${API_BASE}/api/client-messages/${currentClient.id}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
@@ -1278,7 +1278,7 @@
         async function markAsRead(messageId) {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE}/api/count-unread-messages/${messageId}/read`, {
+                const response = await fetch(`${API_BASE}/api/client-messages/${messageId}/read`, {
                     method: 'POST',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -1469,7 +1469,7 @@
             
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE}/api/count-unread-messages/thread/${currentClient.id}`, {
+                const response = await fetch(`${API_BASE}/api/client-messages/thread/${currentClient.id}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 
@@ -1478,7 +1478,7 @@
                     displayMessageThread(data.messages);
                     
                     // Mark client messages as read
-                    await fetch(`${API_BASE}/api/count-unread-messages/mark-read/${currentClient.id}`, {
+                    await fetch(`${API_BASE}/api/client-messages/mark-read/${currentClient.id}`, {
                         method: 'POST',
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
@@ -1554,7 +1554,7 @@
             
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE}/api/count-unread-messages/thread/${currentClient.id}/reply`, {
+                const response = await fetch(`${API_BASE}/api/client-messages/thread/${currentClient.id}/reply`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
