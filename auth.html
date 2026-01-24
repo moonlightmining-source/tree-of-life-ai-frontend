@@ -680,35 +680,46 @@
         });
         
         console.log('🌿 Auth page loaded - Beautiful octagonal design!');
-        function showForgotPassword() {
-    const formTitle = document.querySelector('.form-title');
-    const formSubtitle = document.querySelector('.form-subtitle');
+      function showForgotPassword() {
+    const authTitle = document.querySelector('.auth-title');
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
+    const formTabs = document.querySelector('.form-tabs');
     
-    formTitle.textContent = 'Reset Password';
-    formSubtitle.textContent = 'Enter your email to receive a reset link';
+    authTitle.textContent = 'Reset Password';
     
     loginForm.style.display = 'none';
     registerForm.style.display = 'none';
+    formTabs.style.display = 'none';
     
     const existingForgotForm = document.getElementById('forgotPasswordForm');
     if (existingForgotForm) existingForgotForm.remove();
     
-    const forgotForm = document.createElement('form');
+    const forgotForm = document.createElement('div');
     forgotForm.id = 'forgotPasswordForm';
-    forgotForm.style.display = 'block';
+    forgotForm.className = 'form-content active';
     forgotForm.innerHTML = `
-        <input type="email" id="resetEmail" placeholder="Email Address" required 
-               style="width: 100%; padding: 12px; margin-bottom: 1rem; border: 2px solid var(--bronze-deep); border-radius: 8px; background: rgba(0,0,0,0.3); color: var(--amber-light); font-size: 1rem;">
-        <button type="submit" class="submit-btn" style="margin-bottom: 1rem;">Send Reset Link</button>
-        <div style="text-align: center;">
-            <a href="#" onclick="location.reload(); return false;" 
-               style="color: var(--amber-light); text-decoration: none; font-size: 0.9rem;">← Back to Login</a>
-        </div>
+        <form id="forgotPasswordFormSubmit">
+            <p style="text-align: center; color: var(--amber-medium); margin-bottom: 1.5rem;">
+                Enter your email to receive a password reset link
+            </p>
+            <div class="form-group">
+                <label for="resetEmail">Email</label>
+                <input type="email" id="resetEmail" placeholder="your@email.com" required>
+            </div>
+            <button type="submit" class="submit-btn">Send Reset Link</button>
+            <div style="text-align: center; margin-top: 1rem;">
+                <a href="#" onclick="location.reload(); return false;" 
+                   style="color: var(--amber-light); text-decoration: none; font-size: 0.9rem;">
+                    ← Back to Login
+                </a>
+            </div>
+        </form>
     `;
     
-    forgotForm.onsubmit = async (e) => {
+    registerForm.insertAdjacentElement('afterend', forgotForm);
+    
+    document.getElementById('forgotPasswordFormSubmit').onsubmit = async (e) => {
         e.preventDefault();
         const email = document.getElementById('resetEmail').value;
         const btn = forgotForm.querySelector('button');
@@ -716,7 +727,7 @@
         btn.textContent = 'Sending...';
         
         try {
-            const response = await fetch(`${API_BASE}/api/auth/request-password-reset`, {
+            const response = await fetch(`${API_URL}/api/auth/request-password-reset`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: email })
@@ -731,8 +742,6 @@
             btn.textContent = 'Send Reset Link';
         }
     };
-    
-    formSubtitle.insertAdjacentElement('afterend', forgotForm);
 }
     </script>
 </body>
