@@ -421,6 +421,50 @@
         }
 
         console.log('🔐 Admin panel loaded');
+        async function deleteUser() {
+    const adminPassword = getAdminPassword();
+    if (!adminPassword) return;
+
+    const email = document.getElementById('delete-email').value;
+
+    if (!email) {
+        showMessage('Please enter user email', 'error');
+        return;
+    }
+
+    // Double confirmation
+    if (!confirm(`⚠️ PERMANENTLY DELETE ${email}?\n\nThis will delete:\n- User account\n- All family members\n- All health data\n- All protocols\n- All messages\n\nTHIS CANNOT BE UNDONE!`)) {
+        return;
+    }
+
+    if (!confirm(`Are you ABSOLUTELY SURE you want to delete ${email}?`)) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/api/admin/delete-user`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                admin_password: adminPassword,
+                email: email
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            showMessage('✅ ' + data.message, 'success');
+            document.getElementById('delete-email').value = '';
+            listUsers(); // Refresh list
+        } else {
+            showMessage('❌ ' + (data.detail || 'Delete failed'), 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showMessage('Error: ' + error.message, 'error');
+    }
+}
     </script>
 </body>
 </html>
