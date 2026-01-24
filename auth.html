@@ -686,6 +686,60 @@
         });
         
         console.log('🌿 Auth page loaded - Beautiful octagonal design!');
+        function showForgotPassword() {
+    const formTitle = document.querySelector('.form-title');
+    const formSubtitle = document.querySelector('.form-subtitle');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    
+    formTitle.textContent = 'Reset Password';
+    formSubtitle.textContent = 'Enter your email to receive a reset link';
+    
+    loginForm.style.display = 'none';
+    registerForm.style.display = 'none';
+    
+    const existingForgotForm = document.getElementById('forgotPasswordForm');
+    if (existingForgotForm) existingForgotForm.remove();
+    
+    const forgotForm = document.createElement('form');
+    forgotForm.id = 'forgotPasswordForm';
+    forgotForm.style.display = 'block';
+    forgotForm.innerHTML = `
+        <input type="email" id="resetEmail" placeholder="Email Address" required 
+               style="width: 100%; padding: 12px; margin-bottom: 1rem; border: 2px solid var(--bronze-deep); border-radius: 8px; background: rgba(0,0,0,0.3); color: var(--amber-light); font-size: 1rem;">
+        <button type="submit" class="submit-btn" style="margin-bottom: 1rem;">Send Reset Link</button>
+        <div style="text-align: center;">
+            <a href="#" onclick="location.reload(); return false;" 
+               style="color: var(--amber-light); text-decoration: none; font-size: 0.9rem;">← Back to Login</a>
+        </div>
+    `;
+    
+    forgotForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('resetEmail').value;
+        const btn = forgotForm.querySelector('button');
+        btn.disabled = true;
+        btn.textContent = 'Sending...';
+        
+        try {
+            const response = await fetch(`${API_BASE}/api/auth/request-password-reset`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email })
+            });
+            
+            const data = await response.json();
+            alert('✅ ' + data.message);
+            setTimeout(() => location.reload(), 2000);
+        } catch (error) {
+            alert('❌ Failed to send reset email. Please try again.');
+            btn.disabled = false;
+            btn.textContent = 'Send Reset Link';
+        }
+    };
+    
+    formSubtitle.insertAdjacentElement('afterend', forgotForm);
+}
     </script>
 </body>
 </html>
