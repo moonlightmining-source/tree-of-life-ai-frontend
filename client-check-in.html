@@ -479,45 +479,148 @@
             font-size: 1.3rem;
         }
 
-        .history-item {
-            padding: 1rem;
-            border-bottom: 1px solid rgba(184, 134, 11, 0.3);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .history-item:last-child {
-            border-bottom: none;
-        }
-
-        .history-week {
-            font-weight: bold;
-            color: var(--amber-light);
-        }
-
-        .history-score {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--peach-gold);
-        }
-
-        .history-notes {
-            color: var(--amber-medium);
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-        }
-
-        .history-date {
-            font-size: 0.8rem;
-            color: var(--bronze-light);
-            margin-top: 0.25rem;
-        }
-
         .no-history {
             text-align: center;
             padding: 2rem;
             color: var(--amber-medium);
+        }
+
+        /* DETAILED COMPLIANCE CARD */
+        .compliance-detail-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .compliance-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--bronze-deep);
+        }
+
+        .compliance-week-info h3 {
+            color: var(--peach-gold);
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+        }
+
+        .compliance-date {
+            color: var(--bronze-light);
+            font-size: 0.85rem;
+        }
+
+        .compliance-overall-score {
+            text-align: right;
+        }
+
+        .score-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--peach-gold);
+        }
+
+        .score-number.good { color: #22c55e; }
+        .score-number.medium { color: #f59e0b; }
+        .score-number.poor { color: #ef4444; }
+
+        .score-label {
+            font-size: 0.9rem;
+            color: var(--amber-medium);
+        }
+
+        .category-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .category-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--bronze-deep);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .category-emoji {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .category-percent {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .category-percent.good { color: #22c55e; }
+        .category-percent.medium { color: #f59e0b; }
+        .category-percent.poor { color: #ef4444; }
+
+        .category-name {
+            font-size: 14px;
+            color: var(--bronze-light);
+            margin-bottom: 5px;
+        }
+
+        .category-count {
+            font-size: 12px;
+            color: var(--bronze-light);
+        }
+
+        .items-list-section {
+            margin: 20px 0;
+        }
+
+        .items-list-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 15px 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--amber-light);
+        }
+
+        .items-list-title.completed {
+            color: #22c55e;
+        }
+
+        .items-list-title.incomplete {
+            color: #ef4444;
+        }
+
+        .item-entry {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--bronze-deep);
+            border-radius: 6px;
+            padding: 12px;
+            margin: 8px 0;
+            color: var(--amber-light);
+        }
+
+        .compliance-notes-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(184, 134, 11, 0.3);
+        }
+
+        .notes-label {
+            font-weight: 600;
+            color: var(--amber-medium);
+            margin-bottom: 8px;
+        }
+
+        .notes-text {
+            color: var(--amber-light);
+            line-height: 1.6;
+            font-style: italic;
         }
 
         /* SUCCESS MESSAGE */
