@@ -1409,44 +1409,154 @@
         async function loadComplianceHistory() {
             const historyContainer = document.getElementById('complianceHistory');
             
-            if (!currentAssignment) {
-                historyContainer.innerHTML = '<div class="no-history">No assignment found</div>';
+            if (!currentClient || !currentAssignment) {
+                historyContainer.innerHTML = '<div class="no-history">No client selected</div>';
                 return;
             }
             
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE}/api/compliance/${currentAssignment.id}`, {
+                
+                // Fetch detailed compliance data
+                const response = await fetch(`${API_BASE}/api/pro/client/${currentClient.id}/compliance-details`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
                 if (response.ok) {
                     const data = await response.json();
-                    const logs = data.logs || [];
-
-                    if (logs.length === 0) {
-                        historyContainer.innerHTML = '<div class="no-history">No compliance history yet</div>';
+                    
+                    // Check if compliance data exists
+                    if (!data.compliance_score && data.compliance_score !== 0) {
+                        historyContainer.innerHTML = `
+                            <div class="no-history">
+                                ${data.message || 'Client hasn\'t submitted compliance data yet'}
+                            </div>
+                        `;
                         return;
                     }
-
-                    historyContainer.innerHTML = logs.map(log => `
-                        <div class="history-item">
-                            <div>
-                                <div class="history-week">Week ${log.week_number}</div>
-                                <div class="history-date">${new Date(log.logged_at).toLocaleDateString()}</div>
-                                ${log.notes ? `<div class="history-notes">${log.notes}</div>` : ''}
-                            </div>
-                            <div class="history-score">${log.compliance_score}</div>
-                        </div>
-                    `).join('');
+                    
+                    // Render detailed compliance card
+                    historyContainer.innerHTML = renderDetailedCompliance(data);
                 } else {
-                    console.error('Failed to load compliance history:', response.status);
-                    historyContainer.innerHTML = '<div class="no-history">Failed to load history</div>';
+                    console.error('Failed to load compliance details:', response.status);
+                    historyContainer.innerHTML = '<div class="no-history">Failed to load compliance details</div>';
                 }
             } catch (error) {
-                console.error('Error loading compliance history:', error);
-                historyContainer.innerHTML = '<div class="no-history">Error loading history</div>';
+                console.error('Error loading compliance details:', error);
+                historyContainer.innerHTML = '<div class="no-history">Error loading compliance details</div>';
             }
+        }
+
+        function renderDetailedCompliance(data) {
+            const score = data.compliance_score;
+            let scoreClass = '';
+            if (score >= 80) scoreClass = 'good';
+            else if (score >= 50) scoreClass = 'medium';
+            else scoreClass = 'poor';
+            
+            // Render category breakdown
+            let categoriesHTML = '';
+            if (data.category_breakdown && Object.keys(data.category_breakdown).length > 0) {
+                const categoryEmojis = {
+                    'supplements': '💊',
+                    'nutrition': '🥗',
+                    'exercises': '💪',
+                    'lifestyle': '🌿',
+                    'timeline': '⭐'
+                };
+                
+                const categoryNames = {
+                    'supplements': 'Supplements',
+                    'nutrition': 'Nutrition',
+                    'exercises': 'Exercise',
+                    'lifestyle': 'Lifestyle',
+                    'timeline': 'Timeline'
+                };
+                
+                categoriesHTML = '<div class="category-breakdown">';
+                for (const [category, catData] of Object.entries(data.category_breakdown)) {
+                    if (catData.total === 0) continue;
+                    
+                    const emoji = categoryEmojis[category] || '📋';
+                    const name = categoryNames[category] || category;
+                    
+                    let percentClass = '';
+                    if (catData.percentage >= 80) percentClass = 'good';
+                    else if (catData.percentage >= 50) percentClass = 'medium';
+                    else percentClass = 'poor';
+                    
+                    categoriesHTML += `
+                        <div class="category-box">
+                            <div class="category-emoji">${emoji}</div>
+                            <div class="category-percent ${percentClass}">${catData.percentage}%</div>
+                            <div class="category-name">${name}</div>
+                            <div class="category-count">${catData.completed}/${catData.total}</div>
+                        </div>
+                    `;
+                }
+                categoriesHTML += '</div>';
+            }
+            
+            // Render completed items
+            let completedHTML = '';
+            if (data.completed_items && data.completed_items.length > 0) {
+                completedHTML = `
+                    <div class="items-list-section">
+                        <h4 class="items-list-title completed">
+                            ✅ Completed Items (${data.completed_items.length})
+                        </h4>
+                        ${data.completed_items.map(item => `
+                            <div class="item-entry">✓ ${escapeHtml(item.text)}</div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            // Render incomplete items
+            let incompleteHTML = '';
+            if (data.incomplete_items && data.incomplete_items.length > 0) {
+                incompleteHTML = `
+                    <div class="items-list-section">
+                        <h4 class="items-list-title incomplete">
+                            ❌ Not Completed (${data.incomplete_items.length})
+                        </h4>
+                        ${data.incomplete_items.map(item => `
+                            <div class="item-entry">${escapeHtml(item.text)}</div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            // Render notes if present
+            let notesHTML = '';
+            if (data.notes) {
+                notesHTML = `
+                    <div class="compliance-notes-section">
+                        <div class="notes-label">📝 Notes:</div>
+                        <div class="notes-text">${escapeHtml(data.notes)}</div>
+                    </div>
+                `;
+            }
+            
+            return `
+                <div class="compliance-detail-card">
+                    <div class="compliance-card-header">
+                        <div class="compliance-week-info">
+                            <h3>${data.protocol_name || 'Unknown Protocol'}</h3>
+                            <div class="compliance-date">Week ${data.current_week || '?'} of ${data.total_weeks || '?'}</div>
+                        </div>
+                        <div class="compliance-overall-score">
+                            <div class="score-number ${scoreClass}">${score}%</div>
+                            <div class="score-label">Compliance Score</div>
+                        </div>
+                    </div>
+                    
+                    ${categoriesHTML}
+                    ${completedHTML}
+                    ${incompleteHTML}
+                    ${notesHTML}
+                </div>
+            `;
         }
 
         async function submitCheckIn() {
