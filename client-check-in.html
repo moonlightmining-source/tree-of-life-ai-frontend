@@ -1407,45 +1407,134 @@
         }
 
         async function loadComplianceHistory() {
-            const historyContainer = document.getElementById('complianceHistory');
+    const historyContainer = document.getElementById('complianceHistory');
+    
+    if (!currentClient || !currentAssignment) {
+        historyContainer.innerHTML = '<div class="no-history">No client selected</div>';
+        return;
+    }
+    
+    try {
+        const token = localStorage.getItem('token');
+        
+        // ✅ UNIFIED: Fetch ALL check-ins from compliance_logs (client + practitioner)
+        const response = await fetch(`${API_BASE}/api/compliance/${currentAssignment.id}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            const logs = data.logs || [];
             
-            if (!currentClient || !currentAssignment) {
-                historyContainer.innerHTML = '<div class="no-history">No client selected</div>';
+            if (logs.length === 0) {
+                historyContainer.innerHTML = '<div class="no-history">No compliance check-ins logged yet</div>';
                 return;
             }
             
-            try {
-                const token = localStorage.getItem('token');
-                
-                // Fetch detailed compliance data
-                const response = await fetch(`${API_BASE}/api/pro/client/${currentClient.id}/compliance-details`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
+            // Show ONLY the latest check-in by default
+            const latestLog = logs[0];
+            const submittedBy = latestLog.submitted_by || 'practitioner';
+            const submitterLabel = submittedBy === 'client' ? '👤 Client Submitted' : '👨‍⚕️ Practitioner Logged';
+            
+            historyContainer.innerHTML = `
+                <div class="compliance-detail-card">
+                    <div class="compliance-card-header">
+                        <div class="compliance-week-info">
+                            <h3>Week ${latestLog.week_number}</h3>
+                            <div class="compliance-date">${new Date(latestLog.logged_at).toLocaleString()}</div>
+                            <div style="font-size: 0.85rem; color: var(--bronze-light); margin-top: 5px;">${submitterLabel}</div>
+                        </div>
+                        <div class="compliance-overall-score">
+                            <div class="score-number ${getScoreClass(latestLog.compliance_score)}">${latestLog.compliance_score}%</div>
+                            <div class="score-label">Latest Check-In</div>
+                        </div>
+                    </div>
                     
-                    // Check if compliance data exists
-                    if (!data.compliance_score && data.compliance_score !== 0) {
-                        historyContainer.innerHTML = `
-                            <div class="no-history">
-                                ${data.message || 'Client hasn\'t submitted compliance data yet'}
-                            </div>
-                        `;
-                        return;
-                    }
+                    ${latestLog.image_base64 ? `
+                        <div style="margin: 15px 0;">
+                            <img src="${latestLog.image_base64}" 
+                                 style="max-width: 100%; border-radius: 8px; border: 2px solid var(--bronze-deep); cursor: pointer;"
+                                 onclick="openImageModal('${latestLog.image_base64}')"
+                                 alt="Client submission">
+                        </div>
+                    ` : ''}
                     
-                    // Render detailed compliance card
-                    historyContainer.innerHTML = renderDetailedCompliance(data);
-                } else {
-                    console.error('Failed to load compliance details:', response.status);
-                    historyContainer.innerHTML = '<div class="no-history">Failed to load compliance details</div>';
-                }
-            } catch (error) {
-                console.error('Error loading compliance details:', error);
-                historyContainer.innerHTML = '<div class="no-history">Error loading compliance details</div>';
-            }
+                    ${latestLog.notes ? `
+                        <div class="compliance-notes-section">
+                            <div class="notes-label">📝 Notes:</div>
+                            <div class="notes-text">${escapeHtml(latestLog.notes)}</div>
+                        </div>
+                    ` : ''}
+                    
+                    ${logs.length > 1 ? `
+                        <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--bronze-deep);">
+                            <button class="btn-secondary" onclick="toggleAllCheckIns()" id="toggleAllBtn">
+                                📊 View All ${logs.length} Check-Ins
+                            </button>
+                        </div>
+                        
+                        <div id="allCheckInsContainer" style="display: none; margin-top: 20px;">
+                            ${logs.slice(1).map(log => {
+                                const by = log.submitted_by || 'practitioner';
+                                const byLabel = by === 'client' ? '👤 Client' : '👨‍⚕️ You';
+                                return `
+                                    <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--bronze-deep); border-radius: 8px; padding: 15px; margin: 10px 0;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <div>
+                                                <div style="font-weight: bold; color: var(--amber-light);">Week ${log.week_number}</div>
+                                                <div style="font-size: 0.85rem; color: var(--bronze-light);">${new Date(log.logged_at).toLocaleString()}</div>
+                                                <div style="font-size: 0.75rem; color: var(--bronze-light); margin-top: 3px;">${byLabel}</div>
+                                            </div>
+                                            <div style="font-size: 2rem; font-weight: bold; color: var(--peach-gold);">${log.compliance_score}%</div>
+                                        </div>
+                                        ${log.image_base64 ? `
+                                            <img src="${log.image_base64}" 
+                                                 style="max-width: 200px; margin-top: 10px; border-radius: 6px; border: 1px solid var(--bronze-deep); cursor: pointer;"
+                                                 onclick="openImageModal('${log.image_base64}')"
+                                                 alt="Submission image">
+                                        ` : ''}
+                                        ${log.notes ? `
+                                            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(184,134,11,0.3); color: var(--amber-medium); font-style: italic;">
+                                                ${escapeHtml(log.notes)}
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        } else {
+            console.error('Failed to load compliance history:', response.status);
+            historyContainer.innerHTML = '<div class="no-history">Failed to load compliance history</div>';
         }
+    } catch (error) {
+        console.error('Error loading compliance history:', error);
+        historyContainer.innerHTML = '<div class="no-history">Error loading compliance history</div>';
+    }
+}
+
+function getScoreClass(score) {
+    if (score >= 80) return 'good';
+    if (score >= 50) return 'medium';
+    return 'poor';
+}
+
+function toggleAllCheckIns() {
+    const container = document.getElementById('allCheckInsContainer');
+    const btn = document.getElementById('toggleAllBtn');
+    
+    if (container.style.display === 'none') {
+        container.style.display = 'block';
+        btn.textContent = '▲ Hide Previous Check-Ins';
+    } else {
+        container.style.display = 'none';
+        const totalCount = container.querySelectorAll('[style*="background: rgba(0,0,0,0.3)"]').length + 1;
+        btn.textContent = `📊 View All ${totalCount} Check-Ins`;
+    }
+}
+
 
         function renderDetailedCompliance(data) {
             const score = data.compliance_score;
