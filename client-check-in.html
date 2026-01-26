@@ -1099,36 +1099,54 @@
             }
         }
 
-        async function loadData() {
+         async function loadData() {
+            console.log('🔍 loadData() started');
             try {
                 const token = localStorage.getItem('token');
+                console.log('🔑 Token:', token ? 'exists' : 'MISSING');
                 
                 // Load clients
+                console.log('📡 Fetching clients from:', `${API_BASE}/api/family/members`);
                 const clientsResponse = await fetch(`${API_BASE}/api/family/members`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 
+                console.log('📡 Clients response status:', clientsResponse.status);
+                
                 if (clientsResponse.ok) {
                     const clientsData = await clientsResponse.json();
                     clients = clientsData.members || [];
+                    console.log('✅ Clients loaded:', clients.length, clients);
+                } else {
+                    console.error('❌ Clients fetch failed:', clientsResponse.status);
                 }
 
                 // Load assignments
+                console.log('📡 Fetching assignments from:', `${API_BASE}/api/client-protocols`);
                 const assignmentsResponse = await fetch(`${API_BASE}/api/client-protocols`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 
+                console.log('📡 Assignments response status:', assignmentsResponse.status);
+                
                 if (assignmentsResponse.ok) {
                     const assignmentsData = await assignmentsResponse.json();
                     assignments = assignmentsData.assignments || [];
+                    console.log('✅ Assignments loaded:', assignments.length, assignments);
+                } else {
+                    console.error('❌ Assignments fetch failed:', assignmentsResponse.status);
                 }
 
+                console.log('🎯 Calling displayClients()...');
                 displayClients();
+                console.log('✅ displayClients() completed');
             } catch (error) {
-                console.error('Error loading data:', error);
+                console.error('💥 FATAL ERROR in loadData():', error);
+                console.error('💥 Error stack:', error.stack);
                 document.getElementById('clientList').innerHTML = `
                     <div style="text-align: center; padding: 2rem; color: #dc2626;">
                         <p>Failed to load clients</p>
+                        <p style="font-size: 0.9rem; margin-top: 0.5rem;">${error.message}</p>
                     </div>
                 `;
             }
