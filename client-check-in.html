@@ -1395,61 +1395,7 @@
             }
         }
 
-                if (response.ok) {
-                    const data = await response.json();
-                    const messages = data.messages || [];
-
-                    if (messages.length === 0) {
-                        container.innerHTML = `
-                            <div class="no-history">
-                                <p>No submissions yet</p>
-                                <p style="margin-top: 0.5rem; font-size: 0.9rem;">Client can submit messages and images via their portal link</p>
-                            </div>
-                        `;
-                        return;
-                    }
-
-                    container.innerHTML = messages.map(msg => {
-                        const isUnread = !msg.is_read;
-                        const imageHTML = msg.image_base64 ? `
-                            <img src="${msg.image_base64}" 
-                                 class="submission-image" 
-                                 onclick="openImageModal('${msg.image_base64}')"
-                                 alt="Client submission">
-                        ` : '';
-                        const complianceHTML = msg.compliance_data ? formatCompliance(msg.compliance_data) : '';
-
-                        return `
-                            <div class="submission-item ${isUnread ? 'unread' : ''}">
-                                <div class="submission-header">
-                                    <span class="submission-date">${new Date(msg.created_at).toLocaleString()}</span>
-                                    <span class="submission-badge ${isUnread ? 'unread' : 'read'}">
-                                        ${isUnread ? 'NEW' : 'READ'}
-                                    </span>
-                                </div>
-                                <div class="submission-content">
-                                    ${msg.message_text ? `<div class="submission-message">${msg.message_text}</div>` : ''}
-                                    ${imageHTML}
-                                    ${complianceHTML}
-                                </div>
-                                ${isUnread ? `
-                                    <div class="submission-actions">
-                                        <button class="btn-secondary" onclick="markAsRead('${msg.id}')">Mark as Read</button>
-                                    </div>
-                                ` : ''}
-                            </div>
-                        `;
-                    }).join('');
-                } else {
-                    console.error('Failed to load submissions:', response.status);
-                    container.innerHTML = '<div class="no-history">Failed to load submissions</div>';
-                }
-            } catch (error) {
-                console.error('Error loading submissions:', error);
-                container.innerHTML = '<div class="no-history">Error loading submissions</div>';
-            }
-        }
-
+             
         function formatCompliance(complianceData) {
             if (!complianceData || typeof complianceData !== 'object') return '';
 
