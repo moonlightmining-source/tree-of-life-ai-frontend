@@ -1475,6 +1475,61 @@
             const submittedBy = latestLog.submitted_by || 'practitioner';
             const submitterLabel = submittedBy === 'client' ? '👤 Client Submitted' : '👨‍⚕️ Practitioner Logged';
             
+            // Build category breakdown display
+            let categoryHTML = '';
+            if (latestLog.category_breakdown && Object.keys(latestLog.category_breakdown).length > 0) {
+                const categoryEmojis = {
+                    'supplements': '💊',
+                    'nutrition': '🥗',
+                    'exercises': '💪',
+                    'lifestyle': '🌿',
+                    'timeline': '⭐'
+                };
+                
+                categoryHTML = '<div class="category-breakdown">';
+                for (const [category, data] of Object.entries(latestLog.category_breakdown)) {
+                    if (data.total === 0) continue;
+                    const emoji = categoryEmojis[category] || '📋';
+                    const percentClass = data.percentage >= 80 ? 'good' : data.percentage >= 50 ? 'medium' : 'poor';
+                    
+                    categoryHTML += `
+                        <div class="category-box">
+                            <div class="category-emoji">${emoji}</div>
+                            <div class="category-percent ${percentClass}">${data.percentage}%</div>
+                            <div class="category-name">${category.charAt(0).toUpperCase() + category.slice(1)}</div>
+                            <div class="category-count">${data.completed}/${data.total}</div>
+                        </div>
+                    `;
+                }
+                categoryHTML += '</div>';
+            }
+            
+            // Build completed items list
+            let completedHTML = '';
+            if (latestLog.completed_items && latestLog.completed_items.length > 0) {
+                completedHTML = `
+                    <div class="items-list-section">
+                        <h4 class="items-list-title completed">✅ Completed (${latestLog.completed_items.length})</h4>
+                        ${latestLog.completed_items.map(item => `
+                            <div class="item-entry">✓ ${escapeHtml(item.text || item)}</div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            // Build incomplete items list
+            let incompleteHTML = '';
+            if (latestLog.incomplete_items && latestLog.incomplete_items.length > 0) {
+                incompleteHTML = `
+                    <div class="items-list-section">
+                        <h4 class="items-list-title incomplete">❌ Not Completed (${latestLog.incomplete_items.length})</h4>
+                        ${latestLog.incomplete_items.map(item => `
+                            <div class="item-entry">${escapeHtml(item.text || item)}</div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
             historyContainer.innerHTML = `
                 <div class="compliance-detail-card">
                     <div class="compliance-card-header">
@@ -1489,6 +1544,8 @@
                         </div>
                     </div>
                     
+                    ${categoryHTML}
+                    
                     ${latestLog.image_base64 ? `
                         <div style="margin: 15px 0;">
                             <img src="${latestLog.image_base64}" 
@@ -1497,6 +1554,9 @@
                                  alt="Client submission">
                         </div>
                     ` : ''}
+                    
+                    ${completedHTML}
+                    ${incompleteHTML}
                     
                     ${latestLog.notes ? `
                         <div class="compliance-notes-section">
