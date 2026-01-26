@@ -1561,7 +1561,12 @@
                                                 <div style="font-size: 0.85rem; color: var(--bronze-light);">${new Date(log.logged_at).toLocaleString()}</div>
                                                 <div style="font-size: 0.75rem; color: var(--bronze-light); margin-top: 3px;">${byLabel}</div>
                                             </div>
-                                            <div style="font-size: 2rem; font-weight: bold; color: var(--peach-gold);">${log.compliance_score}%</div>
+                                            <div style="text-align: right;">
+                                                <div style="font-size: 2rem; font-weight: bold; color: var(--peach-gold);">${log.compliance_score}%</div>
+                                                <button class="btn-secondary" style="margin-top: 5px; padding: 0.4rem 0.8rem; background: #dc2626; border-color: #dc2626; color: white; font-size: 0.8rem;" onclick="deleteCompliance(${log.id})">
+                                                    🗑️ Delete
+                                                </button>
+                                            </div>
                                         </div>
                                         ${log.image_base64 ? `
                                             <img src="${log.image_base64}" 
