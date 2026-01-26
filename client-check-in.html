@@ -1324,35 +1324,9 @@
         }
 
          async function loadClientSubmissions() {
-            const container = document.getElementById('submissionsContainer');
-            
-            if (!currentClient || !currentAssignment) {
-                container.innerHTML = '<div class="no-history">No client selected</div>';
-                return;
-            }
-
-            container.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--amber-medium);">Loading...</div>';
-
-            try {
-                const token = localStorage.getItem('token');
-                // ✅ FIXED: Query unified compliance_logs instead of old client_messages
-                const response = await fetch(`${API_BASE}/api/compliance/${currentAssignment.id}`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    const logs = data.logs || [];
-
-                    if (logs.length === 0) {
-                        container.innerHTML = `
-                            <div class="no-history">
-                                <p>No submissions yet</p>
-                                <p style="margin-top: 0.5rem; font-size: 0.9rem;">Client submissions will appear here</p>
-                            </div>
-                        `;
-                        return;
-                    }
+    const container = document.getElementById('submissionsContainer');
+    container.innerHTML = ''; // Just empty - no duplicate content needed
+}
 
                     // Display compliance logs with submitter labels
                     container.innerHTML = logs.map(log => {
