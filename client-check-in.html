@@ -1407,65 +1407,89 @@
             const submittedBy = latestLog.submitted_by || 'practitioner';
             const submitterLabel = submittedBy === 'client' ? '👤 Client Submitted' : '👨‍⚕️ Practitioner Logged';
             
-           // Build simpler list view like client portal
+           // Build category-organized display like client portal
             let categoryHTML = '';
+            if (latestLog.completed_items || latestLog.incomplete_items) {
+                const categoryEmojis = {
+                    'supplements': '💊',
+                    'nutrition': '🥗',
+                    'exercises': '💪',
+                    'lifestyle': '🌿',
+                    'timeline': '⭐'
+                };
+                
+                const categoryNames = {
+                    'supplements': 'Supplements',
+                    'nutrition': 'Nutrition',
+                    'exercises': 'Exercise',
+                    'lifestyle': 'Lifestyle',
+                    'timeline': 'This Week\'s Focus'
+                };
+                
+                // Organize all items by category
+                const itemsByCategory = {
+                    'supplements': [],
+                    'nutrition': [],
+                    'exercises': [],
+                    'lifestyle': [],
+                    'timeline': []
+                };
+                
+                // Add completed items
+                (latestLog.completed_items || []).forEach(item => {
+                    const cat = item.category || 'supplements';
+                    itemsByCategory[cat].push({...item, completed: true});
+                });
+                
+                // Add incomplete items
+                (latestLog.incomplete_items || []).forEach(item => {
+                    const cat = item.category || 'supplements';
+                    itemsByCategory[cat].push({...item, completed: false});
+                });
+                
+                // Render each category
+                categoryHTML = '<div style="margin: 20px 0;">';
+                
+                for (const [category, items] of Object.entries(itemsByCategory)) {
+                    if (items.length === 0) continue;
+                    
+                    const emoji = categoryEmojis[category] || '📋';
+                    const name = categoryNames[category] || category;
+                    
+                    categoryHTML += `
+                        <div style="margin-bottom: 25px;">
+                            <h4 style="color: var(--peach-gold); font-size: 1.1rem; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                                ${emoji} ${name}
+                            </h4>
+                    `;
+                    
+                    // Render items in this category
+                    items.forEach(item => {
+                        if (item.completed) {
+                            categoryHTML += `
+                                <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; border-radius: 6px; padding: 12px; margin: 8px 0; color: #22c55e; display: flex; align-items: center; gap: 10px;">
+                                    <span style="font-size: 1.2rem;">✓</span>
+                                    <span>${escapeHtml(item.text)}</span>
+                                </div>
+                            `;
+                        } else {
+                            categoryHTML += `
+                                <div style="background: rgba(0, 0, 0, 0.2); border: 1px solid var(--bronze-deep); border-radius: 6px; padding: 12px; margin: 8px 0; color: var(--amber-light); display: flex; align-items: center; gap: 10px;">
+                                    <span style="font-size: 1.2rem; color: #ef4444;">○</span>
+                                    <span>${escapeHtml(item.text)}</span>
+                                </div>
+                            `;
+                        }
+                    });
+                    
+                    categoryHTML += '</div>';
+                }
+                
+                categoryHTML += '</div>';
+            }
             
-            // Build completed items list
             let completedHTML = '';
-            if (latestLog.completed_items && latestLog.completed_items.length > 0) {
-                completedHTML = `
-                    <div class="items-list-section">
-                        <h4 class="items-list-title completed">✅ Completed (${latestLog.completed_items.length})</h4>
-                        ${latestLog.completed_items.map(item => `
-                            <div class="item-entry">✓ ${escapeHtml(item.text || item)}</div>
-                        `).join('')}
-                    </div>
-                `;
-            }
-            
-            // Build incomplete items list
             let incompleteHTML = '';
-            if (latestLog.incomplete_items && latestLog.incomplete_items.length > 0) {
-                incompleteHTML = `
-                    <div class="items-list-section">
-                        <h4 class="items-list-title incomplete">❌ Not Completed (${latestLog.incomplete_items.length})</h4>
-                        ${latestLog.incomplete_items.map(item => `
-                            <div class="item-entry">${escapeHtml(item.text || item)}</div>
-                        `).join('')}
-                    </div>
-                `;
-            }
-
-            historyContainer.innerHTML = `
-                <div class="compliance-detail-card">
-                    <div class="compliance-card-header">
-                    <div class="compliance-week-info">
-                        <h3>Week ${latestLog.week_number}</h3>
-                        <div class="compliance-date">${new Date(latestLog.logged_at).toLocaleString()}</div>
-                        <div style="font-size: 0.85rem; color: var(--bronze-light); margin-top: 5px;">${submitterLabel}</div>
-                    </div>
-                    <div class="compliance-overall-score">
-                        <div class="score-number ${getScoreClass(latestLog.compliance_score)}">${latestLog.compliance_score}%</div>
-                        <div class="score-label">Latest Check-In</div>
-                        <button class="btn-secondary" style="margin-top: 10px; padding: 0.5rem 1rem; background: #dc2626; border-color: #dc2626; color: white;" onclick="deleteCompliance(${latestLog.id})">
-                            🗑️ Delete
-                        </button>
-                    </div>
-                </div>
-                    
-                    ${categoryHTML}
-                    
-                    ${latestLog.image_base64 ? `
-                        <div style="margin: 15px 0;">
-                            <img src="${latestLog.image_base64}" 
-                                 style="max-width: 100%; border-radius: 8px; border: 2px solid var(--bronze-deep); cursor: pointer;"
-                                 onclick="openImageModal('${latestLog.image_base64}')"
-                                 alt="Client submission">
-                        </div>
-                    ` : ''}
-                    
-                    ${completedHTML}
-                    ${incompleteHTML}
                     
                     ${latestLog.notes ? `
                         <div class="compliance-notes-section">
