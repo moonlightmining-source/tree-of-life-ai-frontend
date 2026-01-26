@@ -1134,8 +1134,10 @@
             }
         }
 
-        async function displayClients() {
+         async function displayClients() {
             const listContainer = document.getElementById('clientList');
+            
+            console.log('📋 displayClients called - clients:', clients.length, 'assignments:', assignments.length);
             
             if (clients.length === 0) {
                 listContainer.innerHTML = `
@@ -1155,6 +1157,7 @@
                 return;
             }
             
+            // ✅ Build client list synchronously first, then add unread badges
             const clientsHTML = [];
             
             for (const client of clients) {
@@ -1163,17 +1166,14 @@
                 );
                 
                 if (assignment) {
-                    // Check for unread messages
-                    const unreadCount = await getUnreadCount(client.id);
-                    const unreadBadge = unreadCount > 0 ? `<span class="unread-badge">${unreadCount}</span>` : '';
-                    
                     const protocolName = assignment.protocol_name || 'Unknown Protocol';
                     const currentWeek = assignment.current_week || 1;
                     const durationWeeks = assignment.duration_weeks || '?';
                     
+                    // ✅ Create placeholder for unread badge (will be filled in later)
                     clientsHTML.push(`
-                        <div class="client-item" onclick="selectClient(${client.id})">
-                            ${unreadBadge}
+                        <div class="client-item" onclick="selectClient(${client.id})" data-client-id="${client.id}">
+                            <span class="unread-badge" id="badge-${client.id}" style="display: none;"></span>
                             <div class="client-name">${client.name || 'Unknown Client'}</div>
                             <div class="client-protocol">${protocolName}</div>
                             <div class="client-week">Week ${currentWeek} of ${durationWeeks}</div>
@@ -1182,7 +1182,6 @@
                 }
             }
 
-         
             if (clientsHTML.length === 0) {
                 listContainer.innerHTML = `
                     <div style="text-align: center; padding: 2rem; color: var(--amber-medium);">
@@ -1190,10 +1189,30 @@
                     </div>
                 `;
             } else {
+                // ✅ Render clients immediately
                 listContainer.innerHTML = clientsHTML.join('');
+                console.log('✅ Clients rendered:', clientsHTML.length);
+                
+                // ✅ Then load unread badges asynchronously (don't block rendering)
+                for (const client of clients) {
+                    const assignment = assignments.find(a => 
+                        String(a.client_id) === String(client.id)
+                    );
+                    
+                    if (assignment) {
+                        getUnreadCount(client.id).then(unreadCount => {
+                            const badge = document.getElementById(`badge-${client.id}`);
+                            if (badge && unreadCount > 0) {
+                                badge.textContent = unreadCount;
+                                badge.style.display = 'block';
+                            }
+                        }).catch(err => {
+                            console.error('Error loading unread count:', err);
+                        });
+                    }
+                }
             }
         }
-
         async function getUnreadCount(clientId) {
             try {
                 const token = localStorage.getItem('token');
