@@ -1507,16 +1507,19 @@
             historyContainer.innerHTML = `
                 <div class="compliance-detail-card">
                     <div class="compliance-card-header">
-                        <div class="compliance-week-info">
-                            <h3>Week ${latestLog.week_number}</h3>
-                            <div class="compliance-date">${new Date(latestLog.logged_at).toLocaleString()}</div>
-                            <div style="font-size: 0.85rem; color: var(--bronze-light); margin-top: 5px;">${submitterLabel}</div>
-                        </div>
-                        <div class="compliance-overall-score">
-                            <div class="score-number ${getScoreClass(latestLog.compliance_score)}">${latestLog.compliance_score}%</div>
-                            <div class="score-label">Latest Check-In</div>
-                        </div>
+                    <div class="compliance-week-info">
+                        <h3>Week ${latestLog.week_number}</h3>
+                        <div class="compliance-date">${new Date(latestLog.logged_at).toLocaleString()}</div>
+                        <div style="font-size: 0.85rem; color: var(--bronze-light); margin-top: 5px;">${submitterLabel}</div>
                     </div>
+                    <div class="compliance-overall-score">
+                        <div class="score-number ${getScoreClass(latestLog.compliance_score)}">${latestLog.compliance_score}%</div>
+                        <div class="score-label">Latest Check-In</div>
+                        <button class="btn-secondary" style="margin-top: 10px; padding: 0.5rem 1rem; background: #dc2626; border-color: #dc2626; color: white;" onclick="deleteCompliance(${latestLog.id})">
+                            🗑️ Delete
+                        </button>
+                    </div>
+                </div>
                     
                     ${categoryHTML}
                     
