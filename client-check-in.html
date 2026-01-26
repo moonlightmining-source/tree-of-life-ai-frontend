@@ -1991,6 +1991,31 @@ function toggleAllCheckIns() {
             div.textContent = text;
             return div.innerHTML;
         }
+       async function deleteCompliance(logId) {
+            if (!confirm('Are you sure you want to delete this compliance entry? This cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/compliance/${logId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    console.log('✅ Compliance deleted');
+                    // Reload compliance history
+                    await loadComplianceHistory();
+                } else {
+                    const error = await response.json();
+                    alert(`Failed to delete: ${error.detail || 'Unknown error'}`);
+                }
+            } catch (error) {
+                console.error('Error deleting compliance:', error);
+                alert('Failed to delete compliance entry.');
+            }
+        } 
     </script>
 </body>
 </html>
