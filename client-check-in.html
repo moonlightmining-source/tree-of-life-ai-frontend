@@ -1286,10 +1286,10 @@
             }
         }
 
-        async function loadClientSubmissions() {
+         async function loadClientSubmissions() {
             const container = document.getElementById('submissionsContainer');
             
-            if (!currentClient) {
+            if (!currentClient || !currentAssignment) {
                 container.innerHTML = '<div class="no-history">No client selected</div>';
                 return;
             }
@@ -1298,9 +1298,65 @@
 
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE}/api/client-messages/${currentClient.id}`, {
+                // ✅ FIXED: Query unified compliance_logs instead of old client_messages
+                const response = await fetch(`${API_BASE}/api/compliance/${currentAssignment.id}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const logs = data.logs || [];
+
+                    if (logs.length === 0) {
+                        container.innerHTML = `
+                            <div class="no-history">
+                                <p>No submissions yet</p>
+                                <p style="margin-top: 0.5rem; font-size: 0.9rem;">Client submissions will appear here</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    // Display compliance logs with submitter labels
+                    container.innerHTML = logs.map(log => {
+                        const submittedBy = log.submitted_by || 'practitioner';
+                        const submitterLabel = submittedBy === 'client' ? '👤 Client Submitted' : '👨‍⚕️ You Logged';
+                        const submitterColor = submittedBy === 'client' ? '#16a34a' : 'var(--bronze-deep)';
+                        
+                        const imageHTML = log.image_base64 ? `
+                            <img src="${log.image_base64}" 
+                                 class="submission-image" 
+                                 onclick="openImageModal('${log.image_base64}')"
+                                 alt="Submission image">
+                        ` : '';
+
+                        return `
+                            <div class="submission-item" style="border-color: ${submitterColor};">
+                                <div class="submission-header">
+                                    <span class="submission-date">${new Date(log.logged_at).toLocaleString()}</span>
+                                    <span class="submission-badge" style="background: ${submitterColor}; color: white;">
+                                        ${submitterLabel}
+                                    </span>
+                                </div>
+                                <div class="submission-content">
+                                    <div style="font-size: 1.2rem; font-weight: bold; color: var(--peach-gold); margin-bottom: 0.5rem;">
+                                        Week ${log.week_number}: ${log.compliance_score}% Compliance
+                                    </div>
+                                    ${log.notes ? `<div class="submission-message">${escapeHtml(log.notes)}</div>` : ''}
+                                    ${imageHTML}
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    console.error('Failed to load submissions:', response.status);
+                    container.innerHTML = '<div class="no-history">Failed to load submissions</div>';
+                }
+            } catch (error) {
+                console.error('Error loading submissions:', error);
+                container.innerHTML = '<div class="no-history">Error loading submissions</div>';
+            }
+        }
 
                 if (response.ok) {
                     const data = await response.json();
