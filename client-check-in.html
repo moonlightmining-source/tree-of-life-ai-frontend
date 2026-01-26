@@ -1407,34 +1407,8 @@
             const submittedBy = latestLog.submitted_by || 'practitioner';
             const submitterLabel = submittedBy === 'client' ? '👤 Client Submitted' : '👨‍⚕️ Practitioner Logged';
             
-            // Build category breakdown display
+           // Build simpler list view like client portal
             let categoryHTML = '';
-            if (latestLog.category_breakdown && Object.keys(latestLog.category_breakdown).length > 0) {
-                const categoryEmojis = {
-                    'supplements': '💊',
-                    'nutrition': '🥗',
-                    'exercises': '💪',
-                    'lifestyle': '🌿',
-                    'timeline': '⭐'
-                };
-                
-                categoryHTML = '<div class="category-breakdown">';
-                for (const [category, data] of Object.entries(latestLog.category_breakdown)) {
-                    if (data.total === 0) continue;
-                    const emoji = categoryEmojis[category] || '📋';
-                    const percentClass = data.percentage >= 80 ? 'good' : data.percentage >= 50 ? 'medium' : 'poor';
-                    
-                    categoryHTML += `
-                        <div class="category-box">
-                            <div class="category-emoji">${emoji}</div>
-                            <div class="category-percent ${percentClass}">${data.percentage}%</div>
-                            <div class="category-name">${category.charAt(0).toUpperCase() + category.slice(1)}</div>
-                            <div class="category-count">${data.completed}/${data.total}</div>
-                        </div>
-                    `;
-                }
-                categoryHTML += '</div>';
-            }
             
             // Build completed items list
             let completedHTML = '';
