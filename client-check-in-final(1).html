@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Check-In - Tree of Life AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --amber-light: #D4A574;
+            --amber-medium: #C19A6B;
+            --bronze-deep: #B8860B;
+            --bronze-light: #A0826D;
+            --peach-gold: #EEC591;
+            --pure-black: #000;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: url('Images/Background.png') center center fixed;
+            background-size: cover;
+            color: var(--amber-light);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--amber-light);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--amber-medium);
+            font-size: 1.1rem;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 8px;
+            color: var(--amber-light);
+            text-decoration: none;
+            margin-bottom: 2rem;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(0, 0, 0, 0.7);
+            border-color: var(--amber-light);
+        }
+
+        .main-content {
+            max-width: 100%;
+            margin-bottom: 2rem;
+        }
+
+        /* REMOVED CLIENT LIST - direct navigation from dashboard */
+
+        /* TAB SYSTEM */
+        .tab-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--bronze-deep);
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--amber-medium);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .tab-btn:hover {
+            color: var(--amber-light);
+        }
+
+        .tab-btn.active {
+            color: var(--peach-gold);
+            border-bottom-color: var(--peach-gold);
+        }
+
+        .tab-badge {
+            position: absolute;
+            top: 0.25rem;
+            right: 0.25rem;
+            background: #16a34a;
+            color: white;
+            border-radius: 10px;
+            padding: 0.15rem 0.4rem;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* CHECK-IN FORM */
+        .checkin-section {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .checkin-section h2 {
+            color: var(--peach-gold);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--amber-medium);
+        }
+
+        .form-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            color: var(--amber-light);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 8px;
+            color: var(--amber-light);
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--amber-light);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* COMPLIANCE SLIDER */
+        .slider-container {
+            padding: 1rem 0;
+        }
+
+        .slider-value {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--peach-gold);
+            margin-bottom: 1rem;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(to right, #dc2626, #f59e0b, #22c55e);
+            border-radius: 5px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background: var(--amber-light);
+            border: 3px solid var(--bronze-deep);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            background: var(--amber-light);
+            border: 3px solid var(--bronze-deep);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--bronze-light);
+        }
+
+        .btn-secondary {
+            padding: 0.5rem 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 8px;
+            color: var(--amber-light);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--amber-light);
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        /* BUTTONS */
+        .btn-primary {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 165, 116, 0.5);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* HISTORY SECTION */
+        .history-section {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .history-section h2 {
+            color: var(--peach-gold);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .no-history {
+            text-align: center;
+            padding: 2rem;
+            color: var(--amber-medium);
+        }
+
+        /* DETAILED COMPLIANCE CARD */
+        .compliance-detail-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .compliance-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--bronze-deep);
+        }
+
+        .compliance-week-info h3 {
+            color: var(--peach-gold);
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+        }
+
+        .compliance-date {
+            color: var(--bronze-light);
+            font-size: 0.85rem;
+        }
+
+        .compliance-overall-score {
+            text-align: right;
+        }
+
+        .score-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--peach-gold);
+        }
+
+        .score-number.good { color: #22c55e; }
+        .score-number.medium { color: #f59e0b; }
+        .score-number.poor { color: #ef4444; }
+
+        .score-label {
+            font-size: 0.9rem;
+            color: var(--amber-medium);
+        }
+
+        /* SUCCESS MESSAGE */
+        .success-message {
+            display: none;
+            padding: 1rem;
+            background: rgba(34, 197, 94, 0.2);
+            border: 2px solid #22c55e;
+            border-radius: 10px;
+            color: #22c55e;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .success-message.active {
+            display: block;
+        }
+
+        /* IMAGE MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            color: var(--amber-light);
+        }
+
+        /* PORTAL LINK SECTION */
+        .portal-link-section {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .portal-link-section h3 {
+            color: var(--peach-gold);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .portal-link-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .link-display {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 8px;
+            padding: 0.75rem;
+            color: var(--amber-light);
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        .btn-success {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(22, 163, 74, 0.5);
+        }
+
+        .btn-copy {
+            padding: 0.75rem 1.5rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--amber-light);
+            border-radius: 8px;
+            color: var(--amber-light);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-copy:hover {
+            border-color: var(--peach-gold);
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .copy-success {
+            color: #22c55e;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+        }
+
+        /* MESSAGE THREAD STYLES */
+        .message-thread-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 1rem;
+            border-radius: 15px;
+            position: relative;
+            word-wrap: break-word;
+        }
+
+        .message-bubble.client {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--bronze-deep), var(--amber-medium));
+            color: var(--pure-black);
+            border-bottom-right-radius: 5px;
+        }
+
+        .message-bubble.practitioner {
+            align-self: flex-start;
+            background: rgba(34, 197, 94, 0.2);
+            border: 2px solid #22c55e;
+            color: var(--amber-light);
+            border-bottom-left-radius: 5px;
+        }
+
+        .message-sender {
+            font-weight: bold;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.8;
+        }
+
+        .message-text {
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            text-align: right;
+        }
+
+        .message-input-container {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        .message-input-box {
+            flex: 1;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 10px;
+            color: var(--amber-light);
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 60px;
+            max-height: 150px;
+        }
+
+        .message-input-box:focus {
+            outline: none;
+            border-color: var(--amber-light);
+        }
+
+        .btn-send-message {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-send-message:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(22, 163, 74, 0.5);
+        }
+
+        .btn-send-message:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .no-messages {
+            text-align: center;
+            padding: 3rem;
+            color: var(--amber-medium);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 767px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .tab-container {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .tab-btn {
+                border-bottom: 1px solid var(--bronze-deep);
+                border-left: 3px solid transparent;
+            }
+
+            .tab-btn.active {
+                border-left-color: var(--peach-gold);
+                border-bottom-color: var(--bronze-deep);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="pro-dashboard.html" class="back-btn">← Back to Dashboard</a>
+
+        <div class="header">
+            <h1>Client Management</h1>
+            <p>Check-ins, submissions, and progress tracking</p>
+        </div>
+
+        <div class="main-content">
+            <!-- MAIN CONTENT AREA -->
+            <div class="checkin-section">
+                <h2 id="checkinTitle">Select a Client</h2>
+                
+                <div id="successMessage" class="success-message">
+                    ✓ Check-in logged successfully!
+                </div>
+
+                <div id="emptyState" class="empty-state">
+                    <p>Loading client information...</p>
+                </div>
+
+                <!-- TAB SYSTEM -->
+                <div id="tabSystem" style="display: none;">
+                    <div class="tab-container">
+                        <button class="tab-btn active" onclick="switchTab('compliance')">
+                            Log Compliance
+                        </button>
+                        <button class="tab-btn" onclick="switchTab('submissions')" id="submissionsTabBtn">
+                            Client Submissions
+                            <span class="tab-badge" id="submissionsBadge" style="display: none;">0</span>
+                        </button>
+                    </div>
+
+                    <!-- TAB 1: COMPLIANCE LOGGING -->
+                    <div id="complianceTab" class="tab-content active">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Current Protocol</label>
+                                <input type="text" id="currentProtocol" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Protocol Week</label>
+                                <input type="number" id="weekNumber" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Compliance Score (0-100)</label>
+                                <div class="slider-container">
+                                    <div class="slider-value" id="sliderValue">50</div>
+                                    <input type="range" id="complianceSlider" min="0" max="100" value="50">
+                                    <div class="slider-labels">
+                                        <span>0 - Not Following</span>
+                                        <span>50 - Partial</span>
+                                        <span>100 - Excellent</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Notes (Optional)</label>
+                                <textarea id="checkInNotes" placeholder="Progress notes, challenges, observations..."></textarea>
+                            </div>
+
+                            <button class="btn-primary" onclick="submitCheckIn()">Save Check-In</button>
+                        </div>
+                    </div>
+
+                    <!-- TAB 2: CLIENT SUBMISSIONS -->
+                    <div id="submissionsTab" class="tab-content">
+                        <!-- CLIENT PORTAL LINK SECTION -->
+                        <div class="portal-link-section">
+                            <h3>📋 Client Portal Access</h3>
+                            <p style="color: var(--amber-medium); margin-bottom: 1rem; font-size: 0.9rem;">
+                                Generate a secure link for this client to view their protocol and submit updates.
+                            </p>
+                            
+                            <div class="portal-link-actions">
+                                <button class="btn-success" onclick="generateClientLink()">
+                                    🔗 Generate Portal Link
+                                </button>
+                                <button class="btn-copy" id="copyLinkBtn" style="display: none;" onclick="copyPortalLink()">
+                                    📋 Copy Link
+                                </button>
+                                <span class="copy-success" id="copySuccess" style="display: none;">✓ Copied!</span>
+                            </div>
+                            
+                            <div id="portalLinkDisplay" style="display: none;">
+                                <div class="link-display" id="portalLinkText"></div>
+                            </div>
+                        </div>
+
+                         <!-- MESSAGING TAB -->
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: var(--peach-gold); margin-bottom: 1rem;">💬 Messages with Client</h3>
+                        
+                        <!-- Message Thread -->
+                        <div id="messageThread" class="message-thread-container">
+                            <div class="no-messages">
+                                No messages yet. Send a message to start the conversation.
+                            </div>
+                        </div>
+                        
+                        <!-- Message Input -->
+                        <div class="message-input-container">
+                            <textarea 
+                                id="messageInput" 
+                                class="message-input-box" 
+                                placeholder="Type your message to the client..."
+                                onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); }"
+                            ></textarea>
+                            <button class="btn-send-message" onclick="sendMessage()" id="sendMessageBtn">
+                                Send Message
+                            </button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COMPLIANCE HISTORY -->
+        <div class="history-section">
+            <h2>Recent Compliance History</h2>
+            <div id="complianceHistory">
+                <div class="no-history">Select a client to view history</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- IMAGE MODAL -->
+    <div id="imageModal" class="modal" onclick="closeImageModal()">
+        <span class="modal-close">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <script>
+        const API_BASE = 'https://treeoflife-vn25.onrender.com';
+        let currentClient = null;
+        let currentAssignment = null;
+        let clients = [];
+        let assignments = [];
+        let currentTab = 'compliance';
+        let currentPortalLink = '';
+        let currentClientName = '';
+
+        // Default message template
+        const DEFAULT_MESSAGE_TEMPLATE = `Hi {client_name}! I noticed you weren't able to complete "{item_name}" this week. Is there a specific reason? For example:
+
+- Is the timing difficult?
+- Does it cause any side effects?
+- Is there a cost concern?
+- Do you need clarification on how to do it?
+
+I'm here to help and can make adjustments if needed!`;
+
+        // Load custom message template from localStorage
+        function getMessageTemplate() {
+            const saved = localStorage.getItem('compliance_message_template');
+            return saved || DEFAULT_MESSAGE_TEMPLATE;
+        }
+
+        function askAboutItem(itemText) {
+            // Get custom or default message template
+            const template = getMessageTemplate();
+            
+            // Replace placeholders
+            const message = template
+                .replace(/{item_name}/g, itemText)
+                .replace(/{client_name}/g, currentClientName);
+            
+            // Copy to clipboard
+            copyToClipboard(message, '✓ Message copied! Go to Messages tab and paste it.');
+        }
+
+        function copyToClipboard(text, successMessage) {
+            // Try modern clipboard API first
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert(successMessage);
+                }).catch((err) => {
+                    console.log('Clipboard API failed, trying fallback:', err);
+                    fallbackCopyToClipboard(text, successMessage);
+                });
+            } else {
+                // Use fallback for HTTP or older browsers
+                fallbackCopyToClipboard(text, successMessage);
+            }
+        }
+        
+        function fallbackCopyToClipboard(text, successMessage) {
+            // Create temporary textarea
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    alert(successMessage);
+                } else {
+                    alert('❌ Copy failed. Please copy manually:\n\n' + text);
+                }
+            } catch (err) {
+                console.error('Fallback copy failed:', err);
+                alert('❌ Copy failed. Please copy manually:\n\n' + text);
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+            
+            if (!token) {
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            // Get client ID from URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const clientIdFromUrl = urlParams.get('client');
+
+            if (!clientIdFromUrl) {
+                document.getElementById('emptyState').innerHTML = '<p>❌ No client specified. Please select a client from the dashboard.</p>';
+                return;
+            }
+
+            await loadData();
+            setupSlider();
+            
+            // Auto-select the client from URL
+            await selectClient(parseInt(clientIdFromUrl));
+        });
+
+        function setupSlider() {
+            const slider = document.getElementById('complianceSlider');
+            const sliderValue = document.getElementById('sliderValue');
+            
+            if (slider && sliderValue) {
+                slider.addEventListener('input', function() {
+                    sliderValue.textContent = this.value;
+                });
+            }
+        }
+
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            if (tabName === 'compliance') {
+                document.getElementById('complianceTab').classList.add('active');
+                stopMessageRefresh();
+            } else {
+                document.getElementById('submissionsTab').classList.add('active');
+                loadMessageThread();
+                startMessageRefresh();
+            }
+        }
+
+         async function loadData() {
+            console.log('🔍 loadData() started');
+            try {
+                const token = localStorage.getItem('token');
+                console.log('🔑 Token:', token ? 'exists' : 'MISSING');
+                
+                // Load clients
+                console.log('📡 Fetching clients from:', `${API_BASE}/api/family/members`);
+                const clientsResponse = await fetch(`${API_BASE}/api/family/members`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                console.log('📡 Clients response status:', clientsResponse.status);
+                
+                if (clientsResponse.ok) {
+                    const clientsData = await clientsResponse.json();
+                    clients = clientsData.members || [];
+                    console.log('✅ Clients loaded:', clients.length, clients);
+                } else {
+                    console.error('❌ Clients fetch failed:', clientsResponse.status);
+                }
+
+                // Load assignments
+                console.log('📡 Fetching assignments from:', `${API_BASE}/api/client-protocols`);
+                const assignmentsResponse = await fetch(`${API_BASE}/api/client-protocols`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                console.log('📡 Assignments response status:', assignmentsResponse.status);
+                
+                if (assignmentsResponse.ok) {
+                    const assignmentsData = await assignmentsResponse.json();
+                    assignments = assignmentsData.assignments || [];
+                    console.log('✅ Assignments loaded:', assignments.length, assignments);
+                } else {
+                    console.error('❌ Assignments fetch failed:', assignmentsResponse.status);
+                }
+
+                console.log('🎯 Data loading complete');
+            } catch (error) {
+                console.error('💥 FATAL ERROR in loadData():', error);
+                console.error('💥 Error stack:', error.stack);
+                document.getElementById('clientList').innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: #dc2626;">
+                        <p>Failed to load clients</p>
+                        <p style="font-size: 0.9rem; margin-top: 0.5rem;">${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Client list removed - direct navigation from dashboard
+        async function getUnreadCount(clientId) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/count-unread-messages/${clientId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.unread_count || 0;
+                }
+            } catch (error) {
+                console.error('Error getting unread count:', error);
+            }
+            return 0;
+        }
+
+        async function selectClient(clientId) {
+            // Get client and assignment
+            currentClient = clients.find(c => String(c.id) === String(clientId));
+            currentAssignment = assignments.find(a => String(a.client_id) === String(clientId));
+
+            if (!currentClient || !currentAssignment) {
+                document.getElementById('emptyState').innerHTML = '<p>❌ Client or protocol not found. Please return to dashboard.</p>';
+                document.getElementById('emptyState').style.display = 'block';
+                return;
+            }
+
+            // Store client name for message template
+            currentClientName = currentClient.name || 'the client';
+
+            // Load messages when client is selected
+            if (currentTab === 'submissions') {
+                loadMessageThread();
+                startMessageRefresh();
+            }
+            // Update form
+            document.getElementById('checkinTitle').textContent = `${currentClient.name}`;
+            document.getElementById('currentProtocol').value = currentAssignment.protocol_name || 'Unknown';
+            document.getElementById('weekNumber').value = currentAssignment.current_week || 1;            
+            // ✅ Load most recent compliance score and set slider
+            try {
+                const token = localStorage.getItem('token');
+                const complianceResponse = await fetch(`${API_BASE}/api/compliance/${currentAssignment.id}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (complianceResponse.ok) {
+                    const complianceData = await complianceResponse.json();
+                    const logs = complianceData.logs || [];
+                    
+                    if (logs.length > 0) {
+                        const latestScore = logs[0].compliance_score;
+                        document.getElementById('complianceSlider').value = latestScore;
+                        document.getElementById('sliderValue').textContent = latestScore;
+                        console.log('✅ Loaded latest compliance:', latestScore);
+                    } else {
+                        document.getElementById('complianceSlider').value = 50;
+                        document.getElementById('sliderValue').textContent = '50';
+                        console.log('ℹ️ No compliance history, using default: 50');
+                    }
+                }
+            } catch (error) {
+                console.error('❌ Error loading latest compliance:', error);
+                document.getElementById('complianceSlider').value = 50;
+                document.getElementById('sliderValue').textContent = '50';
+            }
+            document.getElementById('checkInNotes').value = '';
+
+            // Show tabs, hide empty state
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('tabSystem').style.display = 'block';
+            document.getElementById('successMessage').classList.remove('active');
+
+            // Load data based on current tab
+            if (currentTab === 'compliance') {
+                await loadComplianceHistory();
+            }
+
+            // Update submissions badge
+            const unreadCount = await getUnreadCount(clientId);
+            const badge = document.getElementById('submissionsBadge');
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount;
+                badge.style.display = 'block';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function openImageModal(imageUrl) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.classList.add('active');
+            modalImg.src = imageUrl;
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+
+        async function loadComplianceHistory() {
+    const historyContainer = document.getElementById('complianceHistory');
+    
+    if (!currentClient || !currentAssignment) {
+        historyContainer.innerHTML = '<div class="no-history">No client selected</div>';
+        return;
+    }
+    
+    try {
+        const token = localStorage.getItem('token');
+        
+        // ✅ UNIFIED: Fetch ALL check-ins from compliance_logs (client + practitioner)
+        const response = await fetch(`${API_BASE}/api/compliance/${currentAssignment.id}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            const logs = data.logs || [];
+            
+            if (logs.length === 0) {
+                historyContainer.innerHTML = '<div class="no-history">No compliance check-ins logged yet</div>';
+                return;
+            }
+            
+        // Show ONLY the latest check-in by default
+        const latestLog = logs[0];
+        const submittedBy = latestLog.submitted_by || 'practitioner';
+        const submitterLabel = submittedBy === 'client' ? '👤 Client Submitted' : '👨‍⚕️ Practitioner Logged';
+        
+        // Build category-organized display like client portal
+        let categoryHTML = '';
+        let hasDetailedData = false;
+        
+        if (latestLog.completed_items || latestLog.incomplete_items) {
+            hasDetailedData = true;
+            const categoryEmojis = {
+                'supplements': '💊',
+                'nutrition': '🥗',
+                'exercises': '💪',
+                'lifestyle': '🌿',
+                'timeline': '⭐'
+            };
+            
+            const categoryNames = {
+                'supplements': 'Supplements',
+                'nutrition': 'Nutrition',
+                'exercises': 'Exercise',
+                'lifestyle': 'Lifestyle',
+                'timeline': 'This Week\'s Focus'
+            };
+            
+            // Organize all items by category
+            const itemsByCategory = {
+                'supplements': [],
+                'nutrition': [],
+                'exercises': [],
+                'lifestyle': [],
+                'timeline': []
+            };
+            
+            // Add completed items
+            (latestLog.completed_items || []).forEach(item => {
+                const cat = item.category || 'supplements';
+                itemsByCategory[cat].push({...item, completed: true});
+            });
+            
+            // Add incomplete items
+            (latestLog.incomplete_items || []).forEach(item => {
+                const cat = item.category || 'supplements';
+                itemsByCategory[cat].push({...item, completed: false});
+            });
+            
+            // Render each category
+            categoryHTML = '<div style="margin: 20px 0;">';
+            
+            for (const [category, items] of Object.entries(itemsByCategory)) {
+                if (items.length === 0) continue;
+                
+                const emoji = categoryEmojis[category] || '📋';
+                const name = categoryNames[category] || category;
+                
+                categoryHTML += `
+                    <div style="margin-bottom: 25px;">
+                        <h4 style="color: var(--peach-gold); font-size: 1.1rem; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                            ${emoji} ${name}
+                        </h4>
+                `;
+                
+                // Render items in this category
+                items.forEach(item => {
+                    if (item.completed) {
+                        categoryHTML += `
+                            <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; border-radius: 6px; padding: 12px; margin: 8px 0; color: #22c55e; display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 1.2rem;">✓</span>
+                                <span>${escapeHtml(item.text)}</span>
+                            </div>
+                        `;
+                    } else {
+                        categoryHTML += `
+                            <div style="background: rgba(0, 0, 0, 0.2); border: 1px solid var(--bronze-deep); border-radius: 6px; padding: 12px; margin: 8px 0; color: var(--amber-light); display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                                <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
+                                    <span style="font-size: 1.2rem; color: #ef4444;">○</span>
+                                    <span>${escapeHtml(item.text)}</span>
+                                </div>
+                                <button onclick="askAboutItem('${escapeHtml(item.text).replace(/'/g, "\\'")}'); event.stopPropagation();" 
+                                        style="background: var(--bronze-deep); color: var(--pure-black); border: none; border-radius: 6px; padding: 8px 16px; font-weight: 600; cursor: pointer; font-size: 13px; white-space: nowrap; transition: all 0.2s;"
+                                        onmouseover="this.style.background='var(--amber-light)'"
+                                        onmouseout="this.style.background='var(--bronze-deep)'">
+                                    💬 Ask Why?
+                                </button>
+                            </div>
+                        `;
+                    }
+                });
+             categoryHTML += '</div>';
+            }
+            
+            categoryHTML += '</div>';
+        }
+        
+        historyContainer.innerHTML = `
+            <div class="compliance-detail-card">
+                <div class="compliance-card-header">
+                    <div class="compliance-week-info">
+                        <h3>Week ${latestLog.week_number}</h3>
+                        <div class="compliance-date">${new Date(latestLog.logged_at).toLocaleString()}</div>
+                        <div style="font-size: 0.85rem; color: var(--bronze-light); margin-top: 5px;">${submitterLabel}</div>
+                    </div>
+                    <div class="compliance-overall-score">
+                        <div class="score-number ${getScoreClass(latestLog.compliance_score)}">${latestLog.compliance_score}%</div>
+                        <div class="score-label">Latest Check-In</div>
+                        ${hasDetailedData ? `
+                            <button class="btn-secondary" style="margin-top: 10px; padding: 0.5rem 1rem; background: var(--bronze-deep); border-color: var(--bronze-deep);" onclick="toggleLatestDetails()">
+                                👁️ View Details
+                            </button>
+                        ` : ''}
+                        <button class="btn-secondary" style="margin-top: 10px; padding: 0.5rem 1rem; background: #dc2626; border-color: #dc2626; color: white;" onclick="deleteCompliance(${latestLog.id})">
+                            🗑️ Delete
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="latestComplianceDetails" style="display: none;">
+                    ${categoryHTML}
+                    
+                    ${latestLog.image_base64 ? `
+                        <div style="margin: 15px 0;">
+                            <img src="${latestLog.image_base64}" 
+                                 style="max-width: 100%; border-radius: 8px; border: 2px solid var(--bronze-deep); cursor: pointer;"
+                                 onclick="openImageModal('${latestLog.image_base64}')"
+                                 alt="Client submission">
+                        </div>
+                    ` : ''}
+                </div>
+                
+                ${latestLog.notes ? `
+                    <div class="compliance-notes-section" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(184,134,11,0.3);">
+                        <div style="font-weight: 600; color: var(--amber-medium); margin-bottom: 8px;">📝 Notes:</div>
+                        <div style="color: var(--amber-light); line-height: 1.6; font-style: italic;">${escapeHtml(latestLog.notes)}</div>
+                    </div>
+                ` : ''}
+                
+                ${logs.length > 1 ? `
+                    <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--bronze-deep);">
+                        <button class="btn-secondary" onclick="toggleAllCheckIns()" id="toggleAllBtn">
+                            📊 View All ${logs.length} Check-Ins
+                        </button>
+                    </div>
+                    
+                    <div id="allCheckInsContainer" style="display: none; margin-top: 20px;">
+                        ${logs.slice(1).map(log => {
+                            const by = log.submitted_by || 'practitioner';
+                            const byLabel = by === 'client' ? '👤 Client' : '👨‍⚕️ You';
+                            return `
+                                <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--bronze-deep); border-radius: 8px; padding: 15px; margin: 10px 0;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div>
+                                            <div style="font-weight: bold; color: var(--amber-light);">Week ${log.week_number}</div>
+                                            <div style="font-size: 0.85rem; color: var(--bronze-light);">${new Date(log.logged_at).toLocaleString()}</div>
+                                            <div style="font-size: 0.75rem; color: var(--bronze-light); margin-top: 3px;">${byLabel}</div>
+                                        </div>
+                                        <div style="text-align: right;">
+                                            <div style="font-size: 2rem; font-weight: bold; color: var(--peach-gold);">${log.compliance_score}%</div>
+                                            <button class="btn-secondary" style="margin-top: 5px; padding: 0.4rem 0.8rem; background: #dc2626; border-color: #dc2626; color: white; font-size: 0.8rem;" onclick="deleteCompliance(${log.id})">
+                                                🗑️ Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                    ${log.image_base64 ? `
+                                        <img src="${log.image_base64}" 
+                                             style="max-width: 200px; margin-top: 10px; border-radius: 6px; border: 1px solid var(--bronze-deep); cursor: pointer;"
+                                             onclick="openImageModal('${log.image_base64}')"
+                                             alt="Submission image">
+                                    ` : ''}
+                                    ${log.notes ? `
+                                        <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(184,134,11,0.3); color: var(--amber-medium); font-style: italic;">
+                                            ${escapeHtml(log.notes)}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                ` : ''}
+            </div>
+        `;
+        } else {
+            console.error('Failed to load compliance history:', response.status);
+            historyContainer.innerHTML = '<div class="no-history">Failed to load compliance history</div>';
+        }
+    
+    } catch (error) {
+        console.error('Error loading compliance history:', error);
+        historyContainer.innerHTML = '<div class="no-history">Error loading compliance history</div>';
+    }
+}
+
+function getScoreClass(score) {
+    if (score >= 80) return 'good';
+    if (score >= 50) return 'medium';
+    return 'poor';
+}
+
+function toggleAllCheckIns() {
+    const container = document.getElementById('allCheckInsContainer');
+    const btn = document.getElementById('toggleAllBtn');
+    
+    if (container.style.display === 'none') {
+        container.style.display = 'block';
+        btn.textContent = '▲ Hide Previous Check-Ins';
+    } else {
+        container.style.display = 'none';
+        const totalCount = container.querySelectorAll('[style*="background: rgba(0,0,0,0.3)"]').length + 1;
+        btn.textContent = `📊 View All ${totalCount} Check-Ins`;
+    }
+}
+
+function toggleLatestDetails() {
+    const detailsDiv = document.getElementById('latestComplianceDetails');
+    const btn = event.target;
+    
+    if (detailsDiv.style.display === 'none') {
+        detailsDiv.style.display = 'block';
+        btn.textContent = '👁️ Hide Details';
+    } else {
+        detailsDiv.style.display = 'none';
+        btn.textContent = '👁️ View Details';
+    }
+}
+
+        async function submitCheckIn() {
+            if (!currentClient || !currentAssignment) {
+                alert('Please select a client first');
+                return;
+            }
+
+            const complianceScore = parseInt(document.getElementById('complianceSlider').value);
+            const notes = document.getElementById('checkInNotes').value.trim();
+            const weekNumber = parseInt(document.getElementById('weekNumber').value);
+
+            const data = {
+                client_protocol_id: currentAssignment.id,
+                week_number: weekNumber,
+                compliance_score: complianceScore,
+                notes: notes || null
+            };
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/compliance`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    document.getElementById('successMessage').classList.add('active');
+                    document.getElementById('complianceSlider').value = 50;
+                    document.getElementById('sliderValue').textContent = '50';
+                    document.getElementById('checkInNotes').value = '';
+                    await loadComplianceHistory();
+                    setTimeout(() => {
+                        document.getElementById('successMessage').classList.remove('active');
+                    }, 3000);
+                } else {
+                    const error = await response.json();
+                    alert(`Failed to save check-in: ${error.detail || 'Unknown error'}`);
+                }
+            } catch (error) {
+                console.error('Error submitting check-in:', error);
+                alert('Failed to save check-in. Please try again.');
+            }
+        }
+
+        // ✅ PORTAL LINK FUNCTIONS
+        async function generateClientLink() {
+            if (!currentClient) {
+                alert('Please select a client first');
+                return;
+            }
+            
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/client-view/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        family_member_id: currentClient.id
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    currentPortalLink = data.link;
+                    
+                    document.getElementById('portalLinkText').textContent = currentPortalLink;
+                    document.getElementById('portalLinkDisplay').style.display = 'block';
+                    document.getElementById('copyLinkBtn').style.display = 'inline-block';
+                    
+                    console.log('✅ Portal link generated:', currentPortalLink);
+                } else {
+                    const error = await response.json();
+                    alert(`Failed to generate link: ${error.detail || 'Unknown error'}`);
+                }
+            } catch (error) {
+                console.error('Error generating portal link:', error);
+                alert('Failed to generate portal link. Please try again.');
+            }
+        }
+
+        async function copyPortalLink() {
+            if (!currentPortalLink) {
+                alert('Please generate a link first');
+                return;
+            }
+            
+            try {
+                await navigator.clipboard.writeText(currentPortalLink);
+                
+                const successMsg = document.getElementById('copySuccess');
+                successMsg.style.display = 'inline';
+                
+                setTimeout(() => {
+                    successMsg.style.display = 'none';
+                }, 2000);
+                
+                console.log('✅ Link copied to clipboard');
+            } catch (error) {
+                console.error('Error copying to clipboard:', error);
+                alert('Link selected - press Ctrl+C (Cmd+C on Mac) to copy');
+            }
+        }
+
+        // ==================== TWO-WAY MESSAGING FUNCTIONS ====================
+        
+        let messageRefreshInterval = null;
+        
+        async function loadMessageThread() {
+            if (!currentClient) {
+                document.getElementById('messageThread').innerHTML = `
+                    <div class="no-messages">Select a client to view messages</div>
+                `;
+                return;
+            }
+            
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/client-messages/thread/${currentClient.id}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+               if (response.ok) {
+                    const data = await response.json();
+                    displayMessageThread(data.messages);
+                    
+                    // Mark client messages as read
+                    await fetch(`${API_BASE}/api/client-messages/mark-read/${currentClient.id}`, {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    
+                    // Client list updated through badge system
+                } else {
+                    console.error('Failed to load messages:', response.status);
+                }
+            } catch (error) {
+                console.error('Error loading messages:', error);
+            }
+        }
+        
+        function displayMessageThread(messages) {
+            const container = document.getElementById('messageThread');
+            
+            if (!messages || messages.length === 0) {
+                container.innerHTML = `
+                    <div class="no-messages">
+                        No messages yet. Send a message to start the conversation.
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = messages.map(msg => {
+                const senderClass = msg.sender_type;
+                const senderName = msg.sender_type === 'client' ? currentClient.name : 'You';
+                const timestamp = new Date(msg.created_at).toLocaleString();
+                
+                let imageHTML = '';
+                if (msg.image_base64) {
+                    imageHTML = `
+                        <img src="${msg.image_base64}" 
+                             style="max-width: 100%; border-radius: 8px; margin-top: 0.5rem; cursor: pointer;"
+                             onclick="openImageModal('${msg.image_base64}')"
+                             alt="Attachment">
+                    `;
+                }
+                
+                return `
+                    <div class="message-bubble ${senderClass}">
+                        <div class="message-sender">${senderName}</div>
+                        <div class="message-text">${escapeHtml(msg.message_text)}</div>
+                        ${imageHTML}
+                        <div class="message-time">${timestamp}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Scroll to bottom
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        async function sendMessage() {
+            if (!currentClient) {
+                alert('Please select a client first');
+                return;
+            }
+            
+            const messageInput = document.getElementById('messageInput');
+            const messageText = messageInput.value.trim();
+            
+            if (!messageText) {
+                alert('Please enter a message');
+                return;
+            }
+            
+            const sendBtn = document.getElementById('sendMessageBtn');
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Sending...';
+            
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/client-messages/thread/${currentClient.id}/reply`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message_text: messageText
+                    })
+                });
+                
+                if (response.ok) {
+                    messageInput.value = '';
+                    await loadMessageThread();
+                    console.log('✅ Message sent successfully');
+                } else {
+                    const error = await response.json();
+                    alert(`Failed to send message: ${error.detail || 'Unknown error'}`);
+                }
+            } catch (error) {
+                console.error('Error sending message:', error);
+                alert('Failed to send message. Please try again.');
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Send Message';
+            }
+        }
+        
+        function startMessageRefresh() {
+            // Stop any existing refresh
+            if (messageRefreshInterval) {
+                clearInterval(messageRefreshInterval);
+            }
+            
+            // Refresh messages every 10 seconds when on submissions tab
+            if (currentTab === 'submissions') {
+                messageRefreshInterval = setInterval(() => {
+                    loadMessageThread();
+                }, 10000);
+            }
+        }
+        
+        function stopMessageRefresh() {
+            if (messageRefreshInterval) {
+                clearInterval(messageRefreshInterval);
+                messageRefreshInterval = null;
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+       async function deleteCompliance(logId) {
+            if (!confirm('Are you sure you want to delete this compliance entry? This cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/compliance/${logId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    console.log('✅ Compliance deleted');
+                    await loadComplianceHistory();
+                } else {
+                    const error = await response.json();
+                    alert(`❌ Backend doesn't support DELETE yet. Error: ${error.detail || 'Method not allowed (405)'}`);
+                }
+            } catch (error) {
+                console.error('Error deleting compliance:', error);
+                alert('❌ Failed to delete. The backend DELETE endpoint may not be implemented yet.');
+            }
+        } 
+    </script>
+</body>
+</html>
