@@ -292,7 +292,24 @@
             <div class="stat-change">Client satisfaction</div>
         </div>
     </div>
-
+    
+    <div class="nav-bar">
+        <button class="btn" onclick="window.location.href='client-editor.html'">
+            👥 Add Client
+        </button>
+        <button class="btn" onclick="window.location.href='protocol-editor.html'">
+            📝 Create Protocol
+        </button>
+        <button class="btn" onclick="window.location.href='protocol-library.html'">
+            📚 Protocol Library
+        </button>      
+        <button class="btn" onclick="window.location.href='training-gallery.html'">
+            🎓 Training Gallery
+        </button>
+        <button class="btn-secondary btn" onclick="logout()">
+            Logout
+        </button>
+    </div>
     <div class="section">
         <div class="section-header">
             <h2 class="section-title">Active Clients</h2>
@@ -331,28 +348,7 @@
             No clients found. Add your first client to get started!
         </div>
     </div>
-
-    <div class="nav-bar">
-        <button class="btn" onclick="window.location.href='client-editor.html'">
-            👥 Add Client
-        </button>
-        <button class="btn" onclick="window.location.href='protocol-editor.html'">
-            📝 Create Protocol
-        </button>
-        <button class="btn" onclick="window.location.href='protocol-library.html'">
-            📚 Protocol Library
-        </button>
-        <button class="btn" onclick="window.location.href='client-check-in.html'">
-            📊 Check-Ins
-        </button>
-        <button class="btn" onclick="window.location.href='training-gallery.html'">
-            🎓 Training Gallery
-        </button>
-        <button class="btn-secondary btn" onclick="logout()">
-            Logout
-        </button>
-    </div>
-
+    
     <script>
         const API_URL = 'https://treeoflife-vn25.onrender.com';
         let allClients = [];
