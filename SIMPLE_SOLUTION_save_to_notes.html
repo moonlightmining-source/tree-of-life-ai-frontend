@@ -1,0 +1,158 @@
+<!-- ==================== SIMPLE SOLUTION: ADD TO MESSAGES SECTION ==================== -->
+
+<!-- ADD THIS BUTTON to the message input container (around line 714-730) -->
+
+<div class="message-input-container">
+    <textarea 
+        id="messageInput" 
+        class="message-input-box" 
+        placeholder="Type your message to the client..."
+        onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); }"
+    ></textarea>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button class="btn-send-message" onclick="sendMessage()" id="sendMessageBtn">
+            Send Message
+        </button>
+        <button class="btn-secondary" onclick="saveConversationToNotes()" style="padding: 0.75rem 1.5rem; white-space: nowrap;">
+            📝 Save to Notes
+        </button>
+    </div>
+</div>
+
+<!-- ADD THESE JAVASCRIPT FUNCTIONS -->
+
+<script>
+function saveConversationToNotes() {
+    // Get the message thread
+    const messageThread = document.getElementById('messageThread');
+    const messages = messageThread.querySelectorAll('.message-bubble');
+    
+    if (messages.length === 0) {
+        alert('No messages to save');
+        return;
+    }
+    
+    // Extract conversation text
+    let conversationText = `=== Conversation with ${currentClientName} ===\n`;
+    conversationText += `Date: ${new Date().toLocaleString()}\n\n`;
+    
+    messages.forEach(msg => {
+        const sender = msg.querySelector('.message-sender')?.textContent || 'Unknown';
+        const text = msg.querySelector('.message-text')?.textContent || '';
+        const time = msg.querySelector('.message-time')?.textContent || '';
+        
+        conversationText += `${sender} (${time}):\n${text}\n\n`;
+    });
+    
+    // Copy to clipboard
+    navigator.clipboard.writeText(conversationText).then(() => {
+        alert('✅ Conversation copied to clipboard!\n\nNow paste it into the Compliance Notes field.');
+        
+        // Switch to compliance tab automatically
+        switchTab('compliance');
+        
+        // Focus on notes textarea
+        document.getElementById('checkInNotes').focus();
+    }).catch(err => {
+        console.error('Failed to copy:', err);
+        
+        // Fallback: Show in alert for manual copy
+        alert('Copy this conversation:\n\n' + conversationText);
+    });
+}
+</script>
+
+<!-- ==================== ALTERNATIVE: ADD "QUICK NOTE" BUTTON ==================== -->
+
+<!-- This adds a quick note capture without needing to log full compliance -->
+
+<div style="background: rgba(0, 0, 0, 0.3); border: 2px solid var(--bronze-deep); border-radius: 10px; padding: 1.5rem; margin-bottom: 2rem;">
+    <h3 style="color: var(--peach-gold); margin-bottom: 1rem;">💭 Quick Note</h3>
+    <p style="color: var(--amber-medium); margin-bottom: 1rem; font-size: 0.9rem;">
+        Capture observations without logging full compliance
+    </p>
+    
+    <textarea 
+        id="quickNoteText" 
+        style="width: 100%; padding: 0.75rem; background: rgba(0, 0, 0, 0.5); border: 2px solid var(--bronze-deep); border-radius: 8px; color: var(--amber-light); font-family: inherit; min-height: 80px; margin-bottom: 1rem;"
+        placeholder="Quick observation, conversation summary, or reminder...">
+    </textarea>
+    
+    <button class="btn-secondary" onclick="saveQuickNote()">
+        💾 Save Quick Note
+    </button>
+</div>
+
+<script>
+async function saveQuickNote() {
+    if (!currentClient || !currentAssignment) {
+        alert('Please select a client first');
+        return;
+    }
+    
+    const noteText = document.getElementById('quickNoteText').value.trim();
+    if (!noteText) {
+        alert('Please enter a note');
+        return;
+    }
+    
+    try {
+        const token = localStorage.getItem('token');
+        
+        // Save as a compliance log with score = 0 to indicate it's just a note
+        const response = await fetch(`${API_BASE}/api/compliance`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                client_protocol_id: currentAssignment.id,
+                week_number: currentAssignment.current_week || 1,
+                compliance_score: 0,  // 0 = Quick Note marker
+                notes: `[Quick Note] ${noteText}`
+            })
+        });
+        
+        if (response.ok) {
+            alert('✅ Note saved!');
+            document.getElementById('quickNoteText').value = '';
+            await loadComplianceHistory();
+        } else {
+            alert('❌ Failed to save note');
+        }
+    } catch (error) {
+        console.error('Error saving note:', error);
+        alert('❌ Failed to save note');
+    }
+}
+</script>
+
+<!-- ==================== BENEFIT OF THIS APPROACH ==================== -->
+
+/**
+ * WHY THIS IS BETTER:
+ * 
+ * 1. ✅ No database bloat - only save when needed
+ * 2. ✅ Simple workflow - practitioners use what they need
+ * 3. ✅ Flexible - can save conversation OR quick observations
+ * 4. ✅ Client submissions keep full detail automatically
+ * 5. ✅ Practitioner logs stay lightweight (score + notes)
+ * 
+ * WORKFLOW:
+ * - Client submits → Full breakdown saved
+ * - Practitioner reviews → Sees full breakdown with "View Details"
+ * - Practitioner chats with client → "Save to Notes" copies conversation
+ * - Practitioner makes observation → "Quick Note" without full check-in
+ * - Practitioner does formal check-in → Score + optional notes
+ * 
+ * DATABASE USAGE:
+ * - Client check-in: ~2-5KB (full JSON with checkboxes)
+ * - Practitioner quick note: ~500 bytes (just text)
+ * - Practitioner check-in: ~1KB (score + notes)
+ * 
+ * vs. YOUR ORIGINAL CONCERN:
+ * - Full practitioner checklist would be ~3-5KB per log
+ * - With 100 clients × 4 weeks × 2 logs/week = 2.4-4.8MB
+ * - Not huge, but unnecessary duplication
+ */
