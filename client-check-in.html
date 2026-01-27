@@ -1570,11 +1570,7 @@
             console.error('Failed to load compliance history:', response.status);
             historyContainer.innerHTML = '<div class="no-history">Failed to load compliance history</div>';
         }
-    } catch (error) {
-        console.error('Error loading compliance history:', error);
-        historyContainer.innerHTML = '<div class="no-history">Error loading compliance history</div>';
-    }
-}
+    
     } catch (error) {
         console.error('Error loading compliance history:', error);
         historyContainer.innerHTML = '<div class="no-history">Error loading compliance history</div>';
