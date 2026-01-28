@@ -929,9 +929,9 @@
                 category: document.getElementById('lifestyleCategory').value,
                 title,
                 description: document.getElementById('lifestyleDescription').value,
-                frequency: document.getElementById('lifestyleFrequency').value
+                frequency: document.getElementById('lifestyleFrequency').value,
+                start_week: parseInt(document.getElementById('lifestyleStartWeek').value) || 1  // ✅ NEW!
             };
-
             protocolData.lifestyle.push(change);
             renderLifestyle();
 
