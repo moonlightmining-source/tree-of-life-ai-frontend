@@ -184,6 +184,50 @@
             width: 100%;
             border-collapse: collapse;
         }
+         .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        @media (max-width: 768px) {
+            .activity-table {
+                font-size: 0.85rem;
+            }
+
+            .activity-table th,
+            .activity-table td {
+                padding: 10px 8px;
+                white-space: nowrap;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .btn-small {
+                width: 100%;
+                text-align: center;
+            }
+
+            .week-btn {
+                width: 100%;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-bar {
+                flex-direction: column;
+            }
+
+            .nav-bar .btn {
+                width: 100%;
+            }
+        }
+
 
         .activity-table th {
             text-align: left;
