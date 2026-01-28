@@ -841,14 +841,16 @@
                 return;
             }
 
-            const exercise = {
+           const exercise = {
                 name,
                 type: document.getElementById('exerciseType').value,
                 frequency: document.getElementById('exerciseFreq').value,
                 duration: document.getElementById('exerciseDuration').value,
                 intensity: document.getElementById('exerciseIntensity').value,
-                instructions: document.getElementById('exerciseInstructions').value
+                instructions: document.getElementById('exerciseInstructions').value,
+                start_week: parseInt(document.getElementById('exerciseStartWeek').value) || 1  // ✅ NEW!
             };
+
 
             protocolData.exercises.push(exercise);
             renderExercises();
