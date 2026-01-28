@@ -257,6 +257,28 @@
             font-weight: bold;
             margin-left: 0.5rem;
         }
+         .week-btn {
+            padding: 6px 12px;
+            background: linear-gradient(135deg, var(--bronze-deep), var(--amber-medium));
+            color: var(--pure-black);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .week-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(184, 134, 11, 0.4);
+        }
+
+        .week-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
     </style>  
 </head>
 <body>
