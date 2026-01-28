@@ -762,7 +762,8 @@
                 timing: document.getElementById('suppTiming').value,
                 type: document.getElementById('suppType').value,
                 with_food: document.getElementById('suppWithFood').value,
-                notes: document.getElementById('suppNotes').value
+                notes: document.getElementById('suppNotes').value,
+                start_week: parseInt(document.getElementById('suppStartWeek').value) || 1  // ✅ NEW!
             };
 
             protocolData.supplements.push(supplement);
