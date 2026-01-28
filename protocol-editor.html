@@ -869,10 +869,11 @@
                     <div class="item-header">
                         <div style="flex: 1;">
                             <div class="item-title">${e.name}</div>
-                            <div class="item-meta">${e.type} • ${e.intensity} Intensity</div>
+                            <div class="item-meta">${e.type} • ${e.intensity} Intensity • Starts Week ${e.start_week || 1}</div>
                         </div>
                         <button class="delete-btn" onclick="removeExercise(${i})">Delete</button>
                     </div>
+
                     <div class="item-details">
                         <div class="detail-row">
                             <div class="detail-label">Frequency</div>
