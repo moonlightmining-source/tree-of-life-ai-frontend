@@ -885,15 +885,18 @@
         // ==================== LIFESTYLE ====================
 
         function addLifestyle() {
-            const title = document.getElementById('lifestyleTitle').value.trim();
-            if (!title) {
-                alert('Please enter a title');
+            const category = document.getElementById('lifestyleCategory').value;
+            const description = document.getElementById('lifestyleDescription').value.trim();
+            
+            if (!category) {
+                alert('Please select a category');
                 return;
             }
 
             const change = {
-                category: document.getElementById('lifestyleCategory').value,
-                title,
+                category: category,
+                title: category,  // Use category as title
+
                 description: document.getElementById('lifestyleDescription').value,
                 frequency: document.getElementById('lifestyleFrequency').value,
                 start_week: parseInt(document.getElementById('lifestyleStartWeek').value) || 1  // ✅ NEW!
