@@ -1090,23 +1090,7 @@
             document.getElementById('mealTiming').value = nutrition.meal_timing || '';
             document.getElementById('hydration').value = nutrition.hydration || '';
         }
-
-        // Load sleep
-        if (protocol.sleep) {
-            const sleep = typeof protocol.sleep === 'string'
-                ? JSON.parse(protocol.sleep)
-                : protocol.sleep;
-            
-            document.getElementById('sleepHours').value = sleep.target_hours || '';
-            document.getElementById('bedtime').value = sleep.bedtime || '';
-            document.getElementById('sleepNotes').value = sleep.notes || '';
-        }
-
-        // Load stress management
-        if (protocol.stress_management) {
-            document.getElementById('stressPractices').value = protocol.stress_management;
-        }
-
+        
         // Load weekly notes
         if (protocol.weekly_notes) {
             const weeklyNotes = typeof protocol.weekly_notes === 'string'
