@@ -970,35 +970,118 @@
 
         function renderExercises() {
             const container = document.getElementById('exerciseList');
-            container.innerHTML = protocolData.exercises.map((e, i) => `
-                <div class="item-card">
-                    <div class="item-header">
-                        <div style="flex: 1;">
-                            <div class="item-title">${e.name}</div>
-                            <div class="item-meta">${e.type} • ${e.intensity} Intensity • Starts Week ${e.start_week || 1}</div>
+            container.innerHTML = protocolData.exercises.map((e, i) => {
+                // Build advanced details if they exist
+                let advancedHTML = '';
+                const hasAdvanced = e.sets || e.reps || e.load || e.rest_period || e.tempo || 
+                                   e.rpe_target || e.structure || e.form_cues || e.video_link;
+                
+                if (hasAdvanced) {
+                    advancedHTML = '<div class="item-details">';
+                    
+                    // Volume details
+                    if (e.sets || e.reps) {
+                        advancedHTML += '<div class="detail-row">';
+                        advancedHTML += '<div class="detail-label">Volume</div>';
+                        advancedHTML += `<div class="detail-value">${e.sets || '?'} sets × ${e.reps || '?'} reps</div>`;
+                        advancedHTML += '</div>';
+                    }
+                    
+                    if (e.load) {
+                        advancedHTML += '<div class="detail-row">';
+                        advancedHTML += '<div class="detail-label">Load</div>';
+                        advancedHTML += `<div class="detail-value">${e.load}${e.load_percentage ? ' (' + e.load_percentage + ')' : ''}</div>`;
+                        advancedHTML += '</div>';
+                    }
+                    
+                    if (e.rest_period) {
+                        advancedHTML += '<div class="detail-row">';
+                        advancedHTML += '<div class="detail-label">Rest</div>';
+                        advancedHTML += `<div class="detail-value">${e.rest_period}</div>`;
+                        advancedHTML += '</div>';
+                    }
+                    
+                    if (e.tempo) {
+                        advancedHTML += '<div class="detail-row">';
+                        advancedHTML += '<div class="detail-label">Tempo</div>';
+                        advancedHTML += `<div class="detail-value">${e.tempo}</div>`;
+                        advancedHTML += '</div>';
+                    }
+                    
+                    if (e.rpe_target) {
+                        advancedHTML += '<div class="detail-row">';
+                        advancedHTML += '<div class="detail-label">RPE Target</div>';
+                        advancedHTML += `<div class="detail-value">${e.rpe_target}</div>`;
+                        advancedHTML += '</div>';
+                    }
+                    
+                    if (e.structure) {
+                        advancedHTML += '<div class="detail-row">';
+                        advancedHTML += '<div class="detail-label">Structure</div>';
+                        advancedHTML += `<div class="detail-value">${e.structure}${e.paired_with ? ' with ' + e.paired_with : ''}</div>`;
+                        advancedHTML += '</div>';
+                    }
+                    
+                    if (e.form_cues) {
+                        advancedHTML += '<div class="detail-row" style="grid-column: 1 / -1;">';
+                        advancedHTML += '<div class="detail-label">Form Cues</div>';
+                        advancedHTML += `<div class="detail-value">${e.form_cues}</div>`;
+                        advancedHTML += '</div>';
+                    }
+                    
+                    if (e.video_link) {
+                        advancedHTML += '<div class="detail-row" style="grid-column: 1 / -1;">';
+                        advancedHTML += '<div class="detail-label">Video</div>';
+                        advancedHTML += `<div class="detail-value"><a href="${e.video_link}" target="_blank" style="color: var(--amber-light);">📹 Watch Demonstration</a></div>`;
+                        advancedHTML += '</div>';
+                    }
+                    
+                    if (e.alternative) {
+                        advancedHTML += '<div class="detail-row" style="grid-column: 1 / -1;">';
+                        advancedHTML += '<div class="detail-label">Alternative</div>';
+                        advancedHTML += `<div class="detail-value">${e.alternative}</div>`;
+                        advancedHTML += '</div>';
+                    }
+                    
+                    advancedHTML += '</div>';
+                }
+                
+                // Build basic details (always shown)
+                let basicHTML = '<div class="item-details">';
+                basicHTML += '<div class="detail-row">';
+                basicHTML += '<div class="detail-label">Frequency</div>';
+                basicHTML += `<div class="detail-value">${e.frequency || '?'} times/week</div>`;
+                basicHTML += '</div>';
+                
+                basicHTML += '<div class="detail-row">';
+                basicHTML += '<div class="detail-label">Duration</div>';
+                basicHTML += `<div class="detail-value">${e.duration || '?'} minutes</div>`;
+                basicHTML += '</div>';
+                
+                if (e.instructions) {
+                    basicHTML += '<div class="detail-row" style="grid-column: 1 / -1;">';
+                    basicHTML += '<div class="detail-label">Instructions</div>';
+                    basicHTML += `<div class="detail-value">${e.instructions}</div>`;
+                    basicHTML += '</div>';
+                }
+                basicHTML += '</div>';
+                
+                return `
+                    <div class="item-card">
+                        <div class="item-header">
+                            <div style="flex: 1;">
+                                <div class="item-title">${e.name}</div>
+                                <div class="item-meta">${e.type} • ${e.intensity} Intensity • Starts Week ${e.start_week || 1}</div>
+                            </div>
+                            <button class="delete-btn" onclick="removeExercise(${i})">Delete</button>
                         </div>
-                        <button class="delete-btn" onclick="removeExercise(${i})">Delete</button>
+                        ${basicHTML}
+                        ${advancedHTML}
                     </div>
-
-                    <div class="item-details">
-                        <div class="detail-row">
-                            <div class="detail-label">Frequency</div>
-                            <div class="detail-value">${e.frequency} times/week</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Duration</div>
-                            <div class="detail-value">${e.duration} minutes</div>
-                        </div>
-                        ${e.instructions ? `
-                        <div class="detail-row" style="grid-column: 1 / -1;">
-                            <div class="detail-label">Instructions</div>
-                            <div class="detail-value">${e.instructions}</div>
-                        </div>
-                        ` : ''}
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
+
 
         function removeExercise(index) {
             protocolData.exercises.splice(index, 1);
