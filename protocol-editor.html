@@ -917,25 +917,55 @@
                 return;
             }
 
-           const exercise = {
+            const exercise = {
+                // Basic fields
                 name,
                 type: document.getElementById('exerciseType').value,
                 frequency: document.getElementById('exerciseFreq').value,
                 duration: document.getElementById('exerciseDuration').value,
                 intensity: document.getElementById('exerciseIntensity').value,
                 instructions: document.getElementById('exerciseInstructions').value,
-                start_week: parseInt(document.getElementById('exerciseStartWeek').value) || 1  // ✅ NEW!
+                start_week: parseInt(document.getElementById('exerciseStartWeek').value) || 1,
+                
+                // Advanced fields (null if not filled)
+                sets: document.getElementById('exerciseSets').value || null,
+                reps: document.getElementById('exerciseReps').value || null,
+                load: document.getElementById('exerciseLoad').value || null,
+                load_percentage: document.getElementById('exerciseLoadPercent').value || null,
+                rest_period: document.getElementById('exerciseRest').value || null,
+                tempo: document.getElementById('exerciseTempo').value || null,
+                rpe_target: document.getElementById('exerciseRPE').value || null,
+                structure: document.getElementById('exerciseStructure').value || null,
+                paired_with: document.getElementById('exercisePairedWith').value || null,
+                form_cues: document.getElementById('exerciseFormCues').value || null,
+                video_link: document.getElementById('exerciseVideoLink').value || null,
+                alternative: document.getElementById('exerciseAlternative').value || null
             };
-
 
             protocolData.exercises.push(exercise);
             renderExercises();
 
-            // Clear form
+            // Clear all fields
             document.getElementById('exerciseName').value = '';
             document.getElementById('exerciseFreq').value = '';
             document.getElementById('exerciseDuration').value = '';
             document.getElementById('exerciseInstructions').value = '';
+            document.getElementById('exerciseSets').value = '';
+            document.getElementById('exerciseReps').value = '';
+            document.getElementById('exerciseLoad').value = '';
+            document.getElementById('exerciseLoadPercent').value = '';
+            document.getElementById('exerciseRest').value = '';
+            document.getElementById('exerciseTempo').value = '';
+            document.getElementById('exerciseRPE').value = '';
+            document.getElementById('exerciseStructure').value = '';
+            document.getElementById('exercisePairedWith').value = '';
+            document.getElementById('exerciseFormCues').value = '';
+            document.getElementById('exerciseVideoLink').value = '';
+            document.getElementById('exerciseAlternative').value = '';
+            
+            // Hide advanced section and uncheck
+            document.getElementById('showAdvanced').checked = false;
+            document.getElementById('advancedExercise').style.display = 'none';
         }
 
         function renderExercises() {
