@@ -904,6 +904,11 @@
         }
 
         // ==================== EXERCISES ====================
+         function toggleAdvancedExercise() {
+            const checkbox = document.getElementById('showAdvanced');
+            const advanced = document.getElementById('advancedExercise');
+            advanced.style.display = checkbox.checked ? 'block' : 'none';
+        }
 
         function addExercise() {
             const name = document.getElementById('exerciseName').value.trim();
