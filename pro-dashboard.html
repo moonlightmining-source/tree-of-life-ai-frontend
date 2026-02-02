@@ -523,6 +523,23 @@
                 document.getElementById('avgCompliance').textContent = 
                     stats.success_rate ? `${stats.success_rate}%` : '-';
                 document.getElementById('recentCheckins').textContent = stats.consultations || 0;
+                
+                // Calculate total unread messages across all clients
+                let totalUnread = 0;
+                for (const client of allClients) {
+                    const unread = await getUnreadCount(client.client_id);
+                    totalUnread += unread;
+                }
+                
+                document.getElementById('unreadMessages').textContent = totalUnread;
+                const unreadEl = document.getElementById('unreadChange');
+                if (totalUnread > 0) {
+                    unreadEl.textContent = 'Needs attention';
+                    unreadEl.className = 'stat-change negative';
+                } else {
+                    unreadEl.textContent = 'All caught up';
+                    unreadEl.className = 'stat-change positive';
+                }
 
                 updateChangeIndicator('clientsChange', stats.clients_change, ' this month');
                 updateChangeIndicator('protocolsChange', stats.total_protocols, ' total');
