@@ -485,7 +485,7 @@
         const API_URL = 'https://treeoflife-vn25.onrender.com';
         let allClients = [];
 
-        sync function loadDashboard() {
+        async function loadDashboard() {
             const token = localStorage.getItem('token');
             if (!token) {
                 window.location.href = 'auth.html';
