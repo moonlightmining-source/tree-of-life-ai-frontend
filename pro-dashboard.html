@@ -20,18 +20,14 @@ it<!DOCTYPE html>
             box-sizing: border-box;
         }
 
-        body {
+       body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #1a1410 0%, #2d1f1a 50%, #1a1410 100%);
-            background-image: url('Images/Background.png');
-            background-position: center center;
-            background-attachment: scroll;
-            background-size: cover;
-            background-repeat: no-repeat;
             color: var(--amber-light);
             min-height: 100vh;
             padding: 20px;
             position: relative;
+            margin: 0;
+            overflow-x: hidden;
         }
 
         body::before {
@@ -41,10 +37,27 @@ it<!DOCTYPE html>
             left: 0;
             right: 0;
             bottom: 0;
+            background: linear-gradient(135deg, #1a1410 0%, #2d1f1a 50%, #1a1410 100%);
+            background-image: url('Images/Background.png');
+            background-position: center center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            z-index: -2;
+            /* iOS-specific fixes */
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: rgba(0, 0, 0, 0.2);
             z-index: -1;
         }
-
         .header {
             display: flex;
             justify-content: space-between;
