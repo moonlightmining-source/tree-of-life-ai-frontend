@@ -519,14 +519,13 @@
                 const stats = await response.json();
 
                 document.getElementById('activeClients').textContent = stats.active_clients || 0;
-                document.getElementById('totalProtocols').textContent = stats.total_protocols || 0;
-                document.getElementById('consultations').textContent = stats.consultations || 0;
-                document.getElementById('successRate').textContent = 
+                document.getElementById('totalProtocols').textContent = stats.protocols_active_count || 0;
+                document.getElementById('avgCompliance').textContent = 
                     stats.success_rate ? `${stats.success_rate}%` : '-';
+                document.getElementById('recentCheckins').textContent = stats.consultations || 0;
 
-                updateChangeIndicator('clientsChange', stats.clients_change);
-                updateChangeIndicator('protocolsChange', stats.protocols_active_count, ' active');
-                updateChangeIndicator('consultationsChange', stats.consultations_change);
+                updateChangeIndicator('clientsChange', stats.clients_change, ' this month');
+                updateChangeIndicator('protocolsChange', stats.total_protocols, ' total');
 
             } catch (error) {
                 console.error('Error loading statistics:', error);
