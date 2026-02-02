@@ -537,23 +537,24 @@
             const element = document.getElementById(elementId);
             if (value === undefined || value === null) {
                 element.textContent = 'No data';
+                element.className = 'stat-change neutral';
                 return;
             }
 
             if (typeof value === 'number') {
                 if (value > 0) {
                     element.textContent = `+${value}${suffix}`;
-                    element.className = 'stat-change';
+                    element.className = 'stat-change positive';
                 } else if (value < 0) {
                     element.textContent = `${value}${suffix}`;
-                    element.className = 'stat-change';
+                    element.className = 'stat-change negative';
                 } else {
-                    element.textContent = `No change${suffix}`;
-                    element.className = 'stat-change';
+                    element.textContent = `${value}${suffix}`;
+                    element.className = 'stat-change neutral';
                 }
             } else {
                 element.textContent = value + suffix;
-                element.className = 'stat-change';
+                element.className = 'stat-change neutral';
             }
         }
 
