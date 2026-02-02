@@ -629,12 +629,11 @@
                     </td>
                     <td>${formatDate(activity.last_active)}</td>
                     <td>${escapeHtml(activity.protocol_name || 'None')}</td>
-                    <td>${activity.current_week || 'N/A'}/${activity.duration_weeks || 'N/A'}</td>
                     <td>
                         <div class="action-buttons">
                             ${activity.protocol_name !== 'None' && activity.protocol_name !== 'No protocol assigned' ? `
                                 <button class="week-btn" onclick="advanceWeek(${activity.assignment_id}, ${activity.current_week}, ${activity.total_weeks}, '${escapeHtml(activity.client_name)}')">
-                                    ⏭️ Week ${activity.current_week || 1}/${activity.total_weeks || 12}
+                                    ▶️ Advance (Wk ${activity.current_week}/${activity.total_weeks})
                                 </button>
                             ` : ''}
                             <button class="btn btn-small" onclick="goToCheckin(${activity.client_id})">
