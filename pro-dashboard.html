@@ -517,11 +517,17 @@
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const stats = await response.json();
-
+                
                 document.getElementById('activeClients').textContent = stats.active_clients || 0;
                 document.getElementById('totalProtocols').textContent = stats.protocols_active_count || 0;
+                
+                // Calculate avg compliance from actual client data
+                const clientsWithData = allClients.filter(c => c.progress > 0);
+                const avgCompliance = clientsWithData.length > 0
+                    ? Math.round(clientsWithData.reduce((sum, c) => sum + c.progress, 0) / clientsWithData.length)
+                    : 0;
                 document.getElementById('avgCompliance').textContent = 
-                    stats.success_rate ? `${stats.success_rate}%` : '-';
+                    avgCompliance > 0 ? `${avgCompliance}%` : '-';
                 document.getElementById('recentCheckins').textContent = stats.consultations || 0;
                 
                 // Calculate total unread messages across all clients
