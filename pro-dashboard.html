@@ -622,6 +622,17 @@
                 const alertBadge = needsAttention ? `<span class="alert-badge">!</span>` : '';
                 
                 const row = document.createElement('tr');
+                
+                // Format compliance with color
+                let complianceDisplay = '-';
+                let complianceColor = 'var(--amber-medium)';
+                if (activity.progress > 0) {
+                    complianceDisplay = `${activity.progress}%`;
+                    if (activity.progress >= 80) complianceColor = '#22c55e';      // Green
+                    else if (activity.progress >= 60) complianceColor = '#f59e0b'; // Amber
+                    else complianceColor = '#ef4444';                               // Red
+                }
+                
                 row.innerHTML = `
                     <td>
                         <span class="client-link" onclick="goToCheckin(${activity.client_id})">
@@ -630,6 +641,7 @@
                     </td>
                     <td>${formatDate(activity.last_active)}</td>
                     <td>${escapeHtml(activity.protocol_name || 'None')}</td>
+                    <td style="color: ${complianceColor}; font-weight: 600;">${complianceDisplay}</td>
                     <td>
                         <div class="action-buttons">
                             ${activity.protocol_name !== 'None' && activity.protocol_name !== 'No protocol assigned' ? `
