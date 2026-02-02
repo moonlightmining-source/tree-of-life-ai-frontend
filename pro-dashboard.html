@@ -485,7 +485,7 @@
         const API_URL = 'https://treeoflife-vn25.onrender.com';
         let allClients = [];
 
-        async function loadDashboard() {
+        sync function loadDashboard() {
             const token = localStorage.getItem('token');
             if (!token) {
                 window.location.href = 'auth.html';
@@ -499,8 +499,9 @@
                 const userData = await userResponse.json();
                 document.getElementById('userName').textContent = userData.email;
 
-                await loadStatistics(token);
-                await loadClientActivity(token);
+                await loadClientActivity(token);  // Load clients FIRST
+                await loadStatistics(token);       // Then calculate stats from allClients
+
 
             } catch (error) {
                 console.error('Error loading dashboard:', error);
