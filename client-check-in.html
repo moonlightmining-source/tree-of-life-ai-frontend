@@ -1651,7 +1651,7 @@ function toggleLatestDetails() {
             
             if (select) {
                 checkboxes.forEach(cb => {
-                    const msgId = parseInt(cb.getAttribute('data-message-id'));
+                    const msgId = (cb.getAttribute('data-message-id'));
                     if (msgId) {
                         selectedMessageIds.add(msgId);
                         cb.checked = true;
