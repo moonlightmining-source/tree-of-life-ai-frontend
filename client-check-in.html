@@ -1702,7 +1702,7 @@ function toggleLatestDetails() {
                 checkboxes.forEach(checkbox => {
                     const messageId = checkbox.getAttribute('data-message-id');
                     if (messageId) {
-                        messageIds.push(parseInt(messageId));
+                        messageIds.push(messageId);  // Don't parseInt - IDs are UUIDs (strings)
                     }
                 });
                 
