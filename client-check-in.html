@@ -1493,7 +1493,6 @@ function toggleLatestDetails() {
                 }
                 
                 const isChecked = selectedMessageIds.has(msg.id);
-                const escapedId = String(msg.id).replace(/'/g, "\\'");
                 
                 return `
                     <div style="display: flex; align-items: flex-start; gap: 10px; ${senderClass === 'client' ? 'justify-content: flex-end;' : 'justify-content: flex-start;'}">
@@ -1501,7 +1500,7 @@ function toggleLatestDetails() {
                                class="message-select-checkbox" 
                                data-index="${index}"
                                data-message-id="${msg.id || ''}"
-                               onchange="toggleMessageSelection(${msg.id})"
+                               onchange="toggleMessageSelectionFromEvent(event)"
                                ${isChecked ? 'checked' : ''}
                                style="margin-top: 10px; width: 18px; height: 18px; cursor: pointer; ${senderClass === 'client' ? 'order: 2;' : 'order: 1;'}">
                         <div class="message-bubble ${senderClass}" style="${senderClass === 'client' ? 'order: 1;' : 'order: 2;'}">
