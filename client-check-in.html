@@ -1672,16 +1672,20 @@ function toggleLatestDetails() {
                 countElement.textContent = `${checked} of ${total} selected`;
             }
         }
-        function toggleMessageSelection(messageId) {
+        
+        function toggleMessageSelectionFromEvent(event) {
+            const messageId = event.target.getAttribute('data-message-id');
+            if (!messageId) return;
+            
             if (selectedMessageIds.has(messageId)) {
                 selectedMessageIds.delete(messageId);
             } else {
                 selectedMessageIds.add(messageId);
             }
             updateSelectedCount();
-        }        
+        }
         
-      async function deleteSelectedMessages() {
+        async function deleteSelectedMessages() {
             const checkboxes = document.querySelectorAll('.message-select-checkbox:checked');
             
             if (checkboxes.length === 0) {
@@ -1695,7 +1699,6 @@ function toggleLatestDetails() {
             
             try {
                 const token = localStorage.getItem('token');
-                
                 // Get message IDs from data attributes
                 const messageIds = [];
                 checkboxes.forEach(checkbox => {
