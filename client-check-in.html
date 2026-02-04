@@ -1644,32 +1644,7 @@ function toggleLatestDetails() {
             });
         }
         
-        function selectAllMessages(select) {
-            const checkboxes = document.querySelectorAll('.message-select-checkbox');
-            checkboxes.forEach(cb => {
-                cb.checked = select;
-            });
-            updateSelectedCount();
-        }
-        
-        function updateSelectedCount() {
-            const checked = document.querySelectorAll('.message-select-checkbox:checked').length;
-            const total = document.querySelectorAll('.message-select-checkbox').length;
-            const countElement = document.getElementById('selectedCount');
-            if (countElement) {
-                countElement.textContent = `${checked} of ${total} selected`;
-            }
-        }
-        function toggleMessageSelection(messageId) {
-            if (selectedMessageIds.has(messageId)) {
-                selectedMessageIds.delete(messageId);
-            } else {
-                selectedMessageIds.add(messageId);
-            }
-            updateSelectedCount();
-        }
-        
-        function selectAllMessages(select) {
+       function selectAllMessages(select) {
             const checkboxes = document.querySelectorAll('.message-select-checkbox');
             selectedMessageIds.clear();
             
@@ -1688,6 +1663,24 @@ function toggleLatestDetails() {
             }
             updateSelectedCount();
         }
+        
+        function updateSelectedCount() {
+            const checked = document.querySelectorAll('.message-select-checkbox:checked').length;
+            const total = document.querySelectorAll('.message-select-checkbox').length;
+            const countElement = document.getElementById('selectedCount');
+            if (countElement) {
+                countElement.textContent = `${checked} of ${total} selected`;
+            }
+        }
+        function toggleMessageSelection(messageId) {
+            if (selectedMessageIds.has(messageId)) {
+                selectedMessageIds.delete(messageId);
+            } else {
+                selectedMessageIds.add(messageId);
+            }
+            updateSelectedCount();
+        }        
+        
       async function deleteSelectedMessages() {
             const checkboxes = document.querySelectorAll('.message-select-checkbox:checked');
             
