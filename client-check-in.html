@@ -1493,6 +1493,7 @@ function toggleLatestDetails() {
                         <input type="checkbox" 
                                class="message-select-checkbox" 
                                data-index="${index}"
+                               data-message-id="${msg.id || ''}"
                                onchange="updateSelectedCount()"
                                style="margin-top: 10px; width: 18px; height: 18px; cursor: pointer; ${senderClass === 'client' ? 'order: 2;' : 'order: 1;'}">
                         <div class="message-bubble ${senderClass}" style="${senderClass === 'client' ? 'order: 1;' : 'order: 2;'}">
