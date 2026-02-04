@@ -722,12 +722,15 @@
                         </div>
                         
                         <!-- Selection Controls -->
-                        <div style="display: flex; gap: 10px; margin-bottom: 1rem; align-items: center;">
+                      <div style="display: flex; gap: 10px; margin-bottom: 1rem; align-items: center;">
                             <button class="btn-secondary" onclick="selectAllMessages(true)" style="padding: 0.5rem 1rem;">
                                 ☑️ Select All
                             </button>
                             <button class="btn-secondary" onclick="selectAllMessages(false)" style="padding: 0.5rem 1rem;">
                                 ☐ Deselect All
+                            </button>
+                            <button class="btn-secondary" onclick="deleteSelectedMessages()" style="padding: 0.5rem 1rem; background: #dc2626; border-color: #dc2626; color: white;">
+                                🗑️ Delete Selected
                             </button>
                             <span id="selectedCount" style="color: var(--amber-medium); font-size: 0.9rem; margin-left: auto;">
                                 0 selected
