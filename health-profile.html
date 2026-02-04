@@ -1418,7 +1418,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Full Name</label>
-                        <input type="text" id="fullName" placeholder="John Doe">
+                        <input type="text" spellcheck="true"id="fullName" placeholder="John Doe">
                     </div>
                     
                     <div class="form-group">
@@ -1490,7 +1490,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Emergency Contact Name</label>
-                        <input type="text" id="emergencyContactName" placeholder="Jane Doe">
+                        <input type="text" spellcheck="true"id="emergencyContactName" placeholder="Jane Doe">
                     </div>
 
                     <div class="form-group">
@@ -1592,7 +1592,7 @@
                 <div class="add-form">
                     <h3>📋 Current Health Conditions</h3>
                     <div class="form-group">
-                        <input type="text" id="conditionInput" placeholder="e.g., High blood pressure, Asthma, Diabetes">
+                        <input type="text" spellcheck="true"id="conditionInput" placeholder="e.g., High blood pressure, Asthma, Diabetes">
                     </div>
                     <button class="btn btn-small" onclick="addCondition()">Add</button>
                 </div>
@@ -1602,7 +1602,7 @@
                 <div class="add-form" style="margin-top: 2rem;">
                     <h3>⚠️ Allergies</h3>
                     <div class="form-group">
-                        <input type="text" id="allergyInput" placeholder="e.g., Peanuts, Penicillin, Pollen">
+                        <input type="text" spellcheck="true"id="allergyInput" placeholder="e.g., Peanuts, Penicillin, Pollen">
                     </div>
                     <button class="btn btn-small" onclick="addAllergy()">Add</button>
                 </div>
@@ -1613,7 +1613,7 @@
                     <h3>🏥 Past Diagnoses & Surgeries</h3>
                     <div class="form-row">
                         <div class="form-group">
-                            <input type="text" id="diagnosisInput" placeholder="Condition or surgery name">
+                            <input type="text" spellcheck="true"id="diagnosisInput" placeholder="Condition or surgery name">
                         </div>
                         <div class="form-group">
                             <input type="date" id="diagnosisDate" placeholder="Date">
@@ -1641,11 +1641,11 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>Name</label>
-                            <input type="text" id="medName" placeholder="e.g., Lisinopril, Vitamin D">
+                            <input type="text" spellcheck="true"id="medName" placeholder="e.g., Lisinopril, Vitamin D">
                         </div>
                         <div class="form-group">
                             <label>Dosage</label>
-                            <input type="text" id="medDosage" placeholder="e.g., 10mg, 500 IU">
+                            <input type="text" spellcheck="true"id="medDosage" placeholder="e.g., 10mg, 500 IU">
                         </div>
                     </div>
                     <div class="form-row">
@@ -1786,7 +1786,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>Provider</label>
-                            <input type="text" id="providerInput" placeholder="e.g., Kaiser Permanente">
+                            <input type="text" spellcheck="true"id="providerInput" placeholder="e.g., Kaiser Permanente">
                         </div>
                         <div class="form-group">
                             <label>Test Date</label>
@@ -2914,10 +2914,10 @@ function isPaidUser() {
 
             container.innerHTML = data.results.map((result, index) => `
                 <div class="extracted-value">
-                    <input type="text" value="${result.name || ''}" data-index="${index}" data-field="name" placeholder="Test name">
-                    <input type="text" value="${result.value || ''}" data-index="${index}" data-field="value" placeholder="Value">
-                    <input type="text" value="${result.unit || ''}" data-index="${index}" data-field="unit" placeholder="Unit">
-                    <input type="text" value="${result.reference_range || ''}" data-index="${index}" data-field="reference_range" placeholder="Range">
+                    <input type="text" spellcheck="true"value="${result.name || ''}" data-index="${index}" data-field="name" placeholder="Test name">
+                    <input type="text" spellcheck="true"value="${result.value || ''}" data-index="${index}" data-field="value" placeholder="Value">
+                    <input type="text" spellcheck="true"value="${result.unit || ''}" data-index="${index}" data-field="unit" placeholder="Unit">
+                    <input type="text" spellcheck="true"value="${result.reference_range || ''}" data-index="${index}" data-field="reference_range" placeholder="Range">
                 </div>
             `).join('');
 
