@@ -1654,76 +1654,12 @@ function toggleLatestDetails() {
             }
         }
         
-       async function deleteSelectedMessages() {
-            const checkboxes = document.querySelectorAll('.message-select-checkbox:checked');
-            
-            if (checkboxes.length === 0) {
-                alert('Please select at least one message to delete');
-                return;
-            }
-            
-            if (!confirm(`Are you sure you want to delete ${checkboxes.length} message(s)? This cannot be undone.`)) {
-                return;
-            }
-            
-            try {
-                const token = localStorage.getItem('token');
-                
-                // Get message IDs from data attributes
-                const messageIds = [];
-                checkboxes.forEach(checkbox => {
-                    const messageId = checkbox.getAttribute('data-message-id');
-                    if (messageId) {
-                        messageIds.push(parseInt(messageId));
-                    }
-                });
-                
-                if (messageIds.length === 0) {
-                    alert('⚠️ Cannot delete: Message IDs not found. Backend support may be needed.');
-                    return;
-                }
-                
-                // Delete messages one by one
-                let successCount = 0;
-                let failCount = 0;
-                
-                for (const messageId of messageIds) {
-                    try {
-                        const response = await fetch(`${API_BASE}/api/client-messages/${messageId}`, {
-                            method: 'DELETE',
-                            headers: {
-                                'Authorization': `Bearer ${token}`
-                            }
-                        });
-                        
-                        if (response.ok) {
-                            successCount++;
-                        } else {
-                            failCount++;
-                            console.error(`Failed to delete message ${messageId}:`, response.status);
-                        }
-                    } catch (error) {
-                        failCount++;
-                        console.error(`Error deleting message ${messageId}:`, error);
-                    }
-                }
-                
-                // Show results
-                if (successCount > 0) {
-                    console.log(`✅ Deleted ${successCount} message(s)`);
-                    await loadMessageThread();
-                }
-                
-                if (failCount > 0) {
-                    alert(`⚠️ Deleted ${successCount} message(s), but ${failCount} failed. The backend may not support message deletion yet.`);
-                } else if (successCount > 0) {
-                    alert(`✅ Successfully deleted ${successCount} message(s)`);
-                }
-                
-            } catch (error) {
-                console.error('Error deleting messages:', error);
-                alert('❌ Failed to delete messages. The backend DELETE endpoint may not be implemented yet.');
-            }
+      async function deleteSelectedMessages() {
+            alert('⚠️ Message deletion is not yet supported by the backend.\n\n' +
+                  'To enable this feature, the backend needs to add:\n' +
+                  '• DELETE /api/client-messages/{message_id} endpoint\n\n' +
+                  'For now, you can copy messages to notes and then they won\'t appear in the thread.');
+            return;
         }
         
        async function deleteCompliance(logId) {
