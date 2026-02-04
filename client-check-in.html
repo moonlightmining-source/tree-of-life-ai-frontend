@@ -1493,6 +1493,7 @@ function toggleLatestDetails() {
                 }
                 
                 const isChecked = selectedMessageIds.has(msg.id);
+                const escapedId = String(msg.id).replace(/'/g, "\\'");
                 
                 return `
                     <div style="display: flex; align-items: flex-start; gap: 10px; ${senderClass === 'client' ? 'justify-content: flex-end;' : 'justify-content: flex-start;'}">
