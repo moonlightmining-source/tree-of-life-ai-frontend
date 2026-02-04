@@ -1652,6 +1652,52 @@ function toggleLatestDetails() {
             }
         }
         
+        async function deleteSelectedMessages() {
+            const checkboxes = document.querySelectorAll('.message-select-checkbox:checked');
+            
+            if (checkboxes.length === 0) {
+                alert('Please select at least one message to delete');
+                return;
+            }
+            
+            if (!confirm(`Are you sure you want to delete ${checkboxes.length} message(s)? This cannot be undone.`)) {
+                return;
+            }
+            
+            try {
+                const token = localStorage.getItem('token');
+                const messageThread = document.getElementById('messageThread');
+                const allMessages = Array.from(messageThread.querySelectorAll('.message-bubble'));
+                
+                // Get message IDs to delete
+                const indicesToDelete = Array.from(checkboxes).map(cb => parseInt(cb.dataset.index));
+                
+                // Make delete request
+                const response = await fetch(`${API_BASE}/api/client-messages/bulk-delete`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        client_id: currentClient.id,
+                        message_indices: indicesToDelete
+                    })
+                });
+                
+                if (response.ok) {
+                    console.log('✅ Messages deleted successfully');
+                    await loadMessageThread();
+                } else {
+                    const error = await response.json();
+                    alert(`Failed to delete messages: ${error.detail || 'Unknown error'}`);
+                }
+            } catch (error) {
+                console.error('Error deleting messages:', error);
+                alert('Failed to delete messages. Please try again.');
+            }
+        }
+        
        async function deleteCompliance(logId) {
             if (!confirm('Are you sure you want to delete this compliance entry? This cannot be undone.')) {
                 return;
