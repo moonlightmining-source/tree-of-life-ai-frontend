@@ -891,12 +891,24 @@ I'm here to help and can make adjustments if needed!`;
             }
         }
 
-        function switchTab(tabName) {
+        function switchTab(tabName, clickEvent) {
             currentTab = tabName;
             
             // Update tab buttons
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            
+            // If called from a click event, use event.target; otherwise find the button by onclick attribute
+            if (clickEvent && clickEvent.target) {
+                clickEvent.target.classList.add('active');
+            } else {
+                // Find and activate the correct tab button programmatically
+                const buttons = document.querySelectorAll('.tab-btn');
+                buttons.forEach(btn => {
+                    if (btn.onclick && btn.onclick.toString().includes(`'${tabName}'`)) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
             
             // Update tab content
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
