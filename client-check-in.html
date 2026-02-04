@@ -1660,7 +1660,34 @@ function toggleLatestDetails() {
                 countElement.textContent = `${checked} of ${total} selected`;
             }
         }
+        function toggleMessageSelection(messageId) {
+            if (selectedMessageIds.has(messageId)) {
+                selectedMessageIds.delete(messageId);
+            } else {
+                selectedMessageIds.add(messageId);
+            }
+            updateSelectedCount();
+        }
         
+        function selectAllMessages(select) {
+            const checkboxes = document.querySelectorAll('.message-select-checkbox');
+            selectedMessageIds.clear();
+            
+            if (select) {
+                checkboxes.forEach(cb => {
+                    const msgId = parseInt(cb.getAttribute('data-message-id'));
+                    if (msgId) {
+                        selectedMessageIds.add(msgId);
+                        cb.checked = true;
+                    }
+                });
+            } else {
+                checkboxes.forEach(cb => {
+                    cb.checked = false;
+                });
+            }
+            updateSelectedCount();
+        }
       async function deleteSelectedMessages() {
             const checkboxes = document.querySelectorAll('.message-select-checkbox:checked');
             
