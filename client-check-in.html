@@ -1595,7 +1595,7 @@ function toggleLatestDetails() {
             return div.innerHTML;
         }
         
-        function saveConversationToNotes() {
+       function saveConversationToNotes() {
             // Get all checkboxes
             const checkboxes = document.querySelectorAll('.message-select-checkbox:checked');
             
@@ -1626,22 +1626,25 @@ function toggleLatestDetails() {
             });
             
             // Copy to clipboard
-            navigator.clipboard.writeText(conversationText).then(() => {
-                alert(`✅ ${checkboxes.length} message(s) copied to clipboard!\n\nGo to "Log Compliance" tab and paste into Notes field.`);
-                
-                // Switch to compliance tab automatically
-                switchTab('compliance');
-                
-                // Focus on notes textarea
-                setTimeout(() => {
-                    document.getElementById('checkInNotes').focus();
-                }, 100);
-            }).catch(err => {
-                console.error('Failed to copy:', err);
-                
-                // Fallback: Show in alert for manual copy
-                alert('Copy this conversation:\n\n' + conversationText);
-            });
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(conversationText)
+                    .then(() => {
+                        // Switch to compliance tab automatically
+                        switchTab('compliance');
+                        
+                        // Focus on notes textarea
+                        setTimeout(() => {
+                            document.getElementById('checkInNotes').focus();
+                        }, 100);
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy:', err);
+                        alert('❌ Copy failed. Please try manually copying from the messages.');
+                    });
+            } else {
+                // Fallback for browsers without clipboard API
+                alert('❌ Clipboard not supported. Please manually copy the messages.');
+            }
         }
         
        function selectAllMessages(select) {
