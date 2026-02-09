@@ -299,12 +299,10 @@ async function loadOutcomes() {
 function renderStats(d) {
     document.getElementById('stat-clients').textContent = d.clients_tracked || 0;
     document.getElementById('stat-checkins-sub').textContent = (d.total_checkins || 0) + ' check-ins';
-    document.getElementById('stat-symptom').textContent = Math.round(data.avg_symptom * 10) + '%';
-
+    document.getElementById('stat-symptom').textContent = Math.round(d.avg_symptom * 10) + '%';
     const impEl = document.getElementById('stat-improving');
     impEl.textContent = (d.pct_improving || 0) + '%';
     impEl.className = 'stat-value ' + (d.pct_improving >= 50 ? 'improving-good' : 'improving-bad');
-
     document.getElementById('stat-energy').textContent = d.avg_energy || '—';
     document.getElementById('stat-sleep').textContent = d.avg_sleep || '—';
 }
