@@ -299,7 +299,7 @@ async function loadOutcomes() {
 function renderStats(d) {
     document.getElementById('stat-clients').textContent = d.clients_tracked || 0;
     document.getElementById('stat-checkins-sub').textContent = (d.total_checkins || 0) + ' check-ins';
-    document.getElementById('stat-symptom').textContent = d.avg_symptom || '—';
+    document.getElementById('stat-symptom').textContent = Math.round(data.avg_symptom * 10) + '%';
 
     const impEl = document.getElementById('stat-improving');
     impEl.textContent = (d.pct_improving || 0) + '%';
