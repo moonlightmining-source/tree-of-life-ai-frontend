@@ -1231,8 +1231,7 @@ I'm here to help and can make adjustments if needed!`;
                         <div style="font-size: 0.85rem; color: var(--bronze-light); margin-top: 5px;">${submitterLabel}</div>
                     </div>
                     <div class="compliance-overall-score">
-                        <div class="score-number ${getScoreClass(latestLog.compliance_score)}">${latestLog.compliance_score}%</div>
-                        <div class="score-label">Latest Check-In</div>
+                        ${scoreDisplay}
                         ${hasDetailedData ? `
                             <button class="btn-secondary" style="margin-top: 10px; padding: 0.5rem 1rem; background: var(--bronze-deep); border-color: var(--bronze-deep);" onclick="toggleLatestDetails()">
                                 👁️ Hide Details
