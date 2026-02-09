@@ -1283,7 +1283,12 @@ I'm here to help and can make adjustments if needed!`;
                                             <div style="font-size: 0.75rem; color: var(--bronze-light); margin-top: 3px;">${byLabel}</div>
                                         </div>
                                         <div style="text-align: right;">
-                                            <div style="font-size: 2rem; font-weight: bold; color: var(--peach-gold);">${log.compliance_score}%</div>
+                                            ${log.type === 'outcome_checkin' 
+                                                ? `<div style="font-size: 1.5rem; font-weight: bold; color: var(--peach-gold);">${Math.round((log.symptom_rating || 0) * 10)}%</div>
+                                                   <div style="font-size: 0.75rem; color: var(--amber-medium);">Symptom</div>
+                                                   <div style="font-size: 0.85rem; color: var(--amber-medium); margin-top: 3px;">Energy: ${log.energy_level}/10 | Sleep: ${log.sleep_quality}/10</div>`
+                                                : `<div style="font-size: 2rem; font-weight: bold; color: var(--peach-gold);">${log.compliance_score}%</div>`
+                                            }
                                             <button class="btn-secondary" style="margin-top: 5px; padding: 0.4rem 0.8rem; background: #dc2626; border-color: #dc2626; color: white; font-size: 0.8rem;" onclick="deleteCompliance(${log.id})">
                                                 🗑️ Delete
                                             </button>
