@@ -992,11 +992,18 @@ I'm here to help and can make adjustments if needed!`;
             return 0;
         }
 
-        async function selectClient(clientId) {
+       async function selectClient(clientId) {
             // Get client and assignment
             currentClient = clients.find(c => String(c.id) === String(clientId));
-            currentAssignment = assignments.find(a => String(a.client_id) === String(clientId));
-
+            
+            // Get ALL assignments for this client, filter out inactive/deleted protocols, get most recent
+            const clientAssignments = assignments.filter(a => String(a.client_id) === String(clientId));
+            
+            // Sort by ID descending (newest first) and take the first active one
+            currentAssignment = clientAssignments
+                .filter(a => a.protocol_name && a.protocol_name !== 'None' && a.protocol_name !== 'No protocol assigned')
+                .sort((a, b) => b.id - a.id)[0];
+            
             if (!currentClient || !currentAssignment) {
                 document.getElementById('emptyState').innerHTML = '<p>❌ Client or protocol not found. Please return to dashboard.</p>';
                 document.getElementById('emptyState').style.display = 'block';
