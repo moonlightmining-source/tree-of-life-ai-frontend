@@ -1256,6 +1256,23 @@ I'm here to help and can make adjustments if needed!`;
                     ` : ''}
                 </div>
                 
+                ${isOutcomeCheckin && (latestLog.what_helped || latestLog.what_struggled) ? `
+                    <div style="margin: 15px 0; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px; border: 1px solid var(--bronze-deep);">
+                        ${latestLog.what_helped ? `
+                            <div style="margin-bottom: 10px;">
+                                <div style="font-weight: 600; color: #22c55e; margin-bottom: 5px;">✅ What Helped:</div>
+                                <div style="color: var(--amber-light);">${escapeHtml(latestLog.what_helped)}</div>
+                            </div>
+                        ` : ''}
+                        ${latestLog.what_struggled ? `
+                            <div>
+                                <div style="font-weight: 600; color: #f59e0b; margin-bottom: 5px;">⚠️ What Was Difficult:</div>
+                                <div style="color: var(--amber-light);">${escapeHtml(latestLog.what_struggled)}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                ` : ''}
+                
                 ${latestLog.notes ? `
                     <div class="compliance-notes-section" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(184,134,11,0.3);">
                         <div style="font-weight: 600; color: var(--amber-medium); margin-bottom: 8px;">📝 Notes:</div>
