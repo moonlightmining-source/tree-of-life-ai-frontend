@@ -1106,6 +1106,31 @@ I'm here to help and can make adjustments if needed!`;
         const submittedBy = latestLog.submitted_by || 'practitioner';
         const submitterLabel = submittedBy === 'client' ? '👤 Client Submitted' : '👨‍⚕️ Practitioner Logged';
         
+        // Handle different entry types
+        const isOutcomeCheckin = latestLog.type === 'outcome_checkin';
+        let scoreDisplay = '';
+        let scoreValue = 0;
+        
+        if (isOutcomeCheckin) {
+            // Outcome check-in: show symptom improvement as percentage
+            scoreValue = Math.round((latestLog.symptom_rating || 0) * 10);
+            scoreDisplay = `
+                <div class="score-number ${getScoreClass(scoreValue)}">${scoreValue}%</div>
+                <div class="score-label">Symptom Improvement</div>
+                <div style="font-size: 0.9rem; color: var(--amber-medium); margin-top: 8px;">
+                    ⚡ Energy: ${latestLog.energy_level || 0}/10<br>
+                    😴 Sleep: ${latestLog.sleep_quality || 0}/10
+                </div>
+            `;
+        } else {
+            // Regular compliance: show percentage
+            scoreValue = latestLog.compliance_score || 0;
+            scoreDisplay = `
+                <div class="score-number ${getScoreClass(scoreValue)}">${scoreValue}%</div>
+                <div class="score-label">Compliance Score</div>
+            `;
+        }
+        
         // Build category-organized display like client portal
         let categoryHTML = '';
         let hasDetailedData = false;
