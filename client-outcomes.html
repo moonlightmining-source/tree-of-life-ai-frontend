@@ -120,6 +120,165 @@
         .stat-dual-item { text-align: center; }
         .stat-dual-item .stat-value { font-size: 24px; }
         .stat-dual-label { font-size: 11px; color: var(--bronze-light); margin-top: 2px; }
+        /* Filter Buttons */
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 8px;
+            color: var(--amber-light);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn:hover {
+            background: rgba(184, 134, 11, 0.2);
+            border-color: var(--amber-light);
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+            border-color: var(--peach-gold);
+        }
+
+        /* Client Cards */
+        .client-card {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bronze-deep);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .client-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(184, 134, 11, 0.3);
+        }
+        
+        .client-card.needs-attention {
+            border-color: #ef4444;
+        }
+        
+        .client-card.improving {
+            border-color: #22c55e;
+        }
+        
+        .client-card.declining {
+            border-color: #f59e0b;
+        }
+        
+        .client-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--peach-gold);
+            margin-bottom: 8px;
+        }
+        
+        .protocol-name {
+            color: var(--amber-medium);
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+        
+        .week-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+        }
+        
+        .progress-bar {
+            flex: 1;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--bronze-deep), var(--peach-gold));
+            transition: width 0.3s;
+        }
+        
+        .metrics-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .metric-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--peach-gold);
+        }
+        
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--amber-medium);
+            margin-top: 4px;
+        }
+        
+        .trend-indicator {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .trend-indicator.improving {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+        
+        .trend-indicator.declining {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        
+        .trend-indicator.stable {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+        
+        .card-actions {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(184, 134, 11, 0.3);
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-view {
+            flex: 1;
+            padding: 10px;
+            background: linear-gradient(135deg, var(--amber-light), var(--bronze-deep));
+            color: var(--pure-black);
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-view:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(184, 134, 11, 0.4);
+        }
 
         /* ── Protocol Table ── */
         .section-title {
