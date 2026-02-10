@@ -533,8 +533,11 @@
                         </div>
                         
                         <div class="card-actions">
-                            <button class="btn-view" onclick="viewClient(${client.client_id})">
+                            <button class="btn-view" onclick="viewClient(${client.client_id})" style="flex: 2;">
                                 📊 View Check-Ins
+                            </button>
+                            <button class="btn-delete" onclick="deleteClientProtocol(${client.client_protocol_id}, '${escapeHtml(client.client_name)}')">
+                                🗑️
                             </button>
                         </div>
                     </div>
