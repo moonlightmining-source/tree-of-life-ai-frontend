@@ -426,98 +426,153 @@
 </div>
 
 <script>
-const API_URL = "https://treeoflife-vn25.onrender.com";
-
-async function loadOutcomes() {
-    const token = localStorage.getItem("token");
-    if (!token) {
-        window.location.href = "auth.html";
-        return;
-    }
-    try {
-        const res = await fetch(API_URL + "/api/outcomes/summary", {
-            headers: { "Authorization": "Bearer " + token }
-        });
-        if (res.status === 401) {
-            localStorage.removeItem("token");
-            window.location.href = "auth.html";
-            return;
+        const API_URL = 'https://treeoflife-vn25.onrender.com';
+        let allClients = [];
+        let currentFilter = 'all';
+        
+        async function loadOutcomes() {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                window.location.href = "auth.html";
+                return;
+            }
+            
+            try {
+                const res = await fetch(API_URL + "/api/outcomes/summary", {
+                    headers: { "Authorization": "Bearer " + token }
+                });
+                
+                if (res.status === 401) {
+                    localStorage.removeItem("token");
+                    window.location.href = "auth.html";
+                    return;
+                }
+                
+                if (!res.ok) throw new Error("Failed to load");
+                
+                const data = await res.json();
+                allClients = data.clients || [];
+                
+                renderStats(data.summary);
+                renderClients(allClients);
+                
+            } catch (e) {
+                console.error(e);
+                document.getElementById("clients-loading").textContent = "⚠️ Error loading data. Try refreshing.";
+            }
         }
-        if (!res.ok) throw new Error("Failed to load");
-        const data = await res.json();
-        renderStats(data);
-        renderTable(data.protocols);
-    } catch (e) {
-        console.error(e);
-        document.getElementById("table-loading").textContent = "⚠️ Error loading outcomes. Try refreshing.";
-    }
-}
-
-function renderStats(d) {
-    document.getElementById('stat-clients').textContent = d.clients_tracked || 0;
-    document.getElementById('stat-checkins-sub').textContent = (d.total_checkins || 0) + ' check-ins';
-    document.getElementById('stat-symptom').textContent = d.avg_symptom || 0;
-    const impEl = document.getElementById('stat-improving');
-    impEl.textContent = (d.pct_improving || 0) + '%';
-    impEl.className = 'stat-value ' + (d.pct_improving >= 50 ? 'improving-good' : 'improving-bad');
-    document.getElementById('stat-energy').textContent = d.avg_energy || '—';
-    document.getElementById('stat-sleep').textContent = d.avg_sleep || '—';
-}
-
-function renderTable(protocols) {
-    const wrap = document.getElementById('table-wrap');
-
-    if (!protocols || protocols.length === 0) {
-        wrap.innerHTML = `
-            <div class="empty-state">
-                <div class="icon">📊</div>
-                <p>No outcome data yet.</p>
-                <p class="sub">Check-ins will appear here once clients start submitting weekly ratings.</p>
-            </div>`;
-        return;
-    }
-
-    let rows = protocols.map(p => {
-        const pct = p.avg_symptom ? Math.round((p.avg_symptom / 10) * 100) : 0;
-        const barClass = p.avg_symptom >= 7 ? 'green' : p.avg_symptom >= 4.5 ? 'amber' : 'red';
-
-        return `<tr>
-            <td class="col-name">${escHtml(p.name)}</td>
-            <td class="col-num">${p.clients}</td>
-            <td class="col-num">${p.total_checkins}</td>
-            <td>
-                <div class="eff-wrap">
-                    <div class="eff-bar-bg"><div class="eff-bar ${barClass}" style="width:${pct}%"></div></div>
-                    <div class="eff-num">${p.avg_symptom || '—'}</div>
-                </div>
-            </td>
-            <td class="col-num">${p.avg_energy || '—'}</td>
-            <td class="col-num">${p.avg_sleep || '—'}</td>
-        </tr>`;
-    }).join('');
-
-    wrap.innerHTML = `<table>
-        <thead>
-            <tr>
-                <th>Protocol</th>
-                <th style="text-align:center">Clients</th>
-                <th style="text-align:center">Check-ins</th>
-                <th>Symptom Trend</th>
-                <th style="text-align:center">Energy</th>
-                <th style="text-align:center">Sleep</th>
-            </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-    </table>`;
-}
-
-function escHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s;
-    return d.innerHTML;
-}
-
-loadOutcomes();
-</script>
+        
+        function renderStats(summary) {
+            document.getElementById('stat-clients').textContent = summary.total_clients || 0;
+            document.getElementById('stat-clients-sub').textContent = 'being tracked';
+            
+            document.getElementById('stat-improving').textContent = summary.clients_improving || 0;
+            document.getElementById('stat-improving-sub').textContent = 'trending up';
+            
+            document.getElementById('stat-avg').textContent = summary.avg_rating ? (summary.avg_rating * 10).toFixed(0) + '%' : '—';
+            
+            const attentionEl = document.getElementById('stat-attention');
+            attentionEl.textContent = summary.needs_attention_count || 0;
+            attentionEl.style.color = summary.needs_attention_count > 0 ? '#ef4444' : '#22c55e';
+            document.getElementById('stat-attention-sub').textContent = summary.needs_attention_count > 0 ? 'require follow-up' : 'all caught up';
+        }
+        
+        function renderClients(clients) {
+            const grid = document.getElementById('clients-grid');
+            
+            if (clients.length === 0) {
+                grid.innerHTML = '<div class="loading">No clients found. Add clients to start tracking outcomes.</div>';
+                return;
+            }
+            
+            grid.innerHTML = clients.map(client => {
+                const progress = Math.round((client.current_week / client.total_weeks) * 100);
+                const trendIcon = client.trend === 'improving' ? '📈' : client.trend === 'declining' ? '📉' : '➡️';
+                const trendText = client.trend.charAt(0).toUpperCase() + client.trend.slice(1);
+                
+                let statusBadge = '';
+                if (client.checkin_status === 'never') {
+                    statusBadge = '<span style="color: #ef4444;">⚠️ No check-ins yet</span>';
+                } else if (client.checkin_status === 'overdue') {
+                    statusBadge = `<span style="color: #f59e0b;">⚠️ ${client.days_since_checkin} days ago</span>`;
+                } else {
+                    statusBadge = `<span style="color: #22c55e;">✓ ${client.days_since_checkin} days ago</span>`;
+                }
+                
+                return `
+                    <div class="client-card ${client.trend}" data-trend="${client.trend}" data-status="${client.checkin_status}">
+                        <div class="client-name">👤 ${escapeHtml(client.client_name)}</div>
+                        <div class="protocol-name">${escapeHtml(client.protocol_name)}</div>
+                        
+                        <div class="week-progress">
+                            <span style="font-size: 0.85rem; color: var(--amber-medium);">Week ${client.current_week}/${client.total_weeks}</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progress}%"></div>
+                            </div>
+                            <span style="font-size: 0.85rem; color: var(--peach-gold);">${progress}%</span>
+                        </div>
+                        
+                        <div class="metrics-row">
+                            <div class="metric-item">
+                                <div class="metric-value">${client.compliance_pct}%</div>
+                                <div class="metric-label">Compliance</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-value">${client.latest_rating.toFixed(1)}/10</div>
+                                <div class="metric-label">Latest Rating</div>
+                            </div>
+                        </div>
+                        
+                        <div style="font-size: 0.85rem; color: var(--bronze-light); margin-top: 10px;">
+                            Last check-in: ${statusBadge}
+                        </div>
+                        
+                        <div class="trend-indicator ${client.trend}">
+                            ${trendIcon} ${trendText}
+                            ${client.first_rating > 0 ? ` (${client.first_rating.toFixed(1)} → ${client.latest_rating.toFixed(1)})` : ''}
+                        </div>
+                        
+                        <div class="card-actions">
+                            <button class="btn-view" onclick="viewClient(${client.client_id})">
+                                📊 View Check-Ins
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function filterClients(filter) {
+            currentFilter = filter;
+            
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            let filtered = allClients;
+            
+            if (filter === 'improving') {
+                filtered = allClients.filter(c => c.trend === 'improving');
+            } else if (filter === 'declining') {
+                filtered = allClients.filter(c => c.trend === 'declining');
+            } else if (filter === 'attention') {
+                filtered = allClients.filter(c => c.checkin_status === 'overdue' || c.trend === 'declining' || c.latest_rating < 5);
+            }
+            
+            renderClients(filtered);
+        }
+        
+        function viewClient(clientId) {
+            window.location.href = `client-check-in.html?client=${clientId}`;
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        document.addEventListener('DOMContentLoaded', loadOutcomes);
+    </script>
 </body>
 </html>
