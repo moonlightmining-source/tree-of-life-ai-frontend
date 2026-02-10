@@ -590,6 +590,29 @@
             div.textContent = text;
             return div.innerHTML;
         }
+        async function deleteClientProtocol(protocolId, clientName) {
+            if (!confirm(`Remove protocol assignment for ${clientName}?\n\nThis will delete all check-in history for this client.`)) {
+                return;
+            }
+            
+            const token = localStorage.getItem("token");
+            
+            try {
+                const res = await fetch(`${API_URL}/api/client-protocols/${protocolId}`, {
+                    method: 'DELETE',
+                    headers: { "Authorization": "Bearer " + token }
+                });
+                
+                if (!res.ok) throw new Error("Delete failed");
+                
+                // Reload the page
+                await loadOutcomes();
+                
+            } catch (e) {
+                console.error(e);
+                alert("Failed to delete protocol assignment. Please try again.");
+            }
+        }
         
         document.addEventListener('DOMContentLoaded', loadOutcomes);
     </script>
