@@ -532,12 +532,15 @@
                 document.getElementById('recentCheckins').textContent = stats.consultations || 0;
                 
                 // Calculate total unread messages across all clients
+                console.log('🔔 Calculating unread messages for', allClients.length, 'clients');
                 let totalUnread = 0;
                 for (const client of allClients) {
                     const unread = await getUnreadCount(client.client_id);
+                    console.log(`Client ${client.client_name}: ${unread} unread`);
                     totalUnread += unread;
                 }
                 
+                console.log('🔔 Total unread:', totalUnread);
                 document.getElementById('unreadMessages').textContent = totalUnread;
                 const unreadEl = document.getElementById('unreadChange');
                 if (totalUnread > 0) {
