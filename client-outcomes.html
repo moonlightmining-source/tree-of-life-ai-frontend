@@ -232,40 +232,38 @@
     <div class="stats-grid">
         <div class="stat-card">
             <div class="stat-value" id="stat-clients">—</div>
-            <div class="stat-label">Clients Tracked</div>
-            <div class="stat-sub" id="stat-checkins-sub">— check-ins</div>
-        </div>
-       <div class="stat-card">
-            <div class="stat-value" id="stat-symptom">—</div>
-            <div class="stat-label">Avg Improvement</div>
-            <div class="stat-sub">symptom improvement rating<br>scale of 1 to 10</div>
+            <div class="stat-label">Total Clients</div>
+            <div class="stat-sub" id="stat-clients-sub">being tracked</div>
         </div>
         <div class="stat-card">
             <div class="stat-value" id="stat-improving">—</div>
-            <div class="stat-label">% Improving</div>
-            <div class="stat-sub">symptom trend ↑</div>
+            <div class="stat-label">Clients Improving</div>
+            <div class="stat-sub" id="stat-improving-sub">— trending up</div>
         </div>
         <div class="stat-card">
-            <div class="stat-dual">
-                <div class="stat-dual-item">
-                    <div class="stat-value" id="stat-energy">—</div>
-                    <div class="stat-dual-label">Energy</div>
-                </div>
-                <div class="stat-dual-item">
-                    <div class="stat-value" id="stat-sleep">—</div>
-                    <div class="stat-dual-label">Sleep</div>
-                </div>
-            </div>
-            <div class="stat-label" style="margin-top:8px;">Avg Energy / Sleep</div>
+            <div class="stat-value" id="stat-avg">—</div>
+            <div class="stat-label">Avg Progress</div>
+            <div class="stat-sub">across all clients</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="stat-attention">—</div>
+            <div class="stat-label">Need Attention</div>
+            <div class="stat-sub" id="stat-attention-sub">require follow-up</div>
         </div>
     </div>
 
-    <!-- Protocol Table -->
-    <div class="section-title">📋 Protocol Effectiveness</div>
-    <div class="table-wrap" id="table-wrap">
-        <div class="loading" id="table-loading">Loading outcomes…</div>
+    <!-- Filter Buttons -->
+    <div style="margin: 20px 0; display: flex; gap: 10px; flex-wrap: wrap;">
+        <button class="filter-btn active" onclick="filterClients('all')">All Clients</button>
+        <button class="filter-btn" onclick="filterClients('improving')">📈 Improving</button>
+        <button class="filter-btn" onclick="filterClients('declining')">📉 Declining</button>
+        <button class="filter-btn" onclick="filterClients('attention')">⚠️ Need Attention</button>
     </div>
 
+    <!-- Client Cards Grid -->
+    <div id="clients-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; margin-top: 20px;">
+        <div class="loading" id="clients-loading">Loading client data…</div>
+    </div>
 </div>
 
 <script>
