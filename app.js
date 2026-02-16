@@ -382,7 +382,6 @@ async function sendMessage() {
             });
         }
     } finally {
-        hideLoadingIndicator();
         document.getElementById('loadingIndicator').classList.remove('active');
     }
 }
