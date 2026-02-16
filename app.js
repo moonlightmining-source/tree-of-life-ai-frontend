@@ -342,6 +342,9 @@ async function sendMessage() {
         image: imageToDisplay  // ✅ Include image for display
     });
     
+    // Show loading indicator
+    document.getElementById('loadingIndicator').classList.add('active');
+    
     // Show loading
     showLoadingIndicator();
     
