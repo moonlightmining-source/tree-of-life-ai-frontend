@@ -469,9 +469,9 @@ async function sendMessageToConversation(message, imageData = null) {
         systemPrompt = systemPrompt ? systemPrompt + memberContext : memberContext.trim();
     }
     
-    // Build request body with optional image and system prompt
+   // Build request body with optional image and system prompt
     const requestBody = {
-        content: systemPrompt 
+        message: systemPrompt 
             ? `${systemPrompt}\n\nUser question: ${message}`
             : message,
         member_id: window.currentFamilyMember?.id ? parseInt(window.currentFamilyMember.id) : null,
