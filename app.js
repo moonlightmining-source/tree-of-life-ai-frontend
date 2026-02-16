@@ -343,7 +343,7 @@ async function sendMessage() {
     });
     
     // Show loading indicator
-    showLoadingIndicator();
+    document.getElementById('loadingIndicator').classList.add('active');
     
     try {
         if (!currentConversationId) {
