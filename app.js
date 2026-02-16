@@ -343,9 +343,6 @@ async function sendMessage() {
     });
     
     // Show loading indicator
-    document.getElementById('loadingIndicator').classList.add('active');
-    
-    // Show loading
     showLoadingIndicator();
     
     try {
