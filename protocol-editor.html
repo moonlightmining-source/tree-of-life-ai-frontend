@@ -872,7 +872,10 @@
                             <div class="item-title">${s.name}</div>
                             <div class="item-meta">${s.dosage} • ${s.frequency} • Starts Week ${s.start_week || 1}</div>
                         </div>
-                        <button class="delete-btn" onclick="removeSupplement(${i})">Delete</button>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="editSupplement(${i})">Edit</button>
+                            <button class="delete-btn" onclick="removeSupplement(${i})">Delete</button>
+                        </div>
                     </div>
                     <div class="item-details">
                         <div class="detail-row">
