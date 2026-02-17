@@ -827,7 +827,12 @@
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             
-            event.target.classList.add('active');
+            // Find and activate the correct tab button
+            const tabButton = document.querySelector(`.tab-btn[onclick*="${tabName}"]`);
+            if (tabButton) {
+                tabButton.classList.add('active');
+            }
+            
             document.getElementById(tabName + 'Tab').classList.add('active');
         }
 
