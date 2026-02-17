@@ -1091,6 +1091,45 @@
             renderExercises();
         }
 
+        function editExercise(index) {
+            const exercise = protocolData.exercises[index];
+            
+            // Populate all form fields
+            document.getElementById('exerciseName').value = exercise.name || '';
+            document.getElementById('exerciseType').value = exercise.type || 'Cardio';
+            document.getElementById('exerciseFreq').value = exercise.frequency || '';
+            document.getElementById('exerciseDuration').value = exercise.duration || '';
+            document.getElementById('exerciseIntensity').value = exercise.intensity || 'Light';
+            document.getElementById('exerciseStartWeek').value = exercise.start_week || 1;
+            document.getElementById('exerciseInstructions').value = exercise.instructions || '';
+            
+            // Populate advanced fields if they exist
+            if (exercise.sets || exercise.reps || exercise.load || exercise.rest_period) {
+                document.getElementById('showAdvanced').checked = true;
+                document.getElementById('advancedExercise').style.display = 'block';
+                
+                document.getElementById('exerciseSets').value = exercise.sets || '';
+                document.getElementById('exerciseReps').value = exercise.reps || '';
+                document.getElementById('exerciseLoad').value = exercise.load || '';
+                document.getElementById('exerciseLoadPercent').value = exercise.load_percentage || '';
+                document.getElementById('exerciseRest').value = exercise.rest_period || '';
+                document.getElementById('exerciseTempo').value = exercise.tempo || '';
+                document.getElementById('exerciseRPE').value = exercise.rpe_target || '';
+                document.getElementById('exerciseStructure').value = exercise.structure || '';
+                document.getElementById('exercisePairedWith').value = exercise.paired_with || '';
+                document.getElementById('exerciseFormCues').value = exercise.form_cues || '';
+                document.getElementById('exerciseVideoLink').value = exercise.video_link || '';
+                document.getElementById('exerciseAlternative').value = exercise.alternative || '';
+            }
+            
+            // Remove from array (will be re-added when user clicks "Add Exercise")
+            protocolData.exercises.splice(index, 1);
+            renderExercises();
+            
+            // Scroll to form
+            document.getElementById('exerciseTab').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
         // ==================== LIFESTYLE ====================
 
         function addLifestyle() {
