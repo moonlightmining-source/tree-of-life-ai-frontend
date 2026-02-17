@@ -906,6 +906,28 @@
             renderSupplements();
         }
 
+        function editSupplement(index) {
+            const supplement = protocolData.supplements[index];
+            
+            // Populate form fields
+            document.getElementById('suppName').value = supplement.name || '';
+            document.getElementById('suppDosage').value = supplement.dosage || '';
+            document.getElementById('suppFrequency').value = supplement.frequency || '';
+            document.getElementById('suppTiming').value = supplement.timing || 'At your discretion';
+            document.getElementById('suppType').value = supplement.type || 'Supplement';
+            document.getElementById('suppWithFood').value = supplement.with_food || 'With food';
+            document.getElementById('suppStartWeek').value = supplement.start_week || 1;
+            document.getElementById('suppNotes').value = supplement.notes || '';
+            
+            // Remove from array (will be re-added when user clicks "Add Supplement")
+            protocolData.supplements.splice(index, 1);
+            renderSupplements();
+            
+            // Switch to supplements tab and scroll to form
+            switchTab('supplements');
+            document.getElementById('supplementsTab').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
         // ==================== EXERCISES ====================
          function toggleAdvancedExercise() {
             const checkbox = document.getElementById('showAdvanced');
