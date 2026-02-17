@@ -1238,29 +1238,8 @@
 
         // ==================== TIMELINE ====================
 
-        function generateTimeline() {
-            const durafunction removeLifestyle(index) {
-            protocolData.lifestyle.splice(index, 1);
-            renderLifestyle();
-        }
-
-        function editLifestyle(index) {
-            const lifestyle = protocolData.lifestyle[index];
-            
-            // Populate form fields
-            document.getElementById('lifestyleCategory').value = lifestyle.category || 'Sleep';
-            document.getElementById('lifestyleDescription').value = lifestyle.description || '';
-            document.getElementById('lifestyleFrequency').value = lifestyle.frequency || 'Daily';
-            document.getElementById('lifestyleStartWeek').value = lifestyle.start_week || 1;
-            
-            // Remove from array (will be re-added when user clicks "Add Lifestyle Change")
-            protocolData.lifestyle.splice(index, 1);
-            renderLifestyle();
-            
-            // Switch to lifestyle tab and scroll to form
-            switchTab('lifestyle');
-            document.getElementById('lifestyleTab').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }tion = parseInt(document.getElementById('duration').value) || 4;
+       function generateTimeline() {
+            const duration = parseInt(document.getElementById('duration').value) || 4;
             const container = document.getElementById('phaseTimeline');
             
             let html = '';
