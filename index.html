@@ -1287,13 +1287,19 @@
                         const userTier = data.subscription_tier || 'free';
                         
                         const dashboardBtn = document.getElementById('dashboardBtn');
-                        if (dashboardBtn) {
-                            if (userTier === 'pro') {
-                                dashboardBtn.innerHTML = 'Pro<br>Dashboard';
-                            } else {
-                                dashboardBtn.innerHTML = 'Family<br>Dashboard';
-                            }
-                        }
+        if (dashboardBtn) {
+            if (userTier === 'pro') {
+                dashboardBtn.innerHTML = 'Pro<br>Dashboard';
+                dashboardBtn.onclick = () => window.location.href = 'pro-dashboard.html';
+            } else if (userTier === 'basic' || userTier === 'premium') {
+                dashboardBtn.innerHTML = 'Family<br>Dashboard';
+                dashboardBtn.onclick = () => window.location.href = 'pro-dashboard.html';
+            } else {
+                // Free tier - send to subscriptions
+                dashboardBtn.innerHTML = 'Family<br>Dashboard';
+                dashboardBtn.onclick = () => window.location.href = 'subscriptions.html';
+            }
+        }
                     }
                 } catch (error) {
                     console.log('Could not check user status:', error);
