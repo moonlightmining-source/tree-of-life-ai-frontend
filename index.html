@@ -1360,6 +1360,17 @@
             }
             return true;
         };
+        
+        // Override sendMessage to enforce validation
+        const originalSendMessage = window.sendMessage;
+        window.sendMessage = function() {
+            if (!window.validateModalitySelection()) {
+                return; // Block sending if no modality selected
+            }
+            if (originalSendMessage) {
+                originalSendMessage();
+            }
+        };
 
         // Tradition button handling - MULTI-SELECT
         document.querySelectorAll('.tradition-btn').forEach(btn => {
