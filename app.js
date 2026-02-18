@@ -319,6 +319,12 @@ function removeImage() {
 
 // ✅ UPDATED: Send message with optional image
 async function sendMessage() {
+    // VALIDATION: Check if at least one modality is selected
+    if (!window.selectedTraditions || window.selectedTraditions.length === 0) {
+        await showCustomAlert('⚠️ Please select at least one medical modality before asking your question.\n\nClick on one or more traditions on the sides of the screen to focus your consultation.');
+        return;
+    }
+    
     const input = document.getElementById('userInput');
     const message = input.value.trim();
     
