@@ -871,7 +871,10 @@ async function startNewConversation() {
         const confirmed = await showCustomConfirm('Start a new conversation? Your current chat will be saved to history.');
         if (!confirmed) return;
     }
-    if (confirmed) {
+    
+    // If we reach here, user either confirmed or there were no messages
+    currentConversationId = null;
+    localStorage.removeItem('currentConversationId');
         currentConversationId = null;
         localStorage.removeItem('currentConversationId');
         
