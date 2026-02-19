@@ -368,7 +368,7 @@ async function createConversation(initialMessage, imageData = null) {
    // Build request body with optional image
     const requestBody = {
         initial_message: initialMessage,
-        
+        selected_traditions: window.selectedTraditions || [],
         member_id: window.currentFamilyMember?.id ? parseInt(window.currentFamilyMember.id) : null,
         member_name: window.currentFamilyMember?.name || null
     };
