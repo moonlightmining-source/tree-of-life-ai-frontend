@@ -396,11 +396,10 @@ async function sendMessage() {
 async function createConversation(initialMessage, imageData = null) {
        
       
-    // Build request body with optional image and system prompt
+   // Build request body with optional image
     const requestBody = {
-        initial_message: systemPrompt 
-            ? `${systemPrompt}\n\nUser question: ${initialMessage}`
-            : initialMessage,
+        initial_message: initialMessage,
+        
         member_id: window.currentFamilyMember?.id ? parseInt(window.currentFamilyMember.id) : null,
         member_name: window.currentFamilyMember?.name || null
     };
