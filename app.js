@@ -911,7 +911,14 @@ function printChat() {
 
 // New conversation button
 async function startNewConversation() {
-    const confirmed = await showCustomConfirm('Start a new conversation? Your current chat will be saved to history.');
+    // Only confirm if there are actual messages in current chat
+    const chatMessages = document.getElementById('chatMessages');
+    const hasMessages = chatMessages && chatMessages.children.length > 0;
+    
+    if (hasMessages) {
+        const confirmed = await showCustomConfirm('Start a new conversation? Your current chat will be saved to history.');
+        if (!confirmed) return;
+    }
     if (confirmed) {
         currentConversationId = null;
         localStorage.removeItem('currentConversationId');
