@@ -394,13 +394,8 @@ async function sendMessage() {
 
 // ✅ UPDATED: Create conversation with optional image and member context
 async function createConversation(initialMessage, imageData = null) {
-        
-    // Add member context to system prompt
-    if (window.currentFamilyMember?.name) {
-        const memberContext = `\n\nIMPORTANT: You are currently chatting with ${window.currentFamilyMember.name}, a family member. Address them by name and provide guidance specifically for them, not the account owner.`;
-        systemPrompt = systemPrompt ? systemPrompt + memberContext : memberContext.trim();
-    }
-    
+       
+      
     // Build request body with optional image and system prompt
     const requestBody = {
         initial_message: systemPrompt 
