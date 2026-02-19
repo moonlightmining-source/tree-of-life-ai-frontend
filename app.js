@@ -875,29 +875,26 @@ async function startNewConversation() {
     // If we reach here, user either confirmed or there were no messages
     currentConversationId = null;
     localStorage.removeItem('currentConversationId');
-        currentConversationId = null;
-        localStorage.removeItem('currentConversationId');
-        
-        // Clear family member selection when starting new chat as owner
-        localStorage.removeItem('selectedMemberId');
-        localStorage.removeItem('selectedMemberName');
-        window.currentFamilyMember = null;
-        
-        // Clear chat
-        document.getElementById('chatMessages').innerHTML = '';
-        
-        // Clear any pending image
-        removeImage();
-        
-        // Hide print button container
-        const printContainer = document.getElementById('printButtonContainer');
-        if (printContainer) {
-            printContainer.classList.remove('active');
-        }
-        
-        // Show welcome message
-        displayWelcomeMessage();
+    
+    // Clear family member selection when starting new chat as owner
+    localStorage.removeItem('selectedMemberId');
+    localStorage.removeItem('selectedMemberName');
+    window.currentFamilyMember = null;
+    
+    // Clear chat
+    document.getElementById('chatMessages').innerHTML = '';
+    
+    // Clear any pending image
+    removeImage();
+    
+    // Hide print button container
+    const printContainer = document.getElementById('printButtonContainer');
+    if (printContainer) {
+        printContainer.classList.remove('active');
     }
+    
+    // Show welcome message
+    displayWelcomeMessage();
 }
 
 console.log('🌿 Tree of Life AI initialized with print, personalization, and IMAGE RECOGNITION! 📸');
