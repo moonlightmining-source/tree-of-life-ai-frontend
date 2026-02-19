@@ -15,38 +15,7 @@ let pendingImage = null;
 
 // Track selected medical traditions
 // Use window.selectedTraditions set by index.html
-// Build system prompt based on selected traditions
-function buildSystemPrompt() {
-    const selectedTraditions = window.selectedTraditions || [];
-    
-    if (selectedTraditions.includes('all') || selectedTraditions.length === 0) {
-        return null; // Use default Claude behavior
-    }
-    
-    const traditionNames = {
-        'western': 'Western Medicine',
-        'ayurveda': 'Ayurveda',
-        'tcm': 'Traditional Chinese Medicine',
-        'herbal': 'Herbal Medicine',
-        'naturopathy': 'Natureopathy',
-        'chiropractic': 'Chiropractic',
-        'nutrition': 'Clinical Nutrition',
-        'functional': 'Functional medicine',
-        'fitness': 'Fitness & Exercise',
-        'physical therapy': 'Physical Therapy',
-        
-    };    
-   
-    const selected = selectedTraditions.map(t => traditionNames[t] || t);
-    
-    return `You are Tree of Life AI. The user has specifically selected these healing traditions: ${selected.join(', ')}. 
 
-IMPORTANT: Respond PRIMARILY from these selected tradition(s). Focus your analysis, recommendations, and insights through the lens of ${selected.length === 1 ? 'this tradition' : 'these traditions'}. 
-
-${selected.length > 1 ? 'You may briefly mention other perspectives for context, but your main response should center on the selected traditions.' : 'Stay focused on this single tradition unless the user asks for other perspectives.'}
-
-Provide specific, actionable guidance from ${selected.length === 1 ? 'this tradition\'s' : 'these traditions\''} framework.`;
-}
 // ✨ CUSTOM MODAL FUNCTIONS - ADDED (replaces alert/confirm with styled modals)
 function showCustomAlert(message) {
     return new Promise((resolve) => {
