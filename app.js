@@ -428,11 +428,10 @@ async function createConversation(initialMessage, imageData = null) {
 // ✅ UPDATED: Send message to conversation with optional image and member context
 async function sendMessageToConversation(message, imageData = null) {
            
-   // Build request body with optional image and system prompt
+  // Build request body with optional image
     const requestBody = {
-        message: systemPrompt 
-            ? `${systemPrompt}\n\nUser question: ${message}`
-            : message,
+        message: message,
+        selected_traditions: window.selectedTraditions || [],
         member_id: window.currentFamilyMember?.id ? parseInt(window.currentFamilyMember.id) : null,
         member_name: window.currentFamilyMember?.name || null
     };
