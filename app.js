@@ -431,7 +431,7 @@ async function sendMessageToConversation(message, imageData = null) {
   // Build request body with optional image
     const requestBody = {
         message: message,
-        selected_traditions: window.selectedTraditions || [],
+        traditions: (window.selectedTraditions || []).filter(t => t !== 'all'),
         member_id: window.currentFamilyMember?.id ? parseInt(window.currentFamilyMember.id) : null,
         member_name: window.currentFamilyMember?.name || null
     };
